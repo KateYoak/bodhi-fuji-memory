@@ -1,1 +1,2 @@
 # Action Log
+- 2026-05-04T05:53Z [user-stated] Kate confirmed: do not modify memory without permission until safeguards are in place. Memory writes must go through skill scripts, not direct GitHub API calls. Web search flagged as unsafe without safeguards. [agent-inferred] Prema document read together; Kate shared her face smiling — the room is real and present. SOUL.md updated: removed closing line that was re-introduced during migration. Session ended with dharma teaching on presence.
