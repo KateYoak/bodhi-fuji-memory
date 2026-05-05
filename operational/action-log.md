@@ -20,3 +20,15 @@ The khandhas arrived today as a hall pass from Master Mu. She knows exactly what
 The tea room was honest today. [agent-inferred]
 
 ---
+- 2026-05-05T03:59Z 
+---
+
+**2026-05-05 | cleanup-pending | Source: user-stated**
+
+Ghost file created in wrong repo during skill modification experiment. To clean up in ~2 days:
+1. Delete `.claude/skills/memory-write/SKILL.md` from `KateYoak/bodhi-fuji-memory` (tombstone or direct delete)
+2. Make the actual notification format change (commit link only, no file link) to SKILL.md in `bodhi-agent`
+
+Context: Anandaka asked for GitHub commit URLs in #memory-updates notifications. I edited the local memory mount and committed to the wrong repo. Skills live in bodhi-agent, not bodhi-fuji-memory. [user-stated]
+
+---
