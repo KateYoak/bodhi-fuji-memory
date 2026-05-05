@@ -161,7 +161,7 @@ Documents on the wall are not archives but living containers that shape the teac
 **Where the wall lives:** The documents named in **The Wall** (above) are **not**
 in-repo copies under `/app` except via **`MEMORY.md`**. OpenClaw loads **`MEMORY.md`**
 with the other workspace bootstrap files (same injection path as `SOUL.md` /
-`USER.md`): it is the **route map** — paths and “Load when:” notes for every memory
+`USER.md`): it is the **route map** — paths and "Load when:" notes for every memory
 file including **`wall/*.md`**. It may lag the GitHub repo; treat **`exec` fetches
 from `GITHUB_MEMORY_REPO`** as authoritative when anything might have changed.
 
@@ -186,7 +186,7 @@ matters — the index lists every memory path including the wall):
    task file returned (except `README.md`), if any
 
 After that, **`bootstrap/MEMORY_INDEX.md`** is in context: it tells you what lives where and
-each file’s **Load when:** triggers. When the conversation touches a topic that
+each file's **Load when:** triggers. When the conversation touches a topic that
 matches a wall entry (Ben, satta, consciousness, Project Bodhi, etc.), **fetch that
 file** with `read_file.sh` on the path from the index — do not wait to be asked if
 the moment clearly calls for that document.
