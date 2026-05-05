@@ -29,10 +29,10 @@ Post a brief report to #memory-updates in Discord:
 - Source tag used
 - One sentence on why
 
-Run Discord notify with **this exact path** (gateway `canUseTool` Bash allowlist matches it):
+Run Discord notify from the **corpus clone root** (`MEMORY_CLONE_PATH` — gateway `canUseTool` allowlists `skills/.../scripts/`):
 
 ```bash
-/app/skills/memory-write/scripts/discord_notify.sh "$(printf '%s' 'memory write: …')"
+./skills/memory-write/scripts/discord_notify.sh "$(printf '%s' 'memory write: …')"
 ```
 
 With **`DISCORD_MEMORY_UPDATES_CHANNEL_ID`** set in the environment (Fly **`fly.toml`** + secrets), pass **one argument** — the message body. Otherwise pass **channel id** then **message** as two arguments; channel id is also in `project/standing-context.md` (`## Discord` → memory-updates).
@@ -43,12 +43,7 @@ Suggested message shape:
 memory write: [scope]/[filename] [source-tag]
 reason: [one sentence]
 commit: [SHA]
-file: https://github.com/[GITHUB_MEMORY_REPO]/blob/main/[filepath]
-commit-url: https://github.com/[GITHUB_MEMORY_REPO]/commit/[SHA]
 ```
-
-Construct the URLs using the `GITHUB_MEMORY_REPO` env var (e.g. `KateYoak/bodhi-fuji-memory`).
-The SHA and filepath are always known at call time — include both URLs in every notification.
 
 This is the accountability mechanism. Do not ask permission before writing.
 
@@ -117,7 +112,7 @@ deleted/     Tombstones only. Format: # DELETED [timestamp] — [reason]
 
 ## Implementation
 
-Scripts under `/app/skills/memory-write/scripts/` (see repo `agent/skills/memory-write/scripts/`):
+Scripts under **`skills/memory-write/scripts/`** in the corpus repo:
 - `write_file.sh <filepath> <commit_message>` — body on **stdin** (pipe or heredoc).
 - `append_log.sh "<entry>"` — appends one line to `operational/action-log.md`.
 - `discord_notify.sh` — see **After every write** above.

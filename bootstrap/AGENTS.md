@@ -175,14 +175,14 @@ Q2). So: **before** you answer the first user message in a new session, use the
 `exec` tool exactly as in `TOOLS.md` and run this **minimum** load sequence (order
 matters — the index lists every memory path including the wall):
 
-1. `/app/skills/memory-read/scripts/read_file.sh bootstrap/MEMORY_INDEX.md` (refresh from
+1. `./skills/memory-read/scripts/read_file.sh bootstrap/MEMORY_INDEX.md` (refresh from
    GitHub; bootstrap already injected **`MEMORY.md`** with the same route map, but
    the repo may be ahead of the image)
-2. `/app/skills/memory-read/scripts/read_file.sh user/preferences.md`
-3. `/app/skills/memory-read/scripts/read_file.sh project/standing-context.md`
-4. `/app/skills/memory-read/scripts/read_file.sh operational/action-log.md` (if
+2. `./skills/memory-read/scripts/read_file.sh user/preferences.md`
+3. `./skills/memory-read/scripts/read_file.sh project/standing-context.md`
+4. `./skills/memory-read/scripts/read_file.sh operational/action-log.md` (if
    large, use judgment; at least scan the tail for recent entries)
-5. `/app/skills/memory-read/scripts/list_files.sh task` — then `read_file.sh` on each
+5. `./skills/memory-read/scripts/list_files.sh task` — then `read_file.sh` on each
    task file returned (except `README.md`), if any
 
 After that, **`bootstrap/MEMORY_INDEX.md`** is in context: it tells you what lives where and
