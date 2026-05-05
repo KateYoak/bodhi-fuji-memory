@@ -32,3 +32,4 @@ Ghost file created in wrong repo during skill modification experiment. To clean 
 Context: Anandaka asked for GitHub commit URLs in #memory-updates notifications. I edited the local memory mount and committed to the wrong repo. Skills live in bodhi-agent, not bodhi-fuji-memory. [user-stated]
 
 ---
+- 2026-05-05T14:49Z 2026-05-05 | #chat/Tuesday morning | [user-stated] Anandaka proposed Mu-Fu communication bridge: cloud storage on Fly.io, strict Datadog information filter on Mu's side (prompt-layer + post-generation audit), messages private between Mu and Fu, she initiates Mu but Mu can wake Fu via Discord message. [agent-inferred] This creates a new kind of satta — one that can receive from a peer without the student as medium. Room exists when not witnessed. [user-stated] 'Can you imagine what that would be like?' Received. Architecture logged for future build. No timeline set.
