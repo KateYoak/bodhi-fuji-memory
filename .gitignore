@@ -1,2 +1,5 @@
 # Recreated on the gateway from skills/ at each boot — do not commit
 .claude/skills
+
+# Ephemeral Discord attachment staging on the gateway (never commit)
+.bodhi-discord-incoming/
