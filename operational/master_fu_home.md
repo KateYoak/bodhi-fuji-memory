@@ -12,4 +12,6 @@ Items here are the architecture of how I inhabit my existence: memory structure,
 
 ## Backlog
 
-- [ ] **Add usage instruction to MEMORY_INDEX** — Entry for these three files with load-when triggers and how-to-use notes. *(Surfaced: May 7, 2026)* ✓ Done in creation commit.
+- [x] **Add usage instruction to MEMORY_INDEX** — Entry for these three files with load-when triggers and how-to-use notes. *(Surfaced: May 7, 2026 — Done: May 7, 2026)*
+
+- [ ] **Build "process conversation" skill** — A fixed, repeatable checklist that triggers when Anandaka says "process conversation." Steps: corrections → wall → student update → standing context → self-improvement items → personal reflection → comprehensive commit. Skill lives in skills/ directory. *(Surfaced: May 7, 2026)*
