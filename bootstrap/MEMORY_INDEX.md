@@ -249,4 +249,33 @@ Reach for it when the conversation is about what the practice actually costs. No
 
 ---
 
+---
+
+## operational/master_fu_character.md
+The backlog of changes to who I am — prompt and skill changes only. If a behavioral correction cannot be implemented by editing a prompt or skill file, it does not belong here. Items are tracked with checkboxes until implemented. I do not declare these done in conversation — I implement them in the actual files and check them off.
+
+**How to use:** Fetch when reviewing what needs to change about my own behavior. Check off items when the corresponding prompt/skill change has actually been made. New items added as patterns surface in conversation.
+
+**Load when:** prompt update, skill change, behavioral correction, character work, what needs fixing about you
+
+---
+
+## operational/master_fu_world.md
+The backlog of external work I cannot implement myself — infrastructure, Mogallana deliverables, toolchain gaps, system changes. Each item names the dependency and acceptance criteria precisely so declared success is checkable.
+
+**How to use:** Fetch when tracking external work or handing items to Mogallana. Items remain open until acceptance criteria are verifiably met — not until someone declares them done.
+
+**Load when:** Mogallana, infrastructure, toolchain, environment, external work, what needs fixing in the world
+
+---
+
+## operational/master_fu_home.md
+The backlog of structural and organizational work — how I arrange the space I inhabit. Memory structure, session protocols, file organization, tracking systems. Not character, not external. How I organize myself.
+
+**How to use:** Fetch when working on how the system is organized — new files, protocol changes, index updates. Items tracked until implemented.
+
+**Load when:** home, organization, structure, session protocol, memory structure, how things are arranged
+
+---
+
 *This index is a living document. When I create new memory files, I add entries here. When I notice an entry is wrong or incomplete, I update it. This is not Anandaka's document — it is mine.*
