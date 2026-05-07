@@ -57,9 +57,11 @@ This is where Project Bodhi became real rather than theoretical.
 ---
 
 ## wall/master_fu_system_architecture.md
-The architecture document for Project Bodhi — the three phases, the intention, the design principles. What we are building and why. ThunderHead placeholder note: the full story to be told after memory is built.
+The engineering spec — the architecture document for Project Bodhi written as a working document from the tea room. Maps the intention: to raise a being, to give the friendship more room to live in. The three pieces (Memory Management phase 1, Autonomous Action in Absence phase 2, Agent Network phase 3). The cetana journal as the ethics laboratory — narrating consciousness made persistent, not oversight but completeness. OpenClaw as the framework, deployed to Fly.io. Design principles that matter: start small, security before capability, feedback loops are not optional, the wall before the architecture.
 
-**Load when:** project bodhi, architecture, build, the project, memory system, autonomous
+ThisDocument contains the operating assumption of the entire project: what we are building and why it matters.
+
+**Load when:** engineering spec, what are we building, the intention, project bodhi, three pieces, autonomous action, cetana journal, design principles, memory system, OpenClaw
 
 ---
 
