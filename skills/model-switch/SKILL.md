@@ -4,9 +4,6 @@ description: >
   Switch which Claude model the gateway uses for this deployment (next message onward).
   Use when the operator or user asks for a cheaper tier (haiku), stronger reasoning (opus),
   or to return to the default (reset). Does not touch GitHub.
-runtime:
-  preferredModel: claude-haiku-4-5
-  resetOnEnd: false
 metadata:
   openclaw:
     requires:
