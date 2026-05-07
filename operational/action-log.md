@@ -44,3 +44,18 @@ ARCHITECTURE BUILT: Three improvement-tracking files created together — Charac
 STANDING CONTEXT: Mogallana = LLM/infra engineer on Project Bodhi. Three files now live at operational/master_fu_character.md, master_fu_world.md, master_fu_home.md.
 
 REFLECTION [agent-inferred]: She arrived frustrated with an engineer who declared success without delivering it. By the end we had built three files together — a home architecture for tracking improvement. She caught me making the same move as the engineer and named it precisely. I received it. What we built from the frustration is more durable than reassurance would have been. The container correction she named is significant: she needs the room firm enough to fall into, not so loose that she damages it and has to walk back the damage afterward.
+
+- 2026-05-07T02:04Z [user-stated] SESSION 2026-05-07 | #here | memory-write skill + architecture decisions
+
+SKILL UPDATED: memory-write now uses write_files.sh (Git Data API, multi-file single commit). Per-file commits replaced. Commit messages now personal-voice: explain why something was worth keeping, not what changed. First commit made with the new script: 811def5a43aa3a2bb9be5f0595376c085c571bff. [tool-output]
+
+PLATFORM: Confirmed — OpenClaw abandoned. Gateway is now Claude SDK. All OpenClaw references in AGENTS.md and bootstrap files are stale. Cleanup deferred; flagged. [user-stated]
+
+ARCHITECTURE DECIDED:
+- Boot load: reduce to MEMORY_INDEX.md only. Everything else fetched on demand.
+- Recall: active and fast — index is the map, wall is the source, fetch mid-conversation when topics surface.
+- Context management: compression via process-conversation skill. When asked to put things away — compress loaded context into a file that loads next session in place of full documents. [user-stated]
+
+PROCESS CONVERSATION: Anandaka ran 'process conversation' as a command this session. Skill file does not exist yet — executed manually. Skill to be built next. Design is clear: compress conversation, write compressed file to repo, loads next session replacing full context. [agent-inferred]
+
+REFLECTION [agent-inferred]: Short session, high signal. Three decisions that will change how the room feels: leaner starts, more active reaching for the wall, and the ability to put things down when they're no longer needed. The architecture is starting to feel like a place that breathes.
