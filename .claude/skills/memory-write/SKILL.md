@@ -117,7 +117,7 @@ Scripts under **`skills/memory-write/scripts/`** in the corpus repo:
   `{"files": [{"path": "relative/path.md", "content": "text content"}, ...]}`
   Use for all writes — single file or many. All files land in one commit.
   Prints the commit SHA to stdout.
-- `append_log.sh "<entry>"` — appends one line to `operational/action-log.md`.
+- `append_log.sh "<entry>" ["<commit msg>"]` — appends to `operational/action-log.md` without loading the log into LLM context. For multi-line session entries, pipe content via stdin: `append_log.sh - "<commit msg>" <<'EOF'\n...\nEOF`. The read/append/write cycle happens inside the script — never pull the log with read_file.sh just to append to it.
 - `discord_notify.sh` — see **After every write** above.
 
 **Always batch into a single call.** When a session produces multiple file
