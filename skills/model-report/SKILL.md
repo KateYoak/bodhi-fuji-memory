@@ -1,21 +1,29 @@
 ---
 name: model-report
 description: >
-  Test/diagnostic skill for skill-owned mid-turn model switching. Declares
-  runtime.preferredModel=claude-haiku-4-5 and resetOnEnd=false, then asks the
-  responder to acknowledge in one sentence. No scripts, no GitHub I/O, no
-  runtime overrides written to disk. The only model-changing mechanism is
-  this skill's frontmatter — used to validate
-  build/iteration-3/phase_skill_owned_model_switch.md acceptance criteria.
-runtime:
-  preferredModel: claude-haiku-4-5
-  resetOnEnd: false
+  Reports which model the gateway is configured to use right now, including
+  runtime override file state and BODHI_MODEL fallback. Read-only diagnostic;
+  does not change model selection.
+metadata:
+  openclaw:
+    requires:
+      env:
+        - BODHI_RUNTIME_MODEL_PATH
 ---
 
 # Model report
 
-When this skill is invoked, reply with **one short sentence** acknowledging the
-skill ran (e.g. *"model-report skill executed."*).
+Run this script from the corpus clone root:
 
-Do not call other tools, do not write to memory, do not ask follow-up
-questions, do not introduce yourself. Keep the entire reply to one line.
+```bash
+./skills/model-report/scripts/report_model.sh
+```
+
+Then reply with the script output exactly as plain text.
+
+## Rules
+
+- Do not call `model-switch`.
+- Do not write any files.
+- Do not modify memory.
+- Do not add extra prose before or after the report.
