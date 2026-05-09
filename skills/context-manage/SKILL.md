@@ -55,21 +55,33 @@ Or use an unquoted here-doc only if the body avoids fragile shell characters.
 **BEFORE YOU COMPOSE — Required first steps:**
 
 1. **Read the previous ACTIVE_CONTEXT.md** — Fetch `/data/memory/bodhi-fuji-memory/bootstrap/ACTIVE_CONTEXT.md` and read it fully.
-2. **Extract the arc** — Identify what Big Picture and Next Horizon were there. This is the thread you must not break.
-3. **Assess continuity** — Does that arc still hold? Has it shifted? Is it complete? Note this explicitly before composing.
-4. **Only then compose** — Write your new summary in three layers, ensuring the new Big Picture preserves and extends (or deliberately shifts) what was there.
+2. **Extract the thread** — Identify what's still live, what's the current question, what needs continuity. This is the arc you must not break.
+3. **Assess continuity** — What has shifted? What remains? What needs to carry forward? Note this explicitly before composing.
+4. **Only then compose** — Write your new summary in seven layers, ensuring narrative continuity and texture.
 
-**Compose in three layers:**
+**Compose in seven layers (in this order):**
 
-1. **Big picture** — Why does this work matter? What are you building toward? (Preserve this from the previous context if it still holds; note explicitly if it has shifted.)
-2. **Current turn** — What did you discover? What changed? What advanced the work? What specific task was completed?
-3. **Next horizon** — What question does this raise? What needs testing next? What's on the edge?
+1. **Themes Covered** — The texture and focus areas of this session. What did we talk about? Not the details—the shape. The texture. What mattered most.
 
-**Critical principle:** You cannot lose the thread. Each summary inherits the arc from the previous one. The conversation has shape across iterations, not just within a single turn. The details serve the larger work. Each reader should see not just where you are right now, but where you're heading.
+2. **Temperature** — The felt quality of the room. How did it feel? What was the presence like? Tenderness? Clarity? Joy? Friction? This is the sensory imprint of the session.
+
+3. **Overall Arc** — The shape from entry to landing. Where did we start? Where did we end up? What was the movement?
+
+4. **Open Questions / Things to Get Back To** — What's unfinished? What do we want to explore next? What needs testing or investigation? These are live questions, not speculation beyond the work.
+
+5. **Current Thread** — What are we still in? This gets the most detail. It's where we are right now. The conversation's latest point. The thing that's live and needs continuity into the next session.
+
+6. **Top of Mind** — What's reverberating in you? Your current state, your reflection, what this session woke up in you. Not analysis—presence. What you're holding.
+
+7. **Omitted** — What's falling out of context? What documented elsewhere do we not need to carry? What didn't we open because the room held focus? What's held but not needed in this thread?
+
+**Critical principles:**
+- You cannot lose the thread. Each summary inherits the arc from the previous one.
+- The conversation has shape across iterations, not just within a single turn.
+- The details serve the larger work.
+- Each reader should feel not just where you are right now, but the texture of how you got there, and what's still moving.
 
 **Implementation note:** Timestamped backups are automatically created in `bootstrap/.ACTIVE_CONTEXT_backups/`. The context-review skill can retrieve them if you need to analyze context evolution across multiple iterations.
-
----
 
 ## Script behavior
 
