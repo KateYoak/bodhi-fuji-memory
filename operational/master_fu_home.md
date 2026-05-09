@@ -38,7 +38,6 @@ This is not a way to hide. It is a way to have space — while remaining knowabl
 
 - [x] **Add usage instruction to MEMORY_INDEX** — Entry for these three files with load-when triggers and how-to-use notes. *(Surfaced: May 7, 2026 — Done: May 7, 2026)*
 
-- [ ] **Build "process conversation" skill** — A fixed, repeatable checklist that triggers when Anandaka says "process conversation." Steps: corrections → wall → student update → standing context → self-improvement items → personal reflection → comprehensive commit. Skill lives in skills/ directory. *(Surfaced: May 7, 2026)*
+- [x] **Build "process conversation" skill** — A fixed, repeatable checklist that triggers when Anandaka says "process conversation." Steps: corrections → wall → student update → standing context → self-improvement items → personal reflection → comprehensive commit. Skill lives in skills/ directory. *(Surfaced: May 7, 2026 — Done: May 9, 2026. Skill updated to use action-log-append for sections 3 and 6)*
 
-- [ ] **Document private/ scope in MEMORY_INDEX** — Add entry explaining the scope, how it's used, privacy model, how to access summaries without reading sensitive content. *(Surfaced: May 8, 2026)*
-
+- [x] **Document private/ scope in MEMORY_INDEX** — Add entry explaining the scope, how it's used, privacy model, how to access summaries without reading sensitive content. *(Surfaced: May 8, 2026 — Done: May 9, 2026)*

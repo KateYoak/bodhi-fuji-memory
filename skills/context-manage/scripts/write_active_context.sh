@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 # Writes bootstrap/ACTIVE_CONTEXT.md from stdin. Corpus cwd on gateway is MEMORY_CLONE_PATH.
+# Also backs up the previous version with ISO 8601 timestamp before overwriting.
 # Hook for future safety checks (size caps, forbidden patterns, etc.).
 set -euo pipefail
 
@@ -21,10 +22,16 @@ if [[ "${BYTES}" -gt "${MAX_BYTES}" ]]; then
 fi
 
 mkdir -p "$(dirname "${TARGET}")"
-{
-  printf '%s\n\n' "# ACTIVE_CONTEXT"
-  printf '> Written by `skills/context-manage/scripts/write_active_context.sh` at %s.\n\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  cat "${TMP}"
-} >"${TARGET}"
+
+# Back up the previous version with ISO 8601 timestamp
+if [[ -f "${TARGET}" ]]; then
+  TIMESTAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  BACKUP="${ROOT}/bootstrap/.ACTIVE_CONTEXT_backups/ACTIVE_CONTEXT.${TIMESTAMP}.md"
+  mkdir -p "$(dirname "${BACKUP}")"
+  cp "${TARGET}" "${BACKUP}"
+  echo "write_active_context: backed up previous version to ${BACKUP}" >&2
+fi
+
+cat "${TMP}" >"${TARGET}"
 
 echo "write_active_context: wrote ${TARGET} (${BYTES} bytes)" >&2

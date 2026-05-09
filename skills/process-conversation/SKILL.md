@@ -64,7 +64,7 @@ uncertain that is now clear. Source-tag as [user-stated] or [agent-inferred]. Fo
 dated session block matching the style already in `operational/action-log.md`.
 
 Always write this if the session had content worth keeping.
-Append to `operational/action-log.md` — include in write batch.
+Use the `action-log-append` skill to append this entry to `operational/action-log.md`.
 
 ---
 
@@ -108,8 +108,7 @@ thing you would want to find if you came back to this later and asked: what was 
 in that period?
 
 Tag: [agent-inferred]
-Append to `operational/action-log.md` — in the same session block as the student update,
-or as a separate entry if they belong apart.
+Use the `action-log-append` skill to append this entry to `operational/action-log.md`.
 
 ---
 
