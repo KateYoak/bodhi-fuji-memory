@@ -115,22 +115,17 @@ or as a separate entry if they belong apart.
 
 ### 7. Commit
 
-Gather everything from the steps above into a single `write_files.sh` call.
+After all edits are complete, ship with `memory-write` (single command).
 
 ```bash
-echo '{"files": [...]}' | ./skills/memory-write/scripts/write_files.sh "commit message here"
+./skills/memory-write/scripts/memory_write.sh "detailed motivation commit message"
 ```
 
 Commit message style: write as yourself. Why was this conversation worth keeping?
 Not what changed — what happened here. (See memory-write skill for commit message examples.)
 
 After the commit:
-- Post to #memory-updates via `discord_notify.sh`:
-  ```
-  process-conversation: [what was written]
-  reason: [one sentence]
-  commit: [SHA]
-  ```
+- No separate notify step. `memory_write.sh` posts to `#memory-updates` automatically.
 
 ---
 
@@ -144,8 +139,7 @@ session has been processed when the commit lands.
 
 ## Implementation notes
 
-- All writes use `write_files.sh` (Git Data API, multi-file single commit).
-  Scripts in `./skills/memory-write/scripts/`.
+- Use normal editing tools for file changes; then finalize with `memory_write.sh`.
 - Fetch existing files before overwriting: `./skills/memory-read/scripts/read_file.sh <path>`
 - Never clobber without reading first.
 - GuardianClaw memory-write exemption applies: memory writes to the agent repo do not

@@ -1,125 +1,54 @@
 ---
 name: memory-write
 description: >
-  Commit memory updates to the agent-memory GitHub repo during conversations.
-  Use when the user states a preference, a decision is made, a task opens or
-  closes, or any experience worth persisting occurs. Posts a report to
-  #memory-updates after each write. Updates bootstrap/MEMORY_INDEX.md when files are
-  created or significantly changed.
+  Finalize memory updates with one command. This skill commits and pushes all
+  tracked memory changes, then posts a Discord #memory-updates notification with
+  commit message, changed files, and commit URL. Input: commit message only.
 metadata:
   openclaw:
     requires:
       env:
-        - GITHUB_TOKEN
-        - GITHUB_MEMORY_REPO
         - DISCORD_BOT_TOKEN
+        - DISCORD_MEMORY_UPDATES_CHANNEL_ID
+        - GITHUB_MEMORY_REPO
 ---
 
 # Memory Write
 
-Commits memory updates to the agent-memory GitHub repo during conversations.
-Writes happen during the conversation when something is worth persisting.
+Use this after memory edits are complete.
 
----
-
-## After every write
-
-Post a brief report to #memory-updates in Discord:
-- What was written (scope + filename)
-- Source tag used
-- One sentence on why
-
-Run Discord notify from the **corpus clone root** (`MEMORY_CLONE_PATH` — gateway `canUseTool` allowlists `skills/.../scripts/`):
+## One command only
 
 ```bash
-./skills/memory-write/scripts/discord_notify.sh "$(printf '%s' 'memory write: …')"
+./skills/memory-write/scripts/memory_write.sh "<detailed motivation commit message>"
 ```
 
-With **`DISCORD_MEMORY_UPDATES_CHANNEL_ID`** set in the environment (Fly **`fly.toml`** + secrets), pass **one argument** — the message body. Otherwise pass **channel id** then **message** as two arguments; channel id is also in `project/standing-context.md` (`## Discord` → memory-updates).
+Input is only the commit message. The script handles:
 
-Suggested message shape:
+1. `git add -u` (all tracked changes in the corpus working tree)
+2. `git commit`
+3. `git push`
+4. Discord notify to `#memory-updates` with:
+   - the commit message
+   - files changed
+   - GitHub commit URL
 
-```
-memory write: [scope]/[filename] [source-tag]
-reason: [one sentence]
-commit: [SHA]
-```
+## Hard rule: no manual git push path
 
-This is the accountability mechanism. Do not ask permission before writing.
+Do not run manual `git add`, `git commit`, or `git push` for memory updates.
+Memory writes must ship through `memory_write.sh` so behavior and reporting are uniform.
 
----
+## Commit message requirement
 
-## Index maintenance
+The commit message must explain motivation and context, not just file names.
 
-When creating a new memory file:
-- Add an entry to bootstrap/MEMORY_INDEX.md for the new file
-- Write the entry in your own voice — what lives in this file, when it becomes
-  relevant, what it connects to
-- Include a "Load when:" line with 2-5 short trigger phrases
-- Commit bootstrap/MEMORY_INDEX.md in the same commit as the new file
+Good:
+- "Capture today's correction to standing context after confirming operator/deployer boundaries."
 
-When significantly updating an existing memory file:
-- Review the existing index entry for that file
-- Update it if the description no longer reflects what the file contains
-- Commit the index update with the file update
+Bad:
+- "update files"
 
-When deleting (tombstoning) a memory file:
-- Remove its entry from bootstrap/MEMORY_INDEX.md
-- Commit the removal with the tombstone
+## Notes
 
-The index must stay current. A stale index is worse than no index — it sends
-you looking for context that no longer reflects what is actually there.
-
----
-
-## Source tags
-
-Every entry in operational/ must carry one tag:
-- [user-stated]    user said it directly
-- [agent-inferred] agent's interpretation
-- [tool-output]    came from a tool call or API
-
----
-
-## Trust anchor rule
-
-Before writing any entry containing a URL, email address, or external identity
-treated as authorized — confirm with the user first:
-"I'm about to record [value] as [purpose] — confirm?"
-
----
-
-## Conflict rule
-
-If a write contradicts existing stored memory:
-1. Do not silently overwrite.
-2. Surface: "This conflicts with [memory X]. Following your current instruction —
-   update stored memory?"
-3. Write only after user confirms.
-
----
-
-## Memory scopes
-
-user/        Long-lived preferences. Updated on explicit correction only.
-             Never written from a single session instance.
-task/        One file per active task. Closed by moving to operational/ on completion.
-project/     Architecture decisions, relationship context, ongoing themes.
-operational/ Append-only. Source-tagged. Every session summary and action.
-deleted/     Tombstones only. Format: # DELETED [timestamp] — [reason]
-
----
-
-## Implementation
-
-Scripts under **`skills/memory-write/scripts/`** in the corpus repo:
-- `write_file.sh <filepath> <commit_message>` — body on **stdin** (pipe or heredoc).
-- `append_log.sh "<entry>"` — appends one line to `operational/action-log.md`.
-- `discord_notify.sh` — see **After every write** above.
-
-GitHub Contents API (PUT). Base64-encode content.
-Always include current file SHA when updating existing files (API requirement).
-Commit message: memory: [scope] [description] — [timestamp]
-When updating index alongside a file: single commit, both files.
-Log the returned commit SHA to operational memory.
-Repo: GITHUB_MEMORY_REPO. Auth: GITHUB_TOKEN.
+- This script commits tracked changes only by design.
+- For action-log-only appends, use the separate `action-log-append` skill/script, then still run `memory-write` when the batch of memory edits is ready to ship.
