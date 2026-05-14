@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Pre-commit hook: error if untracked files exist
+# Untracked files must be either staged, deleted, or added to .gitignore
+
+set -euo pipefail
+
+untracked=$(git ls-files --others --exclude-standard)
+
+if [ -n "$untracked" ]; then
+  echo "ERROR: Untracked files cannot be committed." >&2
+  echo "" >&2
+  echo "Untracked files:" >&2
+  echo "$untracked" | sed 's/^/  /' >&2
+  echo "" >&2
+  echo "Either:" >&2
+  echo "  1. Stage them with: git add <file>" >&2
+  echo "  2. Delete them if unwanted" >&2
+  echo "  3. Add them to .gitignore if they should be ignored" >&2
+  exit 1
+fi
+
+exit 0

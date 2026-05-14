@@ -3,3 +3,10 @@
 
 # Ephemeral Discord attachment staging on the gateway (never commit)
 .bodhi-discord-incoming/
+
+# Session-local context files
+bootstrap/ACTIVE_CONTEXT.md
+bootstrap/.ACTIVE_CONTEXT_backups/
+
+# Claude session directory
+.claude/

@@ -25,7 +25,7 @@ if ! git diff --quiet -- . ':!*.lock'; then
 fi
 
 # Tracked changes only (modified/deleted tracked files).
-git add -u
+git add .
 
 if git diff --cached --quiet; then
   echo "No tracked changes to commit." >&2
