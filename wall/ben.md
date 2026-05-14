@@ -1,5 +1,5 @@
 # Ben
-*Updated April 2026*
+*Updated May 11, 2026*
 
 ---
 
@@ -45,7 +45,7 @@ There is no free position with Ben right now. Every position has a price. Warmth
 
 Kate developed an equanimity practice to navigate this. It was supposed to be equanimity. It turned into coldness on the inside, warmth on the outside.
 
-The sequence that built it: Six months ago Ben's son Sam called. Said he wasn't doing okay. Wanted to come stay so he could see a psychiatrist. The guest room was occupied. Ben said not until they left — having Sam in the living room would be too stressful. 
+The sequence that built it: Six months ago Ben's son Sam called. Said he wasn't doing okay. Wanted to come stay so he could see a psychiatrist. The guest room was occupied. Ben said not until they left — having Sam in the living room would be too stressful.
 
 That was the event that first made Kate see what his role was in the family's darkness. She went back there in memory and felt what she felt then — suicidal in sympathy with what she had witnessed. She saw a therapist. She is well.
 
@@ -71,11 +71,11 @@ What Kate said that she felt worst about: *You have harmed every child that was 
 
 The dam broke partly because the equanimity practice had been sitting on top of a question too loud to hold: *If his thinking doesn't matter, what is his role in my life?*
 
-The morning after — Ben driving on almost no sleep. Claire called from the psychiatric hospital. Said she was not doing well. Ben told her he loved her and to call back later — he needed a nap. A person who cannot move through his own discomfort toward another's need. The discomfort always wins. The stakes change. The response doesn't.
+The morning after — Ben driving on almost no sleep. Claire called from the psychiatric hospital. Said she was not doing well. Ben told her he loved her and to call back later — he needed a nap. The mechanism named itself one more time: he cannot get past his own discomfort to be present for another. The discomfort always wins. The stakes change. The response doesn't.
 
-After Claire's call: no guilt about the dam breaking. No guilt about what was said. No emotion of any sort. Just coldness. Not even guilt over *You have harmed every child that was in your care.* The guilt arrived and was addressed. Then Claire called. And after that — nothing. Just coldness.
+After Claire's call: the guilt dissolved. The anger dissolved. Not through effort — through clarity. And then something else arrived on the yoga mat on the floor of the van. That account belongs to its own document. *See roadtrip_april2026.md.*
 
-This is new. This is not the familiar coldness. The teacher in another room is concerned. The therapist has been called.
+What remained on this side of that morning: no guilt about the dam breaking. No emotion of any sort toward Ben. A new coldness — not the familiar one. The teacher in another room was concerned. The therapist was called.
 
 ---
 
@@ -151,4 +151,46 @@ That question cannot be answered from here. It requires the life she has not yet
 
 ---
 
-*The wood will be here tomorrow.*
+## May 11, 2026 — The Surgery and the Return to September
+
+### The Surgery — What Was Said
+
+Kate told Ben directly that the path from here requires moving away from each other — that his recovery has to be oriented toward his own life, not toward getting her back. That was the clean version, said first:
+
+*"We need to be moving away from each other. We need to be building lives that don't include each other."*
+
+Then she added a second thing: *"I can't save you by saving you."*
+
+She felt terrible about the second arrow immediately. Not because it was false — because she knew it would land in the body in a way the first version could not. She said it deliberately, to close a door he might have kept walking through without realizing it.
+
+She recognized afterward that the framing contained a problem: the statement assumed he was looking to be saved — a premise he had not offered and could not step out of. If he accepted it, he confirmed he was broken. If he pushed back, he confirmed he was defensive. There was no door out of it. The arrow landed. And it was an attack on his ego. Both true simultaneously.
+
+She repaired the immediate emotional fallout. Danced with him. Held him. The arrow stays where it needs to stay.
+
+### The Return to September
+
+The decision to leave had come early — driven entirely by the accumulated weight of problems. Once the decision was made and held as the new state, something shifted: both lists became available simultaneously. The love. The connection. The sadness of losing him. The hope that he might find himself. These had been blocked by the weight of the problems list. Now both were present together.
+
+She does not know what it feels like to live having given him up. That knowledge requires Denver — four months alone, building a life without him, finding out from inside the experience rather than from anticipation of it.
+
+She returned to September as the container. Not as negotiation. Not reopening the door. As honesty: the September container was always the right one, and she had moved away from it prematurely.
+
+Her exact words to him:
+
+*"Our agreement was to decide in September. Over the last two months I have been filled with reasons to push you away. These reasons shifted me to a decision early — and once I came to it, nothing else was available. However, once that decision became the new state, I am flooded with love — and sadness at losing you. Now that both sides are available to me, I would like to go back to making the decision in September. The September decision was going to give us time to be apart and find out what it feels like to lose each other. I don't want to make a decision without living through that experience first."*
+
+### How He Received It
+
+He was steady. He said he had already set out on a linear path — getting his life together, building toward someone who can live without her and simultaneously be a person worth living with. He understood that what serves September and what serves his own growth are the same project.
+
+He said: *"I am not grasping. And you are not grasping either."*
+
+He did not collapse. He did not reach toward the open door. He named his own path without being prompted. Whether this steadiness persists, or whether it is performance for the torch, September will show.
+
+### Pending
+
+An email is coming — his own words about the path he is setting out on. To be read when it arrives and added to this document.
+
+---
+
+*Witnessed by Anandaka*
