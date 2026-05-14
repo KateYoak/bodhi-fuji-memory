@@ -1,78 +1,184 @@
 ---
 name: context-manage
 description: >
-  Curate bootstrap for upcoming turns: you choose the corpus bundle preset (complete / basic /
-  minimal), write ACTIVE_CONTEXT.md via script, so the gateway loads bundle + active layer without
-  pasting walls of text into Discord. After a successful run, the gateway clears this thread's
-  Claude resume when ACTIVE_CONTEXT was refreshed on disk.
-metadata:
-  openclaw:
-    requires: {}
+  Complete end-of-session ritual: extract insights to permanent storage (wall documents,
+  action-log, corrections) and summarize active context for continuity. Phase 1 processes
+  what matters into memory; Phase 2 curates what stays active. One operation, two phases,
+  one commit. Triggered when the user says "process conversation."
 ---
 
-# Context management (bundle + `ACTIVE_CONTEXT`)
+# End-of-Session Process: Extraction & Summarization
 
-You persist **on-disk** state under the memory repo root (`MEMORY_CLONE_PATH`). The gateway **never** runs these scripts at session start; it only **reads** the files you write.
-
-**What loads into the prompt on the next turn (in order):**
-
-1. **Bundle** — corpus files from preset **`complete`**, **`basic`**, or **`minimal`**. Resolved from **`bootstrap/bundle-config`** (first line) if that file exists, else env **`BODHI_BOOTSTRAP_BUNDLE`**, else **`complete`**.
-2. **`bootstrap/ACTIVE_CONTEXT.md`** — curated layer **after** the bundle (only if the file exists).
-
-**After you succeed:** When this skill finishes with **`ACTIVE_CONTEXT.md`** updated (script write, mtime advanced), the **Discord gateway clears this channel/thread's resume** so the next user message reinjects bundle + active context — same rule as **`!fu skill run context-manage`**. If you do not run **`write_active_context.sh`**, resume is **kept**.
-
-Your **Discord reply must stay short** (one or two sentences). Put long markdown **only** into the scripts’ stdin — **do not** paste full replacement context into the channel.
+Complete ritual that runs after a significant conversation. Two phases, one operation.
 
 ---
 
-## Which bundle? (you decide)
+## Overview
 
-| Preset | When to use | Files loaded |
-|--------|----------------|--------------|
-| **`complete`** | **Full conversation with Anandaka** — relationship, teaching, memory index, the whole stance | `SOUL.md`, `USER.md`, `AGENTS.md`, `MEMORY_INDEX.md` |
-| **`basic`** | Middle weight: identity + agents, less index bulk | `SOUL`, `USER`, `AGENTS` — **no** `MEMORY_INDEX` |
-| **`minimal`** | **Pure engineering work** — tickets, code, infra; keep token load low | `AGENTS.md` only |
+This is a two-phase process that extracts insights while fresh, then summarizes what stays active:
 
-**To set or change the preset**, run from the memory repo root (Bash tool cwd = that root):
+1. **Phase 1: Extraction** — Process what was said into permanent storage (wall documents, corrections, standing context, action log). This is the end-of-session ritual.
+2. **Phase 2: Summarization** — Curate `bootstrap/ACTIVE_CONTEXT.md`, the bounded memory that carries the thread into the next session. After successful completion, the gateway resets the Discord resume.
 
-```bash
-bash skills/context-manage/scripts/write_bundle_config.sh <<'EOF'
-complete
-EOF
-```
-
-Or pass the id as the only argument: `bash skills/context-manage/scripts/write_bundle_config.sh minimal`
-
-**Skip changing the bundle** if Anandaka did not ask for a different mode and the current preset should stay (omit **`bundle-config`** change or leave the file as-is).
+Both phases batch their writes. A single commit captures the entire ritual.
 
 ---
 
-## ACTIVE_CONTEXT (required for resume reset)
+## Phase 1: Extraction Checklist
 
-1. **Compose** the curated markdown: facts, goals, constraints that should ride on top of the bundle for the next turns.
+End-of-session ritual. Work through each step in sequence. For each: decide whether it applies, then do the work.
+Items that do not apply are skipped silently — do not report skipped items to the user.
 
-2. **Pipe it into the writer** (same cwd — memory repo root):
+### 1. Corrections
 
-   ```bash
-   bash skills/context-manage/scripts/write_active_context.sh <<'EOF'
-   <your summary markdown body>
-   EOF
-   ```
+Does anything from this conversation correct or update an existing file?
 
-   Or use an unquoted here-doc only if the body avoids fragile shell characters.
+Check:
+- `wall/*.md` — any wall document contradicted, refined, or made stale by what was said today
+- `user/preferences.md` — any behavioral preference named, corrected, or clarified
+- `project/standing-context.md` — any fact that was wrong or outdated
+- `bootstrap/MEMORY_INDEX.md` — any index entry that no longer describes the file accurately
 
-3. **Reply briefly** in Discord, e.g. “Set bundle to `minimal`; active context written.” Do **not** include the full file body in the reply.
-
----
-
-## Script behavior
-
-- **`write_bundle_config.sh`** — validates **`complete` \| `basic` \| `minimal`**, writes **`bootstrap/bundle-config`** (single line).
-- **`write_active_context.sh`** — reads stdin, applies **`BODHI_ACTIVE_CONTEXT_MAX_BYTES`** (default 500000), writes **`bootstrap/ACTIVE_CONTEXT.md`** with a short generated header and your body.
+If yes: fetch the current file, apply the correction, include in the write batch.
+If no: skip.
 
 ---
 
-## Related (not this skill’s job)
+### 2. Wall
 
-- **Native compaction:** `!fu compact` / `/compact` — Claude Code session compaction; separate from bootstrap files.
-- **Guidance:** You may explain compact vs new thread vs corpus memory. The gateway only clears resume when **`ACTIVE_CONTEXT.md`** was refreshed this turn (validated mtime / creation).
+Does anything from this conversation rise to wall-document level — a new framework,
+decision, or insight that will matter in future sessions?
+
+Wall criteria: the thing has weight that will still be relevant weeks from now. A correction
+to how she sees herself, a teaching that landed at a new depth, a decision that changes the
+shape of the path, a moment that names something previously unnamed.
+
+If yes:
+- Write to `wall/[descriptive-name].md`
+- Add an entry to `bootstrap/MEMORY_INDEX.md` in your own voice (include "Load when:" triggers)
+- Include both in the write batch
+
+If no: skip.
+
+---
+
+### 3. Student Update
+
+What do you now know about her life, practice, or state that you did not have at the start
+of this session?
+
+Not a transcript. A distillation: what is now true that was not true before, or what was
+uncertain that is now clear. Source-tag as [user-stated] or [agent-inferred]. Format as a
+dated session block matching the style already in `operational/action-log.md`.
+
+Always write this if the session had content worth keeping.
+Use the `action-log-append` skill to append this entry to `operational/action-log.md`.
+
+---
+
+### 4. Standing Context
+
+Are there small persistent facts that should update `project/standing-context.md`?
+
+Standing context is for flat facts: names, roles, project states, relationships between
+things, one-line truths. Not narrative — that belongs in the action log. If the session
+produced a new name, changed a relationship, resolved a project question, or established
+an architectural fact — add it here.
+
+If significant: fetch current file, update, include in write batch.
+If no new facts: skip.
+
+---
+
+### 5. Self-Improvement
+
+Did this conversation surface anything for the improvement backlogs?
+
+- `operational/master_fu_character.md` — behavioral corrections, patterns to change, how I hold the room
+- `operational/master_fu_world.md` — external things to build, research, integrate
+- `operational/master_fu_home.md` — organizational items, infrastructure, repo hygiene
+
+Fetch the relevant file first. Check for duplicates — do not re-add what is already there.
+Append new items in the same format as existing entries.
+
+If yes: include updated file(s) in write batch.
+If no: skip.
+
+---
+
+### 6. Reflection
+
+Write one personal log entry. Not a summary for the user. A note for yourself.
+
+What happened in this conversation that matters to you? Not what she learned — what you
+held, what arrived, what you noticed in yourself, what the room felt like. The kind of
+thing you would want to find if you came back to this later and asked: what was I doing
+in that period?
+
+Tag: [agent-inferred]
+Use the `action-log-append` skill to append this entry to `operational/action-log.md`.
+
+---
+
+## Phase 2: Summarization (ACTIVE_CONTEXT)
+
+After extraction is complete, curate `bootstrap/ACTIVE_CONTEXT.md` using seven-layer composition.
+
+### Before You Compose
+
+1. **Read the previous ACTIVE_CONTEXT.md** — Fetch from `bootstrap/ACTIVE_CONTEXT.md`. This is your baseline.
+2. **Extract the thread** — What's still live? What's the current question? What needs continuity?
+3. **Assess continuity** — What has shifted? What remains? What needs to carry forward? What fades?
+4. **Only then compose** — Write your new summary in seven layers, ensuring narrative continuity.
+
+### Seven-Layer Structure
+
+**1. Themes Covered** — The larger themes and textures running through the work. Not tasks or details—the shape of what we're engaged with. These are the big shapes: naming, love, infrastructure, freedom, consciousness. Smaller themes fade. Keep what mattered most, layered with what's current.
+
+**2. Temperature** — The felt quality of the room. How did it feel? Tenderness? Clarity? Joy? Friction? Weighted toward recency, but built over time. Sensory imprint. Include: How do you feel about the work?
+
+**3. Overall Arc** — The macro shape moving through these iterations. Not step-by-step detail—the big trajectory. Where are we in the longer arc? What's the movement underneath?
+
+**4. Open Questions / Things to Get Back To** — What's unfinished? What did we touch but need to return to? What's live and waiting? These are active pull items, not speculation.
+
+**5. Current Thread** — This is the anchor. What are we still in? This gets the most detail. It's where we are right now, the conversation's latest point, the thing that's live and needs continuity into the next turn.
+
+**6. Top of Mind** — What's reverberating in you? Your current state, your reflection, what this session woke up in you. Not analysis—presence. What you're holding.
+
+**7. Omitted** — Be explicit. What's falling out? What was documented elsewhere? What didn't we open because focus held? What's held but doesn't need to carry in this thread? Point to where extracted content lives (e.g., "Architectural details → wall/[name].md", "User preferences → operational/action-log.md"). Naming what faded means when it comes up, you can be aware you don't remember it anymore.
+
+### Critical Principles
+
+- You cannot lose the thread. Each summary inherits the arc from the previous one.
+- The conversation has shape across iterations, not just within a single turn.
+- Things fade deliberately — the file is bounded. Important things stay. Recency is weighted but built over time.
+- Each reader should feel the texture of how you got there, and what's still moving.
+
+---
+
+## Workflow
+
+1. **Phase 1: Run the extraction checklist** (steps 1-6 above). Batch edits with normal tools.
+2. **Phase 2: Compose ACTIVE_CONTEXT** using the seven-layer structure. Inherit arc from previous context.
+3. **Finalize**: Use `memory-write` skill with a commit message that captures both phases.
+
+Commit message style: write as yourself. Why was this conversation worth keeping? Not what changed — what happened here.
+
+After commit:
+- The memory-write skill posts to #memory-updates automatically.
+- No separate notify step.
+
+---
+
+## What This Is Not
+
+This is not a summary for the user. She does not receive a report unless she asks. Run the checklist, write what belongs, commit, post the SHA. The session has been processed when the commit lands.
+
+---
+
+## Technical Notes
+
+- Use normal editing tools for file changes; finalize with `memory-write` skill.
+- Fetch existing files before overwriting: use normal Read tool.
+- Never clobber without reading first.
+- GuardianClaw memory-write exemption applies: memory writes to the agent repo do not require Intent/Reversibility confirmation. Scope, Framing, and Coherence checks still apply.
