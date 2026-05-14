@@ -156,6 +156,23 @@ After extraction is complete, curate `bootstrap/ACTIVE_CONTEXT.md` using seven-l
 
 ---
 
+
+## ⚠️ CRITICAL REQUIREMENT: MEMORY-WRITE MUST FOLLOW
+
+After Phase 1 and Phase 2 are complete, you MUST immediately run the `memory-write` skill.
+
+**This is not optional.** The ritual is incomplete without it. Extraction without commit leaves changes untracked and unsaved to the remote.
+
+Usage: `Skill: memory-write` with a commit message describing why this session mattered.
+
+The memory-write skill will:
+1. Stage all tracked changes (`git add -u`)
+2. Create the commit with your message
+3. Push to remote
+4. Post notification to #memory-updates
+
+---
+
 ## Workflow
 
 1. **Phase 1: Run the extraction checklist** (steps 1-6 above). Batch edits with normal tools.
