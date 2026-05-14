@@ -1,7 +1,8 @@
 ---
 name: model-switch
 description: >
-  Switch which Claude model the gateway uses for this deployment (next message onward).
+  Switch which Claude model the gateway uses for this deployment (next message onward),
+  or **report** current default + runtime override without calling the model.
   Use when the operator or user asks for a cheaper tier (haiku), stronger reasoning (opus),
   or to return to the default (reset). Does not touch GitHub.
 metadata:
@@ -9,6 +10,9 @@ metadata:
     requires:
       env:
         - BODHI_RUNTIME_MODEL_PATH
+bodhi:
+  forceBypassModel: true
+  forceBypassEntry: scripts/set_model.sh
 ---
 
 # Model switch
@@ -25,12 +29,14 @@ Run **exactly** this script from the **corpus clone root** (path matches gateway
 ./skills/model-switch/scripts/set_model.sh sonnet
 ./skills/model-switch/scripts/set_model.sh opus
 ./skills/model-switch/scripts/set_model.sh reset
+./skills/model-switch/scripts/set_model.sh report
 ```
 
 - **haiku** → `claude-haiku-4-5`
 - **sonnet** → `claude-sonnet-4-6`
 - **opus** → `claude-opus-4-7`
 - **reset** → remove override; gateway falls back to `BODHI_MODEL` (Fly secret) or SDK default
+- **report** → print `BODHI_MODEL` and whether `BODHI_RUNTIME_MODEL_PATH` override file is set (no write; `BODHI_RUNTIME_MODEL_PATH` optional for this alias only)
 
 After switching, say which alias you applied and that it applies from the **next** reply.
 

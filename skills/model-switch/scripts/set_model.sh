@@ -1,11 +1,22 @@
 #!/usr/bin/env bash
 # Writes a gateway allowlisted model id for the next Agent SDK turns.
-# Usage: set_model.sh haiku|sonnet|opus|reset
+# Usage: set_model.sh haiku|sonnet|opus|reset|report
 
 set -euo pipefail
 
+alias="${1:?usage: set_model.sh haiku|sonnet|opus|reset|report}"
+
+if [[ "$alias" == "report" ]]; then
+  echo "Default model (BODHI_MODEL): ${BODHI_MODEL:-unset}"
+  if [[ -n "${BODHI_RUNTIME_MODEL_PATH:-}" && -f "${BODHI_RUNTIME_MODEL_PATH}" ]]; then
+    echo "Runtime override (${BODHI_RUNTIME_MODEL_PATH}): $(tr -d '\r\n' < "${BODHI_RUNTIME_MODEL_PATH}")"
+  else
+    echo "Runtime override: none"
+  fi
+  exit 0
+fi
+
 PATH_FILE="${BODHI_RUNTIME_MODEL_PATH:?BODHI_RUNTIME_MODEL_PATH not set}"
-alias="${1:?usage: set_model.sh haiku|sonnet|opus|reset}"
 
 case "$alias" in
   haiku) model="claude-haiku-4-5" ;;

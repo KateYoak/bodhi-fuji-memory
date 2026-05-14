@@ -6,6 +6,9 @@ description: >
   (e.g. Fly). During a Discord turn the gateway sets BODHI_DISCORD_POST_CHANNEL_ID
   so you can omit the channel id. If the gateway has INTERNAL_QUERY_TOKEN set, pass
   the same value into the skill env (subprocess inherits it on Fly).
+bodhi:
+  forceBypassModel: true
+  forceBypassEntry: scripts/post_to_chat.sh
 ---
 
 # Discord say (intentional chat post)
