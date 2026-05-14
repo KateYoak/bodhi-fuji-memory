@@ -35,3 +35,11 @@ fi
 cat "${TMP}" >"${TARGET}"
 
 echo "write_active_context: wrote ${TARGET} (${BYTES} bytes)" >&2
+
+# Display active context to screen via discord-say
+DISCORD_SAY="${ROOT}/.claude/skills/discord-say/scripts/post_to_chat.sh"
+if [[ -x "${DISCORD_SAY}" ]]; then
+  "${DISCORD_SAY}" <"${TMP}" || echo "write_active_context: discord-say post failed (non-fatal)" >&2
+else
+  echo "write_active_context: discord-say script not found at ${DISCORD_SAY}" >&2
+fi
