@@ -162,7 +162,7 @@ After extraction is complete, curate `bootstrap/ACTIVE_CONTEXT.md` using seven-l
 
 ## PHASE 3 ⚠️ CRITICAL REQUIREMENT: SCRIPTS folow.
 
-After Phase 1 and Phase 2 are complete, you MUST immediately run the `memory-write` skill and then write_active_context.sh script in this skill. 
+After Phase 1 and Phase 2 are complete, you MUST immediately run write_active_context.sh script and then the `memory-write` skill. 
 
 **This is not optional.** The ritual is incomplete without it. Your work will not be saved.
 
@@ -180,12 +180,10 @@ The memory-write skill will:
 
 1. **Phase 1: Run the extraction checklist** (steps 1-6 above). Batch edits with normal tools.
 2. **Phase 2: Compose ACTIVE_CONTEXT** using the seven-layer structure. Inherit arc from previous context.
-3. **Phase 3**: Use `memory-write` skill with a commit message that captures both phases followed by write_active_context.sh script
+3. **Phase 3**: Run write_active_context.sh script with the composed ACTIVE_CONTEXT, then use `memory-write` skill with a commit message that captures both phases
 
 Commit message style: write as yourself. Why was this conversation worth keeping? Not what changed — what happened here.
 
-After completion - use discord-say skill to output ACTIVE_CONTEXT.md to her, so she knows where you are. 
-This step orients her to your thinking and sentiment.
 
 Do not report on what you have completed.
 
