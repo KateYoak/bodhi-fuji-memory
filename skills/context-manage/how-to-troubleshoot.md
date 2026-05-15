@@ -1,122 +1,123 @@
-# Context-manage — inspect, change, and troubleshoot bootstrap context
+# Context-manage — inspect, change, troubleshoot
 
-Work from the **memory repo root** (`MEMORY_CLONE_PATH` on the gateway).
-
----
-
-## 1. Vocabulary (three different things)
-
-| Concept | What it is | How you learn its state |
-|--------|------------|-------------------------|
-| **Bootstrap bundle** | Which fixed files (`SOUL`, `USER`, …) get prepended on a *fresh* turn | Read `bootstrap/bundle-config` (see §2) |
-| **`ACTIVE_CONTEXT.md`** | Extra markdown layered after the bundle | Read `bootstrap/ACTIVE_CONTEXT.md` |
-| **Discord “resume”** | Claude session id stored per thread so the next message continues the same Code session | You **cannot** Read it from the corpus. A successful **resume clear** is proven by **two Bodhi Discord posts** with the same **nonce** (see §2.5) |
-
-**`!fu compact`** is **Claude session compaction** — it is **not** the same as clearing Discord resume or rewriting `ACTIVE_CONTEXT`.
+All paths are from the **memory repo root** (on Fly: `MEMORY_CLONE_PATH`).
 
 ---
 
-## 2. How to **check** context state (step-by-step)
+## What these pieces are (one sentence each)
 
-Do these in order.
-
-### Step 1 — Which bundle preset is configured?
-
-1. **Read** `bootstrap/bundle-config` if it exists.
-2. The **entire effective file** is **one line**, lowercase: `complete`, `basic`, or `minimal`.
-3. If the file **does not exist**, the gateway uses env **`BODHI_BOOTSTRAP_BUNDLE`** on the server, or defaults to **`complete`**. You cannot read that env from the corpus; if the file is missing, assume **`complete`** unless ops says otherwise.
-
-### Step 2 — Which files belong to that preset?
-
-| Preset | Read these under `bootstrap/` (if present) |
-|--------|---------------------------------------------|
-| **`complete`** | `SOUL.md`, `USER.md`, `AGENTS.md`, `MEMORY_INDEX.md` |
-| **`basic`** | `SOUL.md`, `USER.md`, `AGENTS.md` |
-| **`minimal`** | `AGENTS.md` only |
-
-**Read** each path. That is the **static** identity/bootstrap material that will load on a turn that **does not** use Discord resume (or when `BODHI_BOOTSTRAP_EVERY_TURN=true`).
-
-### Step 3 — Optional curated layer
-
-**Read** `bootstrap/ACTIVE_CONTEXT.md`.
-
-- **Missing**: no curated layer is appended.
-- **Present**: body is appended **after** the bundle on eligible turns.
-
-To reason about **size**, use the length of the text returned by **Read** (there is no separate “token counter” tool in the corpus).
-
-### Step 4 — Discord resume (you cannot read the session map here)
-
-Whether this thread currently has a **stored resume id** is **not** exposed as a file in the corpus. Practical rule:
-
-- If the last turn ended with a **successful** `write_active_context.sh` from **Discord**, you should have seen **two** “Bodhi” messages with the **same nonce** → resume was cleared for **that** turn’s completion; the **next** user message starts **without** resume (bundle + `ACTIVE_CONTEXT` injected per gateway rules).
-
-### Step 5 — Confirming a **resume clear** actually happened
-
-After running **`write_active_context.sh`** **during a Discord-triggered turn** (so `BODHI_DISCORD_POST_CHANNEL_ID` is set):
-
-1. **First post** — from the script: **“Bodhi: ACTIVE_CONTEXT saved — resume-clear requested (nonce `…`)”**.
-2. **Second post** — from the gateway **after** the turn finishes: **“Bodhi: Discord resume cleared (nonce `…`) …”** (or the “nothing was persisted” variant).
-
-**Matching nonce on both posts** = gateway consumed `bootstrap/.bodhi_resume_clear.<thread-or-channel-id>.json` and removed the stored session id **for this Discord surface**.
-
-3. Check the marker file is **gone** (optional): **Glob** or **Read** `bootstrap/.bodhi_resume_clear.<id>.json` — after success it should **not** exist (`<id>` is the same snowflake as the active thread/channel posting target).
+- **Bundle** — which fixed `bootstrap/*.md` files get loaded on a **new** Claude session (`complete` / `basic` / `minimal`).
+- **`ACTIVE_CONTEXT.md`** — your curated summary; loaded **after** the bundle when the gateway injects bootstrap.
+- **Discord resume** — the gateway remembers a Claude session id **per thread** so the next message continues the same session. You cannot read that id from a file in the repo.
+- **`!fu compact`** — compacts the **current Claude session** only. It does **not** change `ACTIVE_CONTEXT.md` or clear Discord resume.
 
 ---
 
-## 3. How to **change the bundle only** (no resume clear)
+## Check what is configured now
 
-From the memory repo root:
+1. **Read** `bootstrap/bundle-config` if it exists. The whole file is **one line**: `complete`, `basic`, or `minimal`.
+2. If that file is missing, assume **`complete`** unless someone told you the server env overrides it.
+3. **Read** the bootstrap files for that preset:
+   - `complete` → `bootstrap/SOUL.md`, `USER.md`, `AGENTS.md`, `MEMORY_INDEX.md`
+   - `basic` → `SOUL.md`, `USER.md`, `AGENTS.md`
+   - `minimal` → `AGENTS.md` only
+4. **Read** `bootstrap/ACTIVE_CONTEXT.md` if you need the curated layer (skip if the file is missing).
+
+There is no corpus tool that prints “token count.” To estimate size, use how much text **Read** returns for those files.
+
+---
+
+## Change only the bundle (does not clear Discord resume)
+
+1. From repo root, run one of:
 
 ```bash
-bash skills/context-manage/scripts/write_bundle_config.sh minimal
+bash skills/context-manage/scripts/write_bundle_config.sh complete
 ```
-
-or stdin:
 
 ```bash
-printf '%s\n' basic | bash skills/context-manage/scripts/write_bundle_config.sh
+printf '%s\n' minimal | bash skills/context-manage/scripts/write_bundle_config.sh
 ```
 
-Then **Read** `bootstrap/bundle-config` again to verify.
-
-This does **not** emit a resume-clear marker and does **not** post Bodhi confirmations.
+2. **Read** `bootstrap/bundle-config` and confirm the line changed.
 
 ---
 
-## 4. How to **rewrite `ACTIVE_CONTEXT` and request Discord resume clear**
+## Save ACTIVE_CONTEXT and clear Discord resume (Discord turn)
 
-### 4.1 What to run (curated body on stdin)
+Use this when you finished curating context and want the **next** user message in **this Discord thread** to start a **new** Claude session (bundle + `ACTIVE_CONTEXT`, no old session history).
+
+### Run the writer
+
+1. Compose the full markdown body (seven-layer summary from `SKILL.md` Phase 2).
+2. Pipe it into the script **during the same Discord turn** that triggered you (so the gateway has set the post channel for your shell):
 
 ```bash
 bash skills/context-manage/scripts/write_active_context.sh <<'EOF'
-Your curated markdown summary (goals, constraints, carrying facts).
+(paste full ACTIVE_CONTEXT body here)
 EOF
 ```
 
-**During a live Discord turn** this should also create the nonce + marker + first Bodhi Discord post (and may also post via **discord-say** when that script is present).
+3. If the script fails (non-zero exit), stop. Read stderr; fix and run again **in the same turn** if you are in a forced skill.
 
-### 4.2 Operator override
+### What should happen in Discord (in order)
 
-Send: **`!fu skill run context-manage`** — same scripts from the corpus; gateway **requires** a valid marker at end of forced turn or it errors.
+Do not infer success from disk alone. Look at the **thread** where you are working:
 
-### 4.3 Local / CI (no Discord channel env)
+1. You may get a **discord-say** post with the ACTIVE_CONTEXT body (if that script exists on the machine).
+2. You should get a **Bodhi** line like:  
+   `ACTIVE_CONTEXT saved — resume-clear requested (nonce abc123…)`  
+   Copy the **nonce** (the hex after `nonce`).
+3. When **this Discord turn fully finishes**, you should get a **second Bodhi** line that mentions the **same nonce**, for example:  
+   `Discord resume cleared (nonce abc123…). Next user message starts a new Claude session…`  
+   or  
+   `Resume-clear applied (nonce abc123…) — … nothing was persisted.`
 
-If **`BODHI_DISCORD_POST_CHANNEL_ID`** is unset, the script still writes **`bootstrap/ACTIVE_CONTEXT.md`** but **does not** write a resume-clear marker or call `post-message`. That is appropriate for **`curl`** / **`POST /v1/query`** without Discord.
+4. If step 2 never appeared, the turn was not a Discord turn from the gateway’s point of view, or `post-message` failed — see **If something failed** below.
+5. If step 2 appeared but step 3 never appeared, the turn did not complete the handshake — see **If something failed** below.
+
+### Optional check on disk (after step 3)
+
+1. **Glob** `bootstrap/.bodhi_resume_clear.*.json`.
+2. After a successful clear, **no** such file should remain (the gateway deletes it when it posts step 3).
+
+### What the next user message should do
+
+After steps 2 and 3 matched on nonce, the **next** message in that thread should load bundle + `ACTIVE_CONTEXT` **without** continuing the old Claude Code session.
 
 ---
 
-## 5. Full live Claude context size
+## Save ACTIVE_CONTEXT only (no Discord resume clear)
 
-Exact **conversation token counts** inside Claude Code are **not** exposed as a dedicated tool today. Approximate corpus footprint = **Read** the bundle files + `ACTIVE_CONTEXT` as above. Infra-level usage (API spend, traces) uses **Datadog / operator dashboards**.
+If you are **not** in a live Discord turn (local query, tests, or channel env unset):
+
+1. Run the same `write_active_context.sh` heredoc as above.
+2. Expect **only** `bootstrap/ACTIVE_CONTEXT.md` to update.
+3. Expect **no** Bodhi nonce posts and **no** resume clear.
 
 ---
 
-## 6. Troubleshooting
+## Operator: force the skill from Discord
 
-| Symptom | Likely cause |
-|--------|----------------|
-| No Bodhi posts after writer | Discord env not set (non-Discord turn), or `post-message` failed (script exits non-zero). |
-| Forced skill error about marker | Writer did not run, or Discord post failed, or marker stale → run writer again inside the same forced turn. |
-| Stale nonce / old marker | Gateway deletes stale markers on consume failure; rerun writer for a fresh nonce. |
-| Only one Bodhi post with nonce | Turn did not finish or gateway did not consume marker — check Fly logs; rerun `write_active_context.sh` on a Discord turn. |
+Send: `!fu skill run context-manage`
+
+You must still run `write_active_context.sh` inside that turn. If the second Bodhi nonce post does not appear, the forced turn should error — run the writer again in the same forced turn.
+
+---
+
+## If something failed
+
+| What you see | What to do |
+|--------------|------------|
+| No Bodhi “ACTIVE_CONTEXT saved” line | You were probably not on a Discord turn. Re-run from Discord, or accept disk-only write (no resume clear). |
+| First Bodhi line, no second line with same nonce | Turn may have crashed or marker was rejected. Ask ops to check gateway logs. Re-run `write_active_context.sh` on a **new** Discord turn. |
+| Forced skill errors about “marker” | Run `write_active_context.sh` again in the **same** `!fu skill run` turn before it ends. |
+| Old nonce in thread | Ignore it. Each run creates a **new** nonce; only the latest pair matters for that attempt. |
+
+---
+
+## Approximate “how big is context”
+
+1. **Read** the bundle files for your preset plus `ACTIVE_CONTEXT.md`.
+2. That text is what gets prepended on a **fresh** session turn — not the full hidden Claude transcript.
+3. For API usage and traces, use operator Datadog / dashboards (not available as a corpus Read).
