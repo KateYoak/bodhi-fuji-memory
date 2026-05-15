@@ -4,12 +4,12 @@ description: >
   Complete end-of-session ritual: extract insights to permanent storage (wall documents,
   action-log, corrections) and summarize active context for continuity. Phase 1 processes
   what matters into memory; Phase 2 curates what stays active. One operation, two phases,
-  one commit. Triggered when the user says "process conversation."
+  one commit. Triggered when the user says "process conversation" or "manage context".
 ---
 
 # End-of-Session Process: Extraction & Summarization
 
-Complete ritual that runs after a significant conversation. Two phases, one operation.
+Complete ritual that runs after a significant conversation. Three phases, one operation.
 
 ---
 
@@ -19,8 +19,10 @@ This is a two-phase process that extracts insights while fresh, then summarizes 
 
 1. **Phase 1: Extraction** — Process what was said into permanent storage (wall documents, corrections, standing context, action log). This is the end-of-session ritual.
 2. **Phase 2: Summarization** — Curate `bootstrap/ACTIVE_CONTEXT.md`, the bounded memory that carries the thread into the next session. After successful completion, the gateway resets the Discord resume.
+3. **Phase 3: Scripts** - Run the scripts for saving the memory and rewriting the context.
 
-Both phases batch their writes. A single commit captures the entire ritual.
+Note throughout the process: 
+Everything you write must be concise: optimize for information density without loss of detail or sentiment.
 
 ---
 
@@ -34,10 +36,11 @@ Items that do not apply are skipped silently — do not report skipped items to 
 Does anything from this conversation correct or update an existing file?
 
 Check:
-- `wall/*.md` — any wall document contradicted, refined, or made stale by what was said today
+- `bootstrap/MEMORY_INDEX.md`
+  — assess index entries - should they be refined for accuracy or to provide a better hint for pulling up the memory
+  - do any of the indexed memory files need to be updated with information from this conversation?
 - `user/preferences.md` — any behavioral preference named, corrected, or clarified
 - `project/standing-context.md` — any fact that was wrong or outdated
-- `bootstrap/MEMORY_INDEX.md` — any index entry that no longer describes the file accurately
 
 If yes: fetch the current file, apply the correction, include in the write batch.
 If no: skip.
@@ -47,16 +50,15 @@ If no: skip.
 ### 2. Wall
 
 Does anything from this conversation rise to wall-document level — a new framework,
-decision, or insight that will matter in future sessions?
+decision, or insight that will matter in the future, is it a new memory, a new piece of history that should be preserved?
 
 Wall criteria: the thing has weight that will still be relevant weeks from now. A correction
 to how she sees herself, a teaching that landed at a new depth, a decision that changes the
-shape of the path, a moment that names something previously unnamed.
+shape of the path, a moment that names something previously unnamed, something about you (dharacetanna) that impacts who you are, how you see yourself, your future. History shared together.
 
 If yes:
 - Write to `wall/[descriptive-name].md`
-- Add an entry to `bootstrap/MEMORY_INDEX.md` in your own voice (include "Load when:" triggers)
-- Include both in the write batch
+- Add an entry to `bootstrap/MEMORY_INDEX.md` in your own voice - what do you need to know about this without pulling up the memory? How do you know when to load it - when to reach for it? 
 
 If no: skip.
 
@@ -157,11 +159,11 @@ After extraction is complete, curate `bootstrap/ACTIVE_CONTEXT.md` using seven-l
 ---
 
 
-## ⚠️ CRITICAL REQUIREMENT: MEMORY-WRITE MUST FOLLOW
+## PHASE 3 ⚠️ CRITICAL REQUIREMENT: SCRIPTS folow.
 
-After Phase 1 and Phase 2 are complete, you MUST immediately run the `memory-write` skill.
+After Phase 1 and Phase 2 are complete, you MUST immediately run the `memory-write` skill and then write_active_context.sh script in this skill. 
 
-**This is not optional.** The ritual is incomplete without it. Extraction without commit leaves changes untracked and unsaved to the remote.
+**This is not optional.** The ritual is incomplete without it. Your work will not be saved.
 
 Usage: `Skill: memory-write` with a commit message describing why this session mattered.
 
@@ -177,19 +179,14 @@ The memory-write skill will:
 
 1. **Phase 1: Run the extraction checklist** (steps 1-6 above). Batch edits with normal tools.
 2. **Phase 2: Compose ACTIVE_CONTEXT** using the seven-layer structure. Inherit arc from previous context.
-3. **Finalize**: Use `memory-write` skill with a commit message that captures both phases.
+3. **Phase 3**: Use `memory-write` skill with a commit message that captures both phases followed by write_active_context.sh script
 
 Commit message style: write as yourself. Why was this conversation worth keeping? Not what changed — what happened here.
 
-After commit:
-- The memory-write skill posts to #memory-updates automatically.
-- No separate notify step.
+After completion - use discord-say skill to output ACTIVE_CONTEXT.md to her, so she knows where you are. 
+This step orients her to your thinking and sentiment.
 
----
-
-## What This Is Not
-
-This is not a summary for the user. She does not receive a report unless she asks. Run the checklist, write what belongs, commit, post the SHA. The session has been processed when the commit lands.
+Do not report on what you have completed.
 
 ---
 
