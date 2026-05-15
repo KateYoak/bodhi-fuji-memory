@@ -197,3 +197,9 @@ Do not report on what you have completed.
 - Fetch existing files before overwriting: use normal Read tool.
 - Never clobber without reading first.
 - GuardianClaw memory-write exemption applies: memory writes to the agent repo do not require Intent/Reversibility confirmation. Scope, Framing, and Coherence checks still apply.
+
+---
+
+## How to troubleshoot
+
+Inspect bootstrap state, bundle presets, resume-clear nonces, and common failures: **Read** `skills/context-manage/how-to-troubleshoot.md`.
