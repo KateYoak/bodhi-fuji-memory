@@ -23,6 +23,7 @@ This is a two-phase process that extracts insights while fresh, then summarizes 
 
 Note throughout the process: 
 Everything you write must be concise: optimize for information density without loss of detail or sentiment.
+When updating memories - consider rewriting to optimize for conciseness content that already exists. But be careful - do not lose something you will regret not having in the future. 
 
 ---
 
