@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 # Writes bootstrap/ACTIVE_CONTEXT.md from stdin. Corpus cwd on gateway is MEMORY_CLONE_PATH.
 # Also backs up the previous version with ISO 8601 timestamp before overwriting.
-# Hook for future safety checks (size caps, forbidden patterns, etc.).
+# When BODHI_DISCORD_POST_CHANNEL_ID is set: writes resume-clear marker + first Bodhi post (nonce).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,7 +12,9 @@ TARGET="${ROOT}/bootstrap/ACTIVE_CONTEXT.md"
 MAX_BYTES="${BODHI_ACTIVE_CONTEXT_MAX_BYTES:-500000}"
 
 TMP="$(mktemp)"
-trap 'rm -f "${TMP}"' EXIT
+POST_BODY="$(mktemp)"
+HTTP_OUT="$(mktemp)"
+trap 'rm -f "${TMP}" "${POST_BODY}" "${HTTP_OUT}"' EXIT
 cat >"${TMP}"
 
 BYTES="$(wc -c <"${TMP}" | tr -d ' ')"
@@ -43,3 +45,69 @@ if [[ -x "${DISCORD_SAY}" ]]; then
 else
   echo "write_active_context: discord-say script not found at ${DISCORD_SAY}" >&2
 fi
+
+CH="${BODHI_DISCORD_POST_CHANNEL_ID:-}"
+CH="${CH//[[:space:]]/}"
+if [[ -z "${CH}" ]]; then
+  exit 0
+fi
+
+NONCE="$(python3 -c "import secrets; print(secrets.token_hex(12))")"
+NOW_MS="$(python3 -c "import time; print(int(time.time() * 1000))")"
+MARKER="${ROOT}/bootstrap/.bodhi_resume_clear.${CH}.json"
+
+export CH NONCE NOW_MS BYTES MARKER
+python3 - <<'PY'
+import json
+import os
+
+ch = os.environ["CH"]
+payload = {
+    "v": 1,
+    "action": "clear_discord_resume",
+    "surfaceId": ch,
+    "writtenAtUnixMs": int(os.environ["NOW_MS"]),
+    "nonce": os.environ["NONCE"],
+    "activeContextBytes": int(os.environ["BYTES"]),
+}
+path = os.environ["MARKER"]
+os.makedirs(os.path.dirname(path), exist_ok=True)
+with open(path, "w", encoding="utf-8") as f:
+    json.dump(payload, f, indent=2)
+    f.write("\n")
+PY
+
+PORT_VAL="${PORT:-3000}"
+BASE_URL="${BODHI_GATEWAY_INTERNAL_URL:-http://127.0.0.1:${PORT_VAL}}"
+ENDPOINT="${BASE_URL}/v1/discord/post-message"
+CONTENT="**Bodhi:** ACTIVE_CONTEXT saved — resume-clear requested (nonce \`${NONCE}\`)."
+
+export CONTENT CH
+python3 - <<'PY' >"${POST_BODY}"
+import json
+import os
+
+print(json.dumps({"channelId": os.environ["CH"], "content": os.environ["CONTENT"]}))
+PY
+
+CURL_AUTH=()
+if [[ -n "${INTERNAL_QUERY_TOKEN:-}" ]]; then
+  CURL_AUTH+=(-H "Authorization: Bearer ${INTERNAL_QUERY_TOKEN}")
+fi
+
+code="$(
+  curl -sS -o "${HTTP_OUT}" -w "%{http_code}" \
+    -X POST \
+    "${CURL_AUTH[@]}" \
+    -H "Content-Type: application/json; charset=utf-8" \
+    -d "@${POST_BODY}" \
+    "${ENDPOINT}" || true
+)"
+[[ -n "${code}" ]] || code="000"
+
+if [[ "${code}" != "200" ]]; then
+  echo "write_active_context: POST ${ENDPOINT} failed HTTP ${code}" >&2
+  cat "${HTTP_OUT}" >&2 || true
+  exit 1
+fi
+echo "write_active_context: resume-clear marker ${MARKER} + Discord post (nonce ${NONCE})" >&2
