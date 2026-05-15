@@ -1,160 +1,127 @@
 # Context-manage — troubleshoot
 
-All paths are from the **memory repo root** (`MEMORY_CLONE_PATH` on the gateway).
+You are working in the **memory repo root** (`MEMORY_CLONE_PATH`). Use **Read**, **Glob**, and **Bash** on `skills/context-manage/scripts/…` only.
 
 ---
 
 ## How to tell what's in the bundle
 
-The bundle is **not** the whole live context — it is the fixed `bootstrap/*.md` set chosen by preset.
+The bundle is the fixed bootstrap files the gateway may prepend. It is **not** the whole conversation.
 
-1. **Read** `bootstrap/bundle-config` if it exists. The file is **one line**: `complete`, `basic`, or `minimal`.
-2. If that file is missing, assume **`complete`** unless ops told you otherwise (server env may override; you cannot Read env from here).
+1. **Read** `bootstrap/bundle-config` if it exists — one line: `complete`, `basic`, or `minimal`.
+2. If missing, treat the preset as **`complete`** unless Anandaka or ops said otherwise.
 3. **Read** the files for that preset:
 
-| Preset | Files to Read under `bootstrap/` |
-|--------|----------------------------------|
-| `complete` | `SOUL.md`, `USER.md`, `AGENTS.md`, `MEMORY_INDEX.md` |
+| Preset | Read |
+|--------|------|
+| `complete` | `bootstrap/SOUL.md`, `USER.md`, `AGENTS.md`, `MEMORY_INDEX.md` |
 | `basic` | `SOUL.md`, `USER.md`, `AGENTS.md` |
 | `minimal` | `AGENTS.md` |
 
-4. Whatever those Reads return is the **bundle on disk**. That is what the gateway **can** prepend when it starts a **new** session for this thread (see next section).
+That is the full bundle **on disk**.
 
-**Change the bundle (does not clear Discord resume):**
-
-```bash
-bash skills/context-manage/scripts/write_bundle_config.sh complete
-```
-
-Then **Read** `bootstrap/bundle-config` again to confirm.
-
----
-
-## How to tell what's in context
-
-Live context = what Claude Code has in the **current session** for this Discord thread. It is **usually larger** than the bundle + `ACTIVE_CONTEXT` on disk.
-
-You **cannot** Read the full session transcript from the memory repo. Use the two cases below.
-
-### Case A — This thread is still on the old session (Discord resume active)
-
-Typical after normal back-and-forth **without** a successful resume clear at the end of a turn.
-
-**What is in live context (you cannot list it file-by-file):**
-
-- Prior messages and tool use in this thread’s Claude session
-- The latest user message (and attachments the gateway passed in)
-
-**What is usually *not* re-injected from disk on each message:**
-
-- The bundle files (SOUL, USER, …) — skipped while resume is active (unless ops set `BODHI_BOOTSTRAP_EVERY_TURN=true`)
-
-**What you *can* still Read on disk (may be stale relative to live context):**
-
-- `bootstrap/ACTIVE_CONTEXT.md` — last saved curated summary; **may not** be in the current turn’s prompt until after a resume clear
-- Bundle files — as in the previous section
-
-**How to know you are probably in Case A:**
-
-- No matching **pair** of Bodhi nonce posts in this thread since the last time you intended a reset (see next section), **and**
-- Conversation has continued across multiple user messages without running `write_active_context.sh` through a completed resume-clear handshake
-
-### Case B — Next message will start fresh (resume cleared or never had a session)
-
-After a **successful** resume clear, or a brand-new thread with no stored session yet.
-
-**What will be prepended on the next user message (you *can* Read this on disk):**
-
-1. Bundle files for the preset (section above)
-2. Then `bootstrap/ACTIVE_CONTEXT.md` if it exists and is non-empty
-3. Then the new user message
-
-**Read** those files to see that **bootstrap layer**. It still does **not** show you future tool output or later turns — context will grow again after the next message.
-
-### Related commands (not the same as “what’s in context”)
-
-- **`!fu compact`** — shrinks the **current Claude session**; does not update `ACTIVE_CONTEXT.md` and does not clear Discord resume by itself.
-- **Editing files in the repo** — changes what **can** load later; does not change what is already inside an active session until resume clear or a new session.
-
----
-
-## How to tell if context got reset (or how long ago)
-
-**Reset** here means: this Discord thread’s stored Claude session id was **removed**, so the **next** user message starts a **new** session with bundle + `ACTIVE_CONTEXT` (Case B).
-
-You **cannot** Read the session map from the corpus (it lives on the gateway, not in this repo).
-
-### Did a reset complete for this thread?
-
-1. Scroll the **Discord thread** (or channel) you care about.
-2. Find the **latest** Bodhi line containing `ACTIVE_CONTEXT saved — resume-clear requested (nonce …)`.
-3. Find a **later** Bodhi line in the **same thread** with the **same nonce** and text like `Discord resume cleared` or `Resume-clear applied`.
-4. If both exist with the **same nonce**, reset **completed** for that attempt. The **next** user message after that pair should be Case B.
-5. If you see only the first line, or nonces differ, reset did **not** complete — go to **How to fix**.
-
-### How long ago was ACTIVE_CONTEXT last rewritten on disk?
-
-This is **not** the same as Discord resume reset, but it is the best **time hint** in the repo:
-
-1. **Glob** `bootstrap/.ACTIVE_CONTEXT_backups/ACTIVE_CONTEXT.*.md`
-2. Backup filenames include UTC time, e.g. `ACTIVE_CONTEXT.2026-05-15T12:34:56Z.md` — that is when the **previous** `ACTIVE_CONTEXT.md` was replaced by `write_active_context.sh`.
-3. **Read** `bootstrap/ACTIVE_CONTEXT.md` for the current body (no timestamp in the file itself unless you put one in the content).
-
-### Is a reset still pending on disk?
-
-1. **Glob** `bootstrap/.bodhi_resume_clear.*.json`
-2. If a file exists, something requested resume clear but the gateway has **not** finished consuming it yet (or the turn failed). After success, the file should be **gone**.
-
----
-
-## How to fix things that go wrong
-
-### Wrong or missing bundle on the next fresh turn
-
-1. **Read** `bootstrap/bundle-config` and the bundle files (first section).
-2. Set preset:
+To change the preset (does **not** clear thread session):
 
 ```bash
 bash skills/context-manage/scripts/write_bundle_config.sh basic
 ```
 
-3. **Read** again to confirm. This does **not** clear Discord resume — old session history may still be in live context until you reset (below).
+**Read** `bootstrap/bundle-config` again to confirm.
 
-### Wrong `ACTIVE_CONTEXT` on disk
+---
 
-1. **Read** current `bootstrap/ACTIVE_CONTEXT.md` and backups under `bootstrap/.ACTIVE_CONTEXT_backups/` if you need the old text.
-2. Recompose the summary (see `SKILL.md` Phase 2).
-3. Write during a **Discord turn**:
+## How to tell what's in context
+
+Two layers — do not confuse them.
+
+### A. On disk (you can always check with Read / Glob)
+
+| File | Meaning |
+|------|---------|
+| Bundle files (above) | What **can** be prepended on a **new** thread session |
+| `bootstrap/ACTIVE_CONTEXT.md` | Curated summary saved for the next fresh load |
+| `bootstrap/.ACTIVE_CONTEXT_backups/*.md` | Older copies; filename has UTC time of the overwrite |
+
+Disk files can be **newer or older** than what the gateway actually sent you this turn.
+
+### B. In **this turn** (what the gateway actually gave you)
+
+Look at the **user message** for this turn (the block that starts with `New message arrives:`).
+
+- **Bundle was prepended** — you see SOUL / USER / AGENTS / MEMORY_INDEX (per preset) **above** `New message arrives:`. The gateway started (or restarted) a session and injected bootstrap for this thread.
+- **Bundle was not prepended** — you go straight to `New message arrives:` and the user text. The gateway is **resuming** this thread’s stored session. Live context is that session’s history plus this message — **not** re-listed in the repo. It is **larger** than the bundle and grows every turn.
+
+You **cannot** Read the full resumed session from a file. You only have what is already in this conversation plus the disk files above.
+
+`!fu compact` shrinks the **current session** only. It does not update `ACTIVE_CONTEXT.md` and does not by itself load a fresh bundle.
+
+---
+
+## How to tell if context got reset (or how long ago)
+
+**Reset** = this Discord thread’s stored session was cleared. The **next** user message should show the bundle prepended again (section B).
+
+### Did reset finish after you ran `write_active_context.sh`?
+
+Run the writer **in the Discord turn** that is handling you (gateway sets the post channel for your shell).
+
+1. Bash must **exit 0**. Read stderr for:  
+   `resume-clear marker … + Discord post (nonce …)`  
+   Note the **nonce**.
+2. **Glob** `bootstrap/.bodhi_resume_clear.*.json`  
+   - File **present** right after the script: request is on disk; gateway clears it when the turn ends.  
+   - File **gone** on a later turn: gateway consumed it (reset path ran).
+3. When **you** get the next user message on this thread: check section B — bundle prepended again means a fresh session load.
+
+If the script exits non-zero, reset did **not** start. Fix in **How to fix**.
+
+You do **not** need to search old channel messages. The script posts a Bodhi line when Discord env is set; the gateway posts a matching ack when the turn completes. If you are unsure, use steps 1–3 (stderr, marker Glob, next-turn bootstrap).
+
+### When was `ACTIVE_CONTEXT.md` last replaced?
+
+Not the same as session reset, but the repo timestamp you **can** read:
+
+1. **Glob** `bootstrap/.ACTIVE_CONTEXT_backups/ACTIVE_CONTEXT.*.md`
+2. Newest filename suffix is UTC time of the last overwrite (e.g. `…2026-05-15T12:34:56Z.md`).
+3. **Read** `bootstrap/ACTIVE_CONTEXT.md` for the current text.
+
+---
+
+## How to fix things that go wrong
+
+### Bundle wrong for next fresh load
+
+1. **Read** bundle files and `bootstrap/bundle-config`.
+2. Run `write_bundle_config.sh` with the right preset; **Read** `bundle-config` again.
+3. Session may still be resumed until you clear it (below).
+
+### `ACTIVE_CONTEXT.md` wrong on disk
+
+1. **Read** current file and backups if you need the old text.
+2. Recompose per `SKILL.md` Phase 2.
+3. Run:
 
 ```bash
 bash skills/context-manage/scripts/write_active_context.sh <<'EOF'
-(full new body)
+(full body)
 EOF
 ```
 
-4. Confirm the two Bodhi nonce posts in the thread (reset section). If you only need disk updated with **no** resume clear, run the same script outside a Discord turn (no nonce posts).
+Use a **Discord** turn if you need session reset; use a non-Discord run if you only want the file updated (no marker, no resume clear).
 
-### Need to reset live context for this thread (clear Discord resume)
+### Thread still “remembers” old conversation (need reset)
 
-1. Finish Phase 1–2 work in `SKILL.md` if this is end-of-session.
-2. Run `write_active_context.sh` **during** the Discord turn that is handling you (heredoc above).
-3. Wait for **both** Bodhi nonce posts in the thread.
-4. Have the user send the **next** message — that turn should load bundle + `ACTIVE_CONTEXT` (Case B).
-
-**Operator shortcut:** `!fu skill run context-manage` — you must still run `write_active_context.sh` in that turn; gateway errors if the marker handshake does not finish.
-
-### Session feels huge but you do not want to lose disk curated context
-
-1. **`!fu compact`** — compacts the **current session** only; does not replace `write_active_context.sh`.
-2. For a true fresh start with curated disk context, use **reset** (above), not compact alone.
+1. Complete Phase 1–2 in `SKILL.md` when this is end-of-session.
+2. In the **same Discord turn**, run `write_active_context.sh` (heredoc above).
+3. Confirm exit 0, stderr nonce, then marker consumed (Glob gone on next turn) and bundle prepended on the next user message.
+4. **`!fu skill run context-manage`** — still must run `write_active_context.sh` in that turn; gateway errors if the marker never completes.
 
 ### Symptom → fix
 
-| What you see | What to do |
-|--------------|------------|
-| No Bodhi “ACTIVE_CONTEXT saved” line after writer | Not a Discord turn from the gateway, or `post-message` failed. Re-run from Discord; check script stderr. |
-| First Bodhi nonce line, no second with **same** nonce | Turn did not finish or marker rejected. Re-run `write_active_context.sh` on a **new** Discord turn; ops may check gateway logs. |
-| Forced skill error about marker | Run `write_active_context.sh` again in the **same** `!fu skill run` turn before it ends. |
-| `bootstrap/.bodhi_resume_clear.*.json` still present | Pending or failed clear. Do not assume reset; complete a full Discord turn with a fresh writer run. |
-| Bundle correct on disk but behavior feels “stuck” | Probably Case A (resume still active). Complete reset handshake or use `!fu compact` if you only need session compaction. |
-| Old nonce posts in thread | Ignore for diagnosis; use the **latest** matching pair only. |
+| Symptom | Fix |
+|---------|-----|
+| Script fails or no nonce in stderr | Not a Discord turn, or `post-message` failed. Read stderr; re-run in a Discord-handled turn. |
+| Marker file still there after several turns | Turn did not finish or clear failed. Re-run writer on a new Discord message; ops may check gateway logs. |
+| Forced skill error about marker | Run `write_active_context.sh` again **before** that forced turn ends. |
+| Disk bundle correct but no bootstrap in your user message | Resumed session. Run reset flow above, or `!fu compact` if you only need to shrink the current session. |
+| User says context feels huge | `!fu compact` for session size; `write_active_context.sh` on Discord for fresh load with curated disk context. |
