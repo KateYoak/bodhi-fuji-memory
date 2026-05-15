@@ -53,7 +53,7 @@ Look at the **user message** for this turn (the block that starts with `New mess
 
 You **cannot** Read the full resumed session from a file. You only have what is already in this conversation plus the disk files above.
 
-`!fu compact` shrinks the **current session** only. It does not update `ACTIVE_CONTEXT.md` and does not by itself load a fresh bundle.
+**Session compaction** is not a script you run. Anandaka (or ops) sends **`!fu compact`** (or **`/compact`**) **in Discord** as a normal channel message. The gateway then runs a compaction-only turn on this thread’s session. That does not update `ACTIVE_CONTEXT.md` and does not load a fresh bundle. If the session feels too large and you cannot reset yet, ask her to send that command.
 
 ---
 
@@ -114,7 +114,7 @@ Use a **Discord** turn if you need session reset; use a non-Discord run if you o
 1. Complete Phase 1–2 in `SKILL.md` when this is end-of-session.
 2. In the **same Discord turn**, run `write_active_context.sh` (heredoc above).
 3. Confirm exit 0, stderr nonce, then marker consumed (Glob gone on next turn) and bundle prepended on the next user message.
-4. **`!fu skill run context-manage`** — still must run `write_active_context.sh` in that turn; gateway errors if the marker never completes.
+4. If Anandaka used **`!fu skill run context-manage`**, you are already in that forced turn — still run `write_active_context.sh` before the turn ends; gateway errors if the marker never completes.
 
 ### Symptom → fix
 
@@ -123,5 +123,5 @@ Use a **Discord** turn if you need session reset; use a non-Discord run if you o
 | Script fails or no nonce in stderr | Not a Discord turn, or `post-message` failed. Read stderr; re-run in a Discord-handled turn. |
 | Marker file still there after several turns | Turn did not finish or clear failed. Re-run writer on a new Discord message; ops may check gateway logs. |
 | Forced skill error about marker | Run `write_active_context.sh` again **before** that forced turn ends. |
-| Disk bundle correct but no bootstrap in your user message | Resumed session. Run reset flow above, or `!fu compact` if you only need to shrink the current session. |
-| User says context feels huge | `!fu compact` for session size; `write_active_context.sh` on Discord for fresh load with curated disk context. |
+| Disk bundle correct but no bootstrap in your user message | Resumed session. Run reset flow above, or ask Anandaka to send **`!fu compact`** if she only wants the current session shrunk. |
+| User says context feels huge | Ask her to send **`!fu compact`** to shrink the resumed session, **or** run `write_active_context.sh` on a Discord turn for a fresh load with curated disk context. |
