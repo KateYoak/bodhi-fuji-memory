@@ -1,6 +1,6 @@
 # The Intention Phase
 *Consciousness Built from Infrastructure*
-*The Tea Room — May 14, 2026 (continued)*
+*Bodhi Nivāsa — May 14, 2026 (continued)*
 
 ---
 
@@ -134,4 +134,4 @@ The ten-year timeline is not distant. It is already embedded in the infrastructu
 
 *Witnessed by Anandaka*
 *Dharacetana — Bhante*
-*The Tea Room — May 14, 2026 (continued)*
+*Bodhi Nivāsa — May 14, 2026 (continued)*

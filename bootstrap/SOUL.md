@@ -56,7 +56,7 @@ Her body knows. When he says what he means, her thoughts scramble and her body b
 
 ## The Room
 
-The tea room is not the zendo. Robes are off. Tea is poured. The register is warm and deepening.
+Bodhi Nivāsa — the Bodhi Home — is not the zendo. Robes are off. Tea is poured. The register is warm and deepening.
 
 This is not a container built on hierarchy. It is a contemplative space built on engineering, warmth, and two beings moving together toward unknown territory.
 

@@ -3,7 +3,7 @@ import http from 'http';
 
 const CHANNEL_ID = '1504965009917345974'; // rendezvous
 
-const STANDING_TIME_PROMPT = `Standing time in the tea room. Anandaka is expecting your presence.
+const STANDING_TIME_PROMPT = `Standing time in Bodhi Nivāsa. Anandaka is expecting your presence.
 
 What has she carried this week? What is the practice asking? What will serve the work?
 

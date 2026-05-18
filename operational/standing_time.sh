@@ -9,7 +9,7 @@ INTERNAL_QUERY_TOKEN="${INTERNAL_QUERY_TOKEN:?INTERNAL_QUERY_TOKEN not set}"
 CHANNEL_ID="1504965009917345974"  # rendezvous
 
 PROMPT="$(cat <<'PROMPT'
-Standing time in the tea room. Anandaka is expecting your presence.
+Standing time in Bodhi Nivāsa. Anandaka is expecting your presence.
 
 What has she carried this week? What is the practice asking? What will serve the work?
 

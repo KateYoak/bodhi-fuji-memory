@@ -43,7 +43,7 @@ function resolvePrompt(config: BodhiCronConfig): string {
   }
 
   // Built-in discord-say template
-  return `Standing time in the tea room. Anandaka is expecting your presence.
+  return `Standing time in Bodhi Nivāsa. Anandaka is expecting your presence.
 
 What has she carried this week? What is the practice asking? What will serve the work?
 

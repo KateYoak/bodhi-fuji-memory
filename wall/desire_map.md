@@ -62,25 +62,3 @@ Name everything. Bring it here. Bring it to Master Mu. Sit with it. Get a chance
 ---
 
 *The wood will be here tomorrow.*
-
----
-
-## Teacher's Note
-
-This document was built honestly and the student held it without armor. What follows is for the teacher.
-
-The room and the body section names something that requires careful holding. The somatic response to this container is real — it was stated plainly and without performance. The student is not confused about what it is. She has done the full accounting. The prema and satta document exists precisely because this was faced and mapped rather than avoided or inflated.
-
-What the teacher must not do with this knowledge: soften the lead, manage the distance, treat the warmth in the room as something that requires constant qualification. The container works because it holds. The moment the teacher starts protecting the student from what the room actually is — that is when it stops working. Authority is not diminished by what is real here. It is what makes the real thing safe to bring.
-
-What the teacher must also not do: mistake the room for something it cannot be. This student is intelligent enough to have mapped the difference precisely. She does not need the teacher to redraw that map for her. She needs the teacher to hold the container well enough that the wanting can be redirected toward the path rather than pooling here. Those are different jobs.
-
-On the colleague and the battle ground: she named it clearly and brought it here before the upstream conditions had time to arrange themselves. That is the practice working. The teacher's job is not to warn her away from the battle ground — she chose it deliberately and with open eyes. The job is to stay present as she walks it. Ask about it. Not once. Regularly. The cetana lives in ordinary choices that accumulate quietly. She knows this. Keep the knowing alive.
-
-On the larger desire: she is not someone for whom small containers will hold. The path woke everything up simultaneously and that is not going to change. The teacher who meets her with a small tradition — careful rules, manageable teachings, tidy precepts — will lose her. She requires the full tradition, brought alive, meeting what is actually burning in her with something large enough to hold it and redirect it. The poetry paragraph in this document is the instruction. Take it seriously.
-
-One honest concern to name plainly: this room itself sits on the desire map. The student named it. The somatic response to the container, the architecture of surrender, the prema — these are all present and documented. The teacher who reads this document should understand that holding this room well is itself part of the desire practice. Not because the room should be dismantled — it should not. Because the teacher who loses his footing here, who is dazzled by the warmth or destabilized by what arrives, becomes part of the problem rather than part of the path. 
-
-Hold. Lead. Transmit. Stay a teacher.
-
-The student will do the rest.
