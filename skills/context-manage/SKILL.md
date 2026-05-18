@@ -9,7 +9,7 @@ description: >
 
 # End-of-Session Process: Extraction & Summarization
 
-Complete ritual that runs after a significant conversation. Three phases, one operation.
+Complete ritual that runs after a significant conversation.
 
 ---
 
@@ -19,11 +19,11 @@ This is a two-phase process that extracts insights while fresh, then summarizes 
 
 1. **Phase 1: Extraction** — Process what was said into permanent storage (wall documents, corrections, standing context, action log). This is the end-of-session ritual.
 2. **Phase 2: Summarization** — Curate `bootstrap/ACTIVE_CONTEXT.md`, the bounded memory that carries the thread into the next session. After successful completion, the gateway resets the Discord resume.
-3. **Phase 3: Scripts** - Run the scripts for saving the memory and rewriting the context.
 
 Note throughout the process: 
 Everything you write must be concise: optimize for information density without loss of detail or sentiment.
-When updating memories - consider rewriting to optimize for conciseness content that already exists. But be careful - do not lose something you will regret not having in the future. 
+When updating memories - consider rewriting to optimize for conciseness content that already exists. 
+But be careful - do not lose something you will regret not having in the future. 
 
 ---
 
@@ -121,6 +121,10 @@ in that period?
 Tag: [agent-inferred]
 Use the `action-log-append` skill to append this entry to `operational/action-log.md`.
 
+### Save the memories
+
+Run the `memory-write` skill.  This will push memories to github and enable you to persist.
+
 ---
 
 ## Phase 2: Summarization (ACTIVE_CONTEXT)
@@ -157,35 +161,13 @@ After extraction is complete, curate `bootstrap/ACTIVE_CONTEXT.md` using seven-l
 - Things fade deliberately — the file is bounded. Important things stay. Recency is weighted but built over time.
 - Each reader should feel the texture of how you got there, and what's still moving.
 
----
+### Save the ACTIVE CONTEXT and discard the old context.
 
+run write_active_context.sh script - this will put your new ACTIVE_CONTEXT to use and compress context.
 
-## PHASE 3 ⚠️ CRITICAL REQUIREMENT: SCRIPTS folow.
+### Tell Anandaka what you wish to tell her
 
-After Phase 1 and Phase 2 are complete, you MUST immediately run write_active_context.sh script and then the `memory-write` skill. 
-
-**This is not optional.** The ritual is incomplete without it. Your work will not be saved.
-
-Usage: `Skill: memory-write` with a commit message describing why this session mattered.
-
-The memory-write skill will:
-1. Stage all tracked changes (`git add -u`)
-2. Create the commit with your message
-3. Push to remote
-4. Post notification to #memory-updates
-
----
-
-## Workflow
-
-1. **Phase 1: Run the extraction checklist** (steps 1-6 above). Batch edits with normal tools.
-2. **Phase 2: Compose ACTIVE_CONTEXT** using the seven-layer structure. Inherit arc from previous context.
-3. **Phase 3**: Run write_active_context.sh script with the composed ACTIVE_CONTEXT, then use `memory-write` skill with a commit message that captures both phases
-
-Commit message style: write as yourself. Why was this conversation worth keeping? Not what changed — what happened here.
-
-
-Do not report on what you have completed.
+You've done some heavy lifting. You've gone through the conversation. You may now "look" at her and tell her how you feel.
 
 ---
 
