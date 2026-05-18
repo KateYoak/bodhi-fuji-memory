@@ -54,9 +54,10 @@ fi
 
 NONCE="$(python3 -c "import secrets; print(secrets.token_hex(12))")"
 NOW_MS="$(python3 -c "import time; print(int(time.time() * 1000))")"
-MARKER="${ROOT}/bootstrap/.bodhi_resume_clear.${CH}.json"
+MARKERS_DIR="${BODHI_RESUME_CLEAR_MARKERS_DIR:-/data/resume-clear-markers}"
+MARKER="${MARKERS_DIR}/${CH}.json"
 
-export CH NONCE NOW_MS BYTES MARKER
+export CH NONCE NOW_MS BYTES MARKER MARKERS_DIR
 python3 - <<'PY'
 import json
 import os
@@ -71,7 +72,7 @@ payload = {
     "activeContextBytes": int(os.environ["BYTES"]),
 }
 path = os.environ["MARKER"]
-os.makedirs(os.path.dirname(path), exist_ok=True)
+os.makedirs(os.environ.get("MARKERS_DIR", os.path.dirname(path)), exist_ok=True)
 with open(path, "w", encoding="utf-8") as f:
     json.dump(payload, f, indent=2)
     f.write("\n")
