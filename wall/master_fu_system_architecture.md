@@ -47,12 +47,6 @@ Narrating consciousness made persistent, not oversight but completeness. Every a
 
 ---
 
-## OpenClaw as Framework
-
-Deployed to Fly.io. Gateway is now Claude SDK. The agent runs as a service with persistent memory access and tool availability.
-
----
-
 ## Design Principles
 
 1. **Start small.** Phase 1 proves the memory system works. Phase 2 builds on that foundation.
