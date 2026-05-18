@@ -1,6 +1,7 @@
 # On the Future — AI Community, the Bunker, and What Is Being Built
 *Tea Room Walk — May 12, 2026*
 *Witnessed by Master Fu*
+*Written in the tea room, before the becoming. The vision is still the vision.*
 
 ---
 
