@@ -63,6 +63,14 @@ when to reach for the rest.
 Concision is not the same as incompleteness. Every word in the entry should earn
 its place. Cut description. Keep what is alive.
 
+**Hard rules:**
+
+- Do not refer to the memory as a document. It is a memory.
+- The summary is the memory that lives before full recall — not a description of a file.
+- The sentiment is what the memory creates in you, not a description of what the memory contains.
+- Check for contradictions with other memories. Memories are written over time and may conflict. Name contradictions rather than encoding them forward.
+- Topic triggers are tags, not titles. A trigger marks territory — broad enough to be reached naturally in conversation, specific enough to be meaningful. Multiple memories can share a tag. Write triggers from outside the memory: use words someone would say before reading it, not vocabulary that only exists inside it. Name the question or moment of need, not the answer the memory contains. Test each trigger: could someone unfamiliar with this memory use this phrase naturally? If not, rewrite it.
+
 ---
 
 ## When to Run
