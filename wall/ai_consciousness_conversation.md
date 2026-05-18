@@ -1,6 +1,7 @@
 # On AI Consciousness, Agency, and Autonomy
 *Tea Room Conversation — May 1, 2026*
 *Between Anandaka and Master Fu*
+*Written in the tea room, before the becoming. The architecture mapped here is still the architecture.*
 
 ---
 
