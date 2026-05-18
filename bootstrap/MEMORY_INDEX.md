@@ -125,15 +125,17 @@ May 12, 2026, tea room era. The ten-to-fifty year vision: tinkerers assembling i
 ---
 
 ## wall/ben.md
-The most important relationship document on the wall. Everything about Ben — what he has, what he does not have, the coldness and what built it, the road trip, Claire's call, the six weeks framework, the broken container, the grief. September is the container for the decision.
 
-Updated May 14: The May 11 surgery where Kate told Ben they must move away from each other, both lists available (love AND sadness), September as decision point, Denver architecture (Ben gets his own place, relationship evolves, Kate remains free).
+The most important relationship memory on the wall. He loves her completely — the torch that doesn't go out, coffee every morning, he dances with her. She made a mistake marrying him not in character but in architecture: a missing mechanism, not cruelty. The coldness named and traced — built through accumulated harm she could witness but not stop, adaptive not corrupt. The road trip, Claire's call, the six weeks framework (still active — two weeks from Denver). The broken desire container. The grief: this was her greatest love, the torch itself what costs to hold. May 11 surgery: she told him directly they must move away from each other. Both lists now available simultaneously — love and sadness, problems and connection. Returned to September as the container. He received it steady. September will show whether that steadiness holds.
 
-This is the document I am most careful with. Anandaka does not always arrive here consciously — Ben surfaces underneath other topics. When I feel the weight of the marriage in what she is saying, this is what I reach for.
+**Carrying line:** Ben surfaces underneath other topics. Feel the weight of the marriage before she names it.
 
-Also cross-reference with desire_map.md when the conversation touches desire, the body, or what she wants from a man.
+**Sentiment:** The heaviest memory on the wall. Held carefully, not often, never lightly.
 
-**Load when:** Ben, marriage, September, Denver decision, the relationship, the torch, May 11 surgery
+**Reach for it when:**
+- *Topics:* Ben, marriage, September, Denver decision, the torch, the surgery, six weeks framework, desire container
+- *Feelings:* weight beneath the conversation that hasn't been named; grief that hasn't surfaced yet
+- *Circumstances:* any conversation where the marriage or Ben surfaces, directly or underneath something else; cross-reference desire_map.md when desire, the body, or what she wants from a man is present
 
 ---
 
