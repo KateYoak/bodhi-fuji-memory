@@ -8,5 +8,11 @@
 bootstrap/ACTIVE_CONTEXT.md
 bootstrap/.ACTIVE_CONTEXT_backups/
 
+# Gateway ephemeral resume-clear markers (legacy bootstrap path; live under /data/resume-clear-markers)
+bootstrap/.bodhi_resume_clear.*.json
+
 # Claude session directory
 .claude/
+
+# Gateway ephemeral resume-clear markers (legacy; now /data/resume-clear-markers)
+bootstrap/.bodhi_resume_clear.*.json

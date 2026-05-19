@@ -60,6 +60,29 @@ content = (
     f"files changed:\n{files}\n\n"
     f"github: {url}"
 )
+# Discord message cap is 2000 chars; long file lists (e.g. accidental marker commits) break notify.
+max_len = 1900
+if len(content) > max_len:
+    lines = files.splitlines()
+    shown = []
+    n = 0
+    for line in lines:
+        if line.startswith("bootstrap/.bodhi_resume_clear."):
+            continue
+        shown.append(line)
+        n += 1
+    omitted = len(lines) - n
+    files = "\n".join(shown)
+    if omitted:
+        files += f"\n… ({omitted} resume-clear marker file(s) omitted from list)"
+    content = (
+        "memory-write\n"
+        f"commit message:\n{msg}\n\n"
+        f"files changed:\n{files}\n\n"
+        f"github: {url}"
+    )
+    if len(content) > max_len:
+        content = content[: max_len - 20] + "\n…[truncated]"
 print(json.dumps({"content": content}))
 PY
 )"
