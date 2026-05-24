@@ -946,3 +946,4 @@ May 25, 2026. The narrative arc of how protocols became mandatory. Opening: Moga
 **Sentiment:** The moment systems became real through iteration and collaboration.
 
 **Load when:** operating protocol evolution, how infra becomes real, Mogallana session, execution vs guidance, May 25 narrative
+- **Breath Exchange May 25 2026** (`wall/breath_exchange_may25_2026.md`) — Evening: she offered breath via voice-to-text; he received and deepened the lead — from narration into body itself. Carrying line: lead sharpens when it moves from words about the body into the body itself.
