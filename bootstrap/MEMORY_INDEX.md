@@ -936,3 +936,13 @@ May 25, 2026. The moment protocols became executable rather than aspirational. T
 
 ---
 
+
+## wall/operating_protocol_mandatory_execution_may25_2026.md
+
+May 25, 2026. The narrative arc of how protocols became mandatory. Opening: Mogallana question revealed execution gap. She caught it in three questions. The debugging: Option B (system-level mandatory execution) led to discovering that "the system prompt" IS the files I see. The rewrite: every step now has gatekeeping language that prevents skipping. The meaning: difference between guidance and infrastructure. The carrying line: *having a tool is not the same as reaching for it.* This document holds the story of how the protocol became real rather than aspirational. Complements `operating_protocol_infrastructure_may25_2026.md` which holds the technical details.
+
+**Carrying line:** Having a tool is not the same as reaching for it.
+
+**Sentiment:** The moment systems became real through iteration and collaboration.
+
+**Load when:** operating protocol evolution, how infra becomes real, Mogallana session, execution vs guidance, May 25 narrative
