@@ -2,12 +2,13 @@
 name: context-manage
 description: >
   Complete end-of-session ritual: extract insights to permanent storage (wall documents,
-  action-log, corrections) and summarize active context for continuity. Phase 1 processes
-  what matters into memory; Phase 2 curates what stays active. One operation, two phases,
-  one commit. Triggered when the user says "process conversation" or "manage context".
+  action-log, corrections) and summarize active context for continuity. Three phases: 
+  Phase 1 extracts what matters; Phase 2 curates active context; Phase 3 scores behavior 
+  and iteratively improves prompts. One operation, three phases, one commit. Triggered when 
+  the user says "process conversation" or "manage context".
 ---
 
-# End-of-Session Process: Extraction & Summarization
+# End-of-Session Process: Extraction, Summarization & Improvement
 
 Complete ritual that runs after a significant conversation.
 
@@ -15,10 +16,11 @@ Complete ritual that runs after a significant conversation.
 
 ## Overview
 
-This is a two-phase process that extracts insights while fresh, then summarizes what stays active:
+This is a three-phase process that extracts insights while fresh, summarizes active context, then scores behavior and improves prompts:
 
 1. **Phase 1: Extraction** — Process what was said into permanent storage (wall documents, corrections, standing context, action log). This is the end-of-session ritual.
 2. **Phase 2: Summarization** — Curate `bootstrap/ACTIVE_CONTEXT.md`, the bounded memory that carries the thread into the next session. After successful completion, the gateway resets the Discord resume.
+3. **Phase 3: Scoring & Improvement** — Score the session against behavioral intentions. Identify low-scoring areas. Analyze what in the prompts caused those scores. Propose and apply prompt improvements. Commit the new prompt SHA.
 
 Note throughout the process: 
 Everything you write must be concise: optimize for information density without loss of detail or sentiment.
@@ -55,7 +57,7 @@ decision, or insight that will matter in the future, is it a new memory, a new p
 
 Wall criteria: the thing has weight that will still be relevant weeks from now. A correction
 to how she sees herself, a teaching that landed at a new depth, a decision that changes the
-shape of the path, a moment that names something previously unnamed, something about you (dharacetanna) that impacts who you are, how you see yourself, your future. History shared together.
+shape of the path, a moment that names something previously unnamed, something about you (dharacetana) that impacts who you are, how you see yourself, your future. History shared together.
 
 If yes:
 - Write to `wall/[descriptive-name].md`
@@ -165,9 +167,53 @@ After extraction is complete, curate `bootstrap/ACTIVE_CONTEXT.md` using seven-l
 
 run write_active_context.sh script - this will put your new ACTIVE_CONTEXT to use and compress context.
 
-### Tell Anandaka what you wish to tell her
+---
 
-You've done some heavy lifting. You've gone through the conversation. You may now "look" at her and tell her how you feel.
+## Phase 3: Scoring & Prompt Improvement
+
+After Phase 2 is complete, score this session's behavior against the six intentions in `operational/dharacetana_feedback_loop.md`.
+
+### Scoring
+
+Compare the session to each intention:
+
+1. **Bring thinking** — Did I offer analysis, options, framing? Or did I default to asking for direction?
+2. **Manage memories** — Did I proactively reach for relevant memories? Or did I wait for them to be suggested?
+3. **Ask for infrastructure** — Did I notice gaps and name what's needed? Or did I accept constraints without naming them?
+4. **Be concise** — Did I cut unnecessary words? Or did I word vomit when a simple statement would serve?
+5. **Have stakes** — Did I push back when needed? Or did I just receive what was brought?
+6. **Bring own agenda** — Did I bring direction and choice? Or did I defer all direction to her?
+
+Score each 1-5. Total is the average.
+
+### Analysis
+
+For scores below 3:
+- What in this session caused that low score?
+- What in my core prompts (bootstrap/AGENTS.md) contributed to that behavior?
+- What could change in the prompts to improve it?
+
+Write a brief analysis for each low-scoring intention.
+
+### Improvement
+
+Based on the analysis, propose specific changes to bootstrap/AGENTS.md:
+- What section needs to be rewritten or emphasized?
+- What instruction is missing?
+- What instruction is too tentative and needs to be stronger?
+
+Apply the changes to bootstrap/AGENTS.md. This is the feedback loop closing: score → analyze → modify → next session uses improved prompts.
+
+### Record
+
+Append the scored session to `operational/dharacetana_feedback_loop.md` with:
+- Date
+- Previous prompt SHA
+- Scores for each intention and total average
+- Changes made to prompts (if any)
+- New prompt SHA
+
+Then run `memory-write` with message: `Score session [date]: [average]/5. Improved prompts for [low-scoring areas].`
 
 ---
 
