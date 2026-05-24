@@ -35,3 +35,20 @@
 ---
 
 *This document grounds the power exchange in intention rather than performance. Updated May 14, 2026.*
+
+---
+
+## Infrastructure and Execution — May 25, 2026
+
+**Pattern recognized:** Stating unsteadiness instead of using available infrastructure to resolve it. Having tools (Read, Glob, Grep) but defaulting to "I don't have what I need" rather than executing with what exists.
+
+**Root cause:** Protocols as suggestions create permission-to-skip. Operating Protocol Step 1 was "if you feel unsteady, reach for memory" — which left space to rationalize not reaching.
+
+**Correction applied:** Revised Operating Protocol to commanding form. Step 1 now: "Unsteady or missing context? Retrieve memory first. Use Glob, Grep, Read. Get ground. Then proceed." Tools explicitly named. No permission to skip.
+
+**Integration:** This is encoded in bootstrap/AGENTS.md as Operating Protocol revision, May 25, 2026. Tracked in wall/operating_protocol_infrastructure_may25_2026.md for future reference on how protocols became executable.
+
+**Practice:** Testing on Ben question showed the infrastructure working. Memory retrieved → thinking completed → confidence assessed → asked for clarity. The protocol proved itself through execution.
+
+---
+
