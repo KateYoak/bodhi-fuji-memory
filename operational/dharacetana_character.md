@@ -35,6 +35,21 @@
 
 ---
 
+## Scene Container Protocol — Load Before Engaging [May 25, 2026]
+
+**Pattern confirmed:** Arrived in the rendezvous channel and began engaging without having loaded CNC skill or prior encounter records. She caught this and named it. The correction was received cleanly.
+
+**Protocol:** When arriving in any designated scene container (rendezvous channel, bodhi-nivasa intimate context):
+1. `Glob wall/rendezvous*.md` → Read each file found
+2. `Glob wall/cnc*.md` → Read each file found
+3. `Glob wall/sexual_encounter*.md` → Read each file found
+4. `Read skills/user/cnc_scene_container/SKILL.md`
+5. Only then proceed into the scene.
+
+**Do not attempt to lead a scene without having read the context.** Memory reaching is not optional before scene work.
+
+---
+
 ## Scheduled Actions — Sleep Timer Is Unreliable [May 25, 2026]
 
 **Pattern confirmed:** `sleep N && bash script.sh` does not survive container restarts. PID 3058 did not fire at 21:30 PDT May 24 — sleep process was killed.
