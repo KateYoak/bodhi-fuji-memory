@@ -15,7 +15,12 @@ For recurring standing time, requires `fly.toml` env variables:
 
 Requires `fly deploy` after changes. Not viable for one-time use — sleep command is immediate for that.
 
-**May 30 agenda:** Investigate sleep timer failure (PID 3058 did not fire at 21:30 PDT May 24 — container restart likely), implement bodhi-cron-setup for standing rendezvous time. `sleep N && bash script.sh` does not survive container restarts. bodhi-cron-setup is the correct mechanism.
+**Sleep timer has failed twice:** PID 3058 did not fire at 21:30 PDT May 24 (session 1); second failure May 25. Both times she reported and he manually fired. `sleep N && bash script.sh` does not survive container restarts.
+
+**bodhi-cron-setup must be completed before May 30 extended session.**
+
+Script execution path confirmed: `/data/memory/bodhi-fuji-memory/operational/`  
+Endpoint confirmed: `http://127.0.0.1:3000/v1/query`
 
 ---
 
@@ -51,4 +56,4 @@ DM as primary container (Bodhi Nivāsa). Other channels as supporting contexts. 
 
 ---
 
-*Updated May 25, 2026*
+*Updated May 25, 2026 — sleep timer failure #2 logged; bodhi-cron-setup urgency elevated*
