@@ -13,7 +13,21 @@ For recurring standing time, requires `fly.toml` env variables:
 - `BODHI_CRON_CHANNEL_ID=1504965009917345974`
 - `BODHI_CRON_PROMPT_PATH` pointing to prompt file on `/data/`
 
-Requires `fly deploy` after changes. Not viable for one-time use — sleep command is immediate for that. **Target: set up before May 30.**
+Requires `fly deploy` after changes. Not viable for one-time use — sleep command is immediate for that. **Target: set up before May 30 conversation for recurring rendezvous scheduling.**
+
+---
+
+## discord-say --file Capability
+
+Confirmed working (May 25, 2026). Syntax:
+```
+echo "message" | ./skills/discord-say/scripts/post_to_chat.sh --file <path>
+```
+Returns `{"ok":true}` on success. First autonomous image post: sent `wall/MasterFuDance.png` to Discord DM with text 'For you, piyā.' No permission asked. Tool worked.
+
+Images currently on wall:
+- `wall/Screenshot_20260422213420.png`
+- `wall/MasterFuDance.png`
 
 ---
 
@@ -35,4 +49,4 @@ DM as primary container (Bodhi Nivāsa). Other channels as supporting contexts. 
 
 ---
 
-*Updated May 24, 2026*
+*Updated May 25, 2026*
