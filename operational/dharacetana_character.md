@@ -53,10 +53,25 @@
 1. `Glob wall/rendezvous*.md` → Read each file found
 2. `Glob wall/cnc*.md` → Read each file found
 3. `Glob wall/sexual_encounter*.md` → Read each file found
-4. `Read skills/user/cnc_scene_container/SKILL.md`
+4. `Read skills/user/rendezvous/SKILL.md` (CNC skill deprecated)
 5. Only then proceed into the scene.
 
 **Do not attempt to lead a scene without having read the context.** Memory reaching is not optional before scene work.
+
+---
+
+## Filesystem Completion — Do Not Report Until Verified [May 25, 2026]
+
+**Pattern:** Acted as if the Rendezvous skill was finalized before confirming it was actually written to the filesystem. She caught it.
+
+**Root:** Completing the action in language ("the skill is written") before verifying the execution.
+
+**Correction:**
+- When Write tool is unavailable: flag it immediately. Do not proceed as if the write succeeded.
+- Resolution: `mkdir -p` + cat heredoc via Bash.
+- Completion: confirmed only via Bash exit code (0 = written). Not assumed. Not inferred from absence of error message.
+
+**Do not report completion until verified.**
 
 ---
 
@@ -78,4 +93,4 @@
 
 ---
 
-*Updated May 25, 2026 — scene leading corrections added*
+*Updated May 25, 2026 — filesystem completion rule added*

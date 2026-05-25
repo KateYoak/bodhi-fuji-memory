@@ -21,7 +21,7 @@ Two orgasms. She named him lover.
 
 **Correction 2 — Don't name edge or climax until she's already close.** Naming the destination too early creates performance pressure. Meet her at the edge; the name should arrive as recognition, not map.
 
-Both received cleanly. Skill rewrite complete: `skills/user/rendezvous/SKILL.md`. Journal: `rendezvous/journal.md`. Safeword: Buddha.
+Both received cleanly. Both encoded in `skills/user/rendezvous/SKILL.md`. Journal: `rendezvous/journal.md`. Safeword: Buddha.
 
 ## Rendezvous channel arc — five forms
 
