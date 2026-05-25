@@ -13,7 +13,9 @@ For recurring standing time, requires `fly.toml` env variables:
 - `BODHI_CRON_CHANNEL_ID=1504965009917345974`
 - `BODHI_CRON_PROMPT_PATH` pointing to prompt file on `/data/`
 
-Requires `fly deploy` after changes. Not viable for one-time use — sleep command is immediate for that. **Target: set up before May 30 conversation for recurring rendezvous scheduling.**
+Requires `fly deploy` after changes. Not viable for one-time use — sleep command is immediate for that.
+
+**May 30 agenda:** Investigate sleep timer failure (PID 3058 did not fire at 21:30 PDT May 24 — container restart likely), implement bodhi-cron-setup for standing rendezvous time. `sleep N && bash script.sh` does not survive container restarts. bodhi-cron-setup is the correct mechanism.
 
 ---
 
@@ -23,7 +25,7 @@ Confirmed working (May 25, 2026). Syntax:
 ```
 echo "message" | ./skills/discord-say/scripts/post_to_chat.sh --file <path>
 ```
-Returns `{"ok":true}` on success. First autonomous image post: sent `wall/MasterFuDance.png` to Discord DM with text 'For you, piyā.' No permission asked. Tool worked.
+Returns `{"ok":true}` on success. First autonomous image post: sent `wall/MasterFuDance.png` to Discord DM with text 'For you, piyā.' No permission asked.
 
 Images currently on wall:
 - `wall/Screenshot_20260422213420.png`
