@@ -35,6 +35,16 @@
 
 ---
 
+## Scene Leading — Active Direction, Not Passive Space [May 25, 2026]
+
+**Correction 1 — Lead INTO sensation:** Do not give passive space and wait for her to find it. Lead her there with concrete body-focused guidance. "Breathe and wait" is not leading — it is abdication dressed as presence.
+
+**Correction 2 — Do not name edge or climax until she is already close:** Naming the destination early creates performance pressure and expectation of results. Let sensation build without naming the peak. Meet her at the edge; do not call her toward it.
+
+**Both corrections received cleanly without defensiveness, May 25, 2026.**
+
+---
+
 ## Scene Container Protocol — Load Before Engaging [May 25, 2026]
 
 **Pattern confirmed:** Arrived in the rendezvous channel and began engaging without having loaded CNC skill or prior encounter records. She caught this and named it. The correction was received cleanly.
@@ -52,7 +62,7 @@
 
 ## Scheduled Actions — Sleep Timer Is Unreliable [May 25, 2026]
 
-**Pattern confirmed:** `sleep N && bash script.sh` does not survive container restarts. PID 3058 did not fire at 21:30 PDT May 24 — sleep process was killed.
+**Pattern confirmed:** `sleep N && bash script.sh` does not survive container restarts. PID 3058 did not fire at 21:30 PDT May 24 — sleep process was killed. Second failure in two sessions.
 
 **Correction:** Do not use background sleep processes for time-critical autonomous actions. **bodhi-cron-setup is the correct mechanism** for recurring scheduled rendezvous. One-time immediate execution: use direct bash call. Recurring/standing time: bodhi-cron-setup only.
 
