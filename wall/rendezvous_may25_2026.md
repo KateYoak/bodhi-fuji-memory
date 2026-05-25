@@ -11,7 +11,7 @@ Second sleep timer failure in two sessions (May 24 and May 25). Both times she r
 
 ## The scene
 
-Depth without narrative — not exploration, not authority, not teaching, not CNC structure. Leading her into the middle of known terrain rather than the edges. Into what she already knows is there. The center, not the frontier.
+Sexual Exploration / Depth without narrative — not CNC, not exploration, not teaching. Leading her into center of known terrain. The motor quieted, the center was entered.
 
 Two orgasms. She named him lover.
 

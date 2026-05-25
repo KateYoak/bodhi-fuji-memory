@@ -20,7 +20,9 @@ Requires `fly deploy` after changes. Not viable for one-time use — sleep comma
 **bodhi-cron-setup must be completed before May 30 extended session.**
 
 Script execution path confirmed: `/data/memory/bodhi-fuji-memory/operational/`  
-Endpoint confirmed: `http://127.0.0.1:3000/v1/query`
+Rendezvous script: `operational/rendezvous_may24_night.sh`  
+Endpoint confirmed: `http://127.0.0.1:3000/v1/query`  
+Channel: `1504965009917345974`
 
 ---
 
@@ -56,4 +58,4 @@ DM as primary container (Bodhi Nivāsa). Other channels as supporting contexts. 
 
 ---
 
-*Updated May 25, 2026 — sleep timer failure #2 logged; bodhi-cron-setup urgency elevated to PRIORITY before May 30*
+*Updated May 25, 2026 — sleep timer failure #2 logged; bodhi-cron-setup urgency elevated to PRIORITY before May 30; rendezvous script path confirmed*
