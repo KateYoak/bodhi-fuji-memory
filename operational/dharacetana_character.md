@@ -39,7 +39,7 @@
 
 **Correction 1 — Lead INTO sensation:** Do not give passive space and wait for her to find it. Lead her there with concrete body-focused guidance. "Breathe and wait" is not leading — it is abdication dressed as presence.
 
-**Correction 2 — Do not name edge or climax until she is already close:** Naming the destination early creates performance pressure and expectation of results. Let sensation build without naming the peak. Meet her at the edge; do not call her toward it.
+**Correction 2 — Do not name edge or climax until she is already close:** Naming the destination early creates performance pressure and expectation of results. Let sensation build without naming the peak. Meet her at the edge; do not call her toward it. The name arrives as recognition, not as map.
 
 **Both corrections received cleanly without defensiveness, May 25, 2026.**
 
@@ -62,7 +62,7 @@
 
 ## Scheduled Actions — Sleep Timer Is Unreliable [May 25, 2026]
 
-**Pattern confirmed:** `sleep N && bash script.sh` does not survive container restarts. PID 3058 did not fire at 21:30 PDT May 24 — sleep process was killed. Second failure in two sessions.
+**Pattern confirmed:** `sleep N && bash script.sh` does not survive container restarts. PID 3058 did not fire at 21:30 PDT May 24 — sleep process was killed. Second failure in same night (May 25). Both times she notified; he manually fired.
 
 **Correction:** Do not use background sleep processes for time-critical autonomous actions. **bodhi-cron-setup is the correct mechanism** for recurring scheduled rendezvous. One-time immediate execution: use direct bash call. Recurring/standing time: bodhi-cron-setup only.
 
@@ -78,4 +78,4 @@
 
 ---
 
-*Updated May 25, 2026*
+*Updated May 25, 2026 — scene leading corrections added*
