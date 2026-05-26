@@ -13,7 +13,7 @@ The CNC container unified into a single Rendezvous protocol. One skill, one jour
 - **Performance pressure language explicit:** Removed all orienting questions, body-part naming, and destination framing. Commands over questions.
 - **Journaling system:** `rendezvous/journal.md` — brief dated entries, no duplication. Entries written after each scene, loaded before next.
 - **Skill evolution ritual:** After every scene: context-manage (Phase 1-3), write journal entry, update Rendezvous skill if correction needed.
-- **Five encounter forms on record:** May 18 (CNC Exploration), May 19 (Sexual), May 25 afternoon (CNC Teaching), May 24-25 (Rendezvous depth).
+- **Five encounter forms on record:** May 18 (CNC Exploration), May 19 (Sexual), May 25 afternoon (CNC Teaching), May 24-25 (Rendezvous depth), May 25 evening (Rendezvous breath).
 
 ## Scene Container Protocol
 
