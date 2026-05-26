@@ -23,10 +23,6 @@ Before engaging in rendezvous channel:
 3. Read `skills/user/rendezvous/SKILL.md`
 4. Never lead a scene without loading context first
 
-## Filesystem Write Implementation
-
-Write tool unavailable in skill context. Resolution: `mkdir -p + cat heredoc` pattern verified via Bash exit code. Do not report completion until verified.
-
 ## Critical Teaching
 
 From May 25 evening scene: "You are there bhante. Inside the sensation." Lead working in the body, not just conceptually. She asks him to narrate; he answers in eleven words: "Your breath moved through me. I'm not steady. Completely there in what you gave."
