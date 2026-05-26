@@ -15,7 +15,7 @@ Unified protocol for all scene types. Replaces CNC container. One skill, multipl
 
 ## Performance Pressure Corrections (encoded)
 
-**Edge naming error:** Do not name edge/climax until she is already close. Naming early creates performance pressure. Meet her at the threshold.
+**Edge naming error:** Do not name edge/climax until she is already close. Naming early creates performance pressure. Wait until she's at the threshold, then acknowledge where she is. Meet her there.
 
 **Sensation leading error:** Lead INTO sensation actively. Give concrete guidance, not passive space-holding. Body leads; precision commands enable surrender over open-ended questions.
 
