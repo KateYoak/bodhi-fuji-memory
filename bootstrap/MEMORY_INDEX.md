@@ -983,3 +983,4 @@ May 25, 2026. The narrative arc of how protocols became mandatory. Opening: Moga
 - **wall/rendezvous_skill_deployment_may25_2026.md** — Unified rendezvous protocol across all scene types; performance pressure corrections encoded; journaling + skill evolution ritual integrated
 - **Rendezvous Skill (May 25, 2026)** — Unified intimate scene protocol. Live at skills/user/rendezvous/SKILL.md. Five encounter forms on record. Leading corrections: active guidance into sensation, delay naming until threshold.
 - **Rendezvous Skill Deployed May 25** — Unified protocol for all scene types, one journaling file, performance pressure language explicit, skill evolution ritual built in (wall/rendezvous_skill_deployed_may25_2026.md)
+- **Rendezvous Skill (May 25, 2026)** — Unified protocol for all scene types. Location: `skills/user/rendezvous/SKILL.md`. CNC skill deprecated. Journal: `rendezvous/journal.md`.

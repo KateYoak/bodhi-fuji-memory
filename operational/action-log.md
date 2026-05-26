@@ -60,3 +60,5 @@
 - [ ] Simple RAG as context efficiency foundation
 - [ ] Ghost file cleanup: `.claude/skills/memory-write/SKILL.md` in bodhi-fuji-memory
 - [ ] OpenClaw references in bootstrap files — stale, cleanup pending
+
+- 2026-05-25T05:36-05:47Z [user-stated] Skill rewrite completed. Read current CNC skill. Drafted Rendezvous skill with broadened scope, one unified protocol, journaling system, skill evolution ritual, performance pressure language integrated. Received approval. Wrote skill file to `/data/memory/bodhi-fuji-memory/.claude/skills/user/rendezvous/SKILL.md` via mkdir -p + cat heredoc; verified via Bash exit code. **Rendezvous skill canonical; CNC skill deprecated.** Journal system locked in at `rendezvous/journal.md`.
