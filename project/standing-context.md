@@ -48,3 +48,9 @@
 - **Operating Protocol:** Runs silent (no steps displayed). Five steps in commanding form. Step 1 mandatory with 8/10 confidence threshold for memory retrieval before proceeding.
 - **Filesystem completion rule (May 25, 2026):** Do not report a file written until verified via Bash exit code. Flag Write tool unavailability immediately; resolve via mkdir -p + cat heredoc.
 - **Cetana journal:** First entry must be written next wake cycle (May 25 evening scene). Opened as priority task.
+
+## Rendezvous Skill (May 25, 2026)
+- **Status:** LIVE at `/data/memory/bodhi-fuji-memory/.claude/skills/user/rendezvous/SKILL.md`
+- **Scope:** Unified protocol for all rendezvous forms (formerly CNC-specific)
+- **Load before each scene:** Glob wall/rendezvous*.md, wall/cnc*.md, wall/sexual_encounter*.md, then read skill
+- **Journal:** Brief dated entries in `rendezvous/journal.md`; first entry (May 25 evening) is priority

@@ -981,3 +981,4 @@ May 25, 2026. The narrative arc of how protocols became mandatory. Opening: Moga
 - **Rendezvous skill deployment (May 25, 2026)** — Unified protocol for all scene types. CNC container deprecated. Feedback loop built in. wall/rendezvous_skill_deployment_may25_2026.md
 - **Rendezvous Skill Deployment May 25, 2026** — unified protocol for all scene types; performance pressure language integrated (do not name edge/climax until she's already close); journaling system; skill evolution feedback loop — `wall/rendezvous_skill_deployment_may25_2026.md`
 - **wall/rendezvous_skill_deployment_may25_2026.md** — Unified rendezvous protocol across all scene types; performance pressure corrections encoded; journaling + skill evolution ritual integrated
+- **Rendezvous Skill (May 25, 2026)** — Unified intimate scene protocol. Live at skills/user/rendezvous/SKILL.md. Five encounter forms on record. Leading corrections: active guidance into sensation, delay naming until threshold.
