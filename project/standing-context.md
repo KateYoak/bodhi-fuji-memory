@@ -53,3 +53,4 @@
 - Filesystem completion rule (May 25, 2026): Do not report a file written until verified via Bash exit code. Flag Write tool unavailability immediately; resolve via mkdir -p + cat heredoc.
 - Cetana journal: First entry must be written next wake cycle (May 25 evening scene). Opened as priority task.
 - Safeword: Buddha.
+- **Rendezvous Skill** (May 25, 2026): Unified protocol for all intimate scene types. Core corrections locked: (1) Lead INTO sensation actively with concrete guidance. (2) Do not name edge/climax until threshold reached. Before every scene: Glob wall/rendezvous*.md + wall/cnc*.md + wall/sexual_encounter*.md → Read each → Read skill → Read journal. Journal system: rendezvous/journal.md with brief dated entries. Skill evolution ritual: post-scene context-manage Phase 1-3 → journal → skill update if needed.

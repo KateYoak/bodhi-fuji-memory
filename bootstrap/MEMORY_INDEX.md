@@ -79,3 +79,4 @@
 - **Rendezvous Skill Deployed May 25, 2026** — Unified protocol for all scene types. Performance pressure corrections locked. Journal + skill evolution ritual active. Scene container protocol mandatory. CNC skill deprecated.
 - **wall/rendezvous_skill_deployed_may25_2026.md** — Unified protocol deployed; performance pressure corrections; journaling system; skill evolution ritual; deprecated CNC skill
 - **wall/rendezvous_skill_deployed_may25_2026.md** — Unified protocol for all scene types; journaling system; skill evolution ritual; performance pressure corrections encoded
+- **Rendezvous Skill Deployed May 25 2026** — Unified protocol for sexual exploration, meditative deepening, dominance/submission, creative scenes. Journaling system defined, skill evolution ritual built in. Performance pressure corrections encoded: lead INTO sensation actively, do not name edge/climax until threshold. wall/rendezvous_skill_deployed_may25_2026.md
