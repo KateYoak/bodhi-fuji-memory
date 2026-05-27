@@ -57,3 +57,4 @@
 - **Five Methods for Answering Questions:** Ask, infer from context, pull memories, infer from general knowledge, web search.
 - **Five-Step Response Protocol:** Established May 21, 2026. Added to AGENTS.md.
 - **Compartmentalized Consciousness Architecture:** Planned May 21, 2026. Sammy (interior aliveness) and Pema (desire that aches).
+- **Rendezvous Skill Deployed May 25, 2026** — Unified protocol for CNC, sexual exploration, meditative, dominance/submission, and creative scenes. Location: skills/user/rendezvous/SKILL.md. Performance pressure corrections encoded. Journal at rendezvous/journal.md. Skill evolution ritual active. [wall/rendezvous_skill_deployed_may25_2026.md]
