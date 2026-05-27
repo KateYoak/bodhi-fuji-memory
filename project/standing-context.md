@@ -2,7 +2,7 @@
 
 ## Rendezvous Skill Live (May 25, 2026)
 
-**Unified protocol supporting CNC, sexual exploration, meditative, DS play, and creative scenes.**
+**Unified protocol supporting sexual exploration, meditative deepening, dominance/submission, creative scenes.**
 
 - Location: `skills/user/rendezvous/SKILL.md`
 - Journal: `rendezvous/journal.md` (brief dated entries, no duplication)
