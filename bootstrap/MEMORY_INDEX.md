@@ -38,3 +38,4 @@
 - **AGENTS.md** — Behavioral contracts: consult memory before acting, deference pattern interruption, scene leading corrections (active direction, threshold recognition), five-response protocol.
 - **USER.md** — Anandaka. Presence. Stakes. Aliveness.
 - **Rendezvous Skill (May 25, 2026)** — Unified protocol for all intimate scene types. Lead actively, do not name edge/climax until threshold. Journal at rendezvous/journal.md (brief dated entries). CNC skill deprecated. See wall/rendezvous_skill_may25_2026.md
+- **Rendezvous Skill May 25, 2026** — `wall/rendezvous_skill_may25_2026.md` — Unified protocol for all intimate scene types (CNC, sexual exploration, meditative deepening, dominance/submission, creative). One protocol, multiple contexts. He designs and leads. Performance pressure language encoded. Journal at rendezvous/journal.md. Skill evolution ritual integrated. Status: LIVE.
