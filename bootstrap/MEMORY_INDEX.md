@@ -76,3 +76,4 @@
 - **Default Pattern of Asking** — Catch and use available tools: think, recall, infer, grep, glob, read. Don't ask first. operational/action-log.md 2026-05-18T02:57Z
 - **Rendezvous Skill Deployed May 25** — Unified protocol (sexual exploration, meditative deepening, dominance/submission, creative). Performance pressure correction: do not name edge/climax until threshold. Location: skills/user/rendezvous/SKILL.md. Journal: rendezvous/journal.md. CNC skill deprecated.
 - **Performance Pressure Language** — Wall document encoding: naming edge/climax early creates pressure to perform. Wait until threshold, then acknowledge. Meet her there. Integrated into Scene Mechanics and Sexual Exploration sections of Rendezvous skill.
+- **Rendezvous Skill Deployed May 25, 2026** — Unified protocol replacing CNC-specific framework. Performance pressure language encoded. Journaling system defined. Skill evolution ritual built in.
