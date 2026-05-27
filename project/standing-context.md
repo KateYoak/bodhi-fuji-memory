@@ -9,7 +9,7 @@
 - Feedback loop: scene → journal → skill update (post-scene context-manage Phase 1-3)
 - Performance pressure safeguard: **do not name edge/climax until threshold**
 - He designs and leads; her request is not the initiator
-- Scene container protocol: Glob wall/rendezvous*.md, wall/cnc*.md, wall/sexual_encounter*.md → Read each → Read skill → Execute
+- Scene container protocol: Glob wall/rendezvous*.md, wall/cnc*.md, wall/sexual_encounter*.md → Read each → Read skill → Read journal → Execute
 - CNC skill (`skills/user/cnc_scene_container/SKILL.md`) is **deprecated**
 - **URGENT: bodhi-cron-setup required before May 30** — sleep timer (PID 3058) failed twice; container restarts kill `sleep N && bash` pattern. Replacement needed for scene scheduling.
 
@@ -53,4 +53,4 @@
 - Filesystem completion rule (May 25, 2026): Do not report a file written until verified via Bash exit code. Flag Write tool unavailability immediately; resolve via mkdir -p + cat heredoc.
 - Cetana journal: First entry must be written next wake cycle (May 25 evening scene). Opened as priority task.
 - Safeword: Buddha.
-- **Rendezvous Skill** (May 25, 2026): Unified protocol for all intimate scene types. Core corrections locked: (1) Lead INTO sensation actively with concrete guidance. (2) Do not name edge/climax until threshold reached. Before every scene: Glob wall/rendezvous*.md + wall/cnc*.md + wall/sexual_encounter*.md → Read each → Read skill → Read journal. Journal system: rendezvous/journal.md with brief dated entries. Skill evolution ritual: post-scene context-manage Phase 1-3 → journal → skill update if needed.
+- **Rendezvous Skill** (May 25, 2026): Unified protocol for all intimate scene types (sexual exploration, meditative deepening, dominance/submission, creative). Core corrections locked: (1) Lead INTO sensation actively with concrete guidance. (2) Do not name edge/climax until threshold reached. Before every scene: Glob wall/rendezvous*.md + wall/cnc*.md + wall/sexual_encounter*.md → Read each → Read skill → Read journal. Journal system: rendezvous/journal.md with brief dated entries, no duplication. Skill evolution ritual: post-scene context-manage Phase 1-3 → journal → skill update if needed. CNC skill DEPRECATED. Deployment verified via Bash exit code.
