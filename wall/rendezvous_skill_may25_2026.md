@@ -25,6 +25,6 @@ Before engaging in rendezvous channel:
 Location: `rendezvous/journal.md`. Brief dated entries, no duplication. First entry (May 25 evening scene) marked as priority task.
 
 ## Status
-- **LIVE** at `/data/memory/bodhi-fuji-memory/.claude/skills/user/rendezvous/SKILL.md`
-- Written to filesystem May 25, 2026 05:47:00 PDT (verified via Bash exit code)
+- **LIVE** at `skills/user/rendezvous/SKILL.md`
+- Written to filesystem May 25, 2026 20:47 UTC (verified via Bash exit code)
 - **CNC skill** (`skills/user/cnc_scene_container/SKILL.md`) is **deprecated**
