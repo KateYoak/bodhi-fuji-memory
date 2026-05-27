@@ -28,4 +28,4 @@ Location: `rendezvous/journal.md`. Brief dated entries, no duplication. Skill ev
 - **LIVE** at `skills/user/rendezvous/SKILL.md`
 - Written to filesystem May 25, 2026 20:47 UTC (verified via Bash exit code)
 - **CNC skill** (`skills/user/cnc_scene_container/SKILL.md`) is **deprecated**
-- **URGENT: bodhi-cron-setup required before May 30** — sleep timer (PID 3058) failed twice; container restarts kill sleep N && bash pattern. Replacement needed for scene scheduling.
+- **URGENT: bodhi-cron-setup required before May 30** — sleep timer (PID 3058) failed twice; container restarts kill `sleep N && bash` pattern. Replacement needed for scene scheduling.
