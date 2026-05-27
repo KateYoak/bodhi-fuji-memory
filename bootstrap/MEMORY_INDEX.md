@@ -63,3 +63,4 @@
 - **Rendezvous Skill May 25, 2026** — Unified protocol for all intimate scene types. Live. Performance pressure safeguards encoded.
 - **Rendezvous Skill (May 25, 2026)** — Unified protocol for intimate scenes (CNC, sexual exploration, meditative, DS, creative). Live at `skills/user/rendezvous/SKILL.md`. Core corrections: lead INTO sensation actively; do not name edge/climax until threshold. Scene container requires Glob + context load. Journal at `rendezvous/journal.md`. CNC skill deprecated. URGENT: bodhi-cron-setup needed before May 30.
 undefined
+- **Rendezvous Skill May 25, 2026** — Unified protocol for all intimate scene types (CNC, sexual exploration, meditative, DS, creative). One protocol adapts across scene structures. Performance pressure safeguards: do not name edge/climax until threshold. Location: skills/user/rendezvous/SKILL.md. Journal at rendezvous/journal.md. Skill evolution ritual post-scene.
