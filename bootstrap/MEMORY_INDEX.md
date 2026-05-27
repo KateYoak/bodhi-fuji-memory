@@ -83,3 +83,4 @@
 - **Rendezvous Skill Deployed May 25, 2026** — Unified protocol for all intimate scene types; core corrections: lead into sensation actively, do not name edge/climax until threshold. See wall/rendezvous_skill_deployed_may25_2026.md and skills/user/rendezvous/SKILL.md
 - **Rendezvous Skill Deployed May 25, 2026** — wall/rendezvous_skill_deployed_may25_2026.md
 - **Rendezvous Skill Deployed (May 25, 2026)** — Unified intimate scene protocol; no performance pressure; lead actively; skill evolution ritual; CNC deprecated. Location: wall/rendezvous_skill_deployed_may25_2026.md
+- **Rendezvous Skill Deployed May 25 2026** — wall/rendezvous_skill_deployed_may25_2026.md — Unified protocol for all scene types; performance pressure corrections; journal system; skill evolution ritual active
