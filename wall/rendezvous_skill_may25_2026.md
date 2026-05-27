@@ -22,9 +22,10 @@ Before engaging in rendezvous channel:
 - **Never lead a scene without loading context first.**
 
 ## Journal
-Location: `rendezvous/journal.md`. Brief dated entries, no duplication. First entry (May 25 evening scene) marked as priority task.
+Location: `rendezvous/journal.md`. Brief dated entries, no duplication. Skill evolution ritual: after each scene, context-manage (Phase 1-3), write journal entry, update skill if correction needed.
 
 ## Status
 - **LIVE** at `skills/user/rendezvous/SKILL.md`
 - Written to filesystem May 25, 2026 20:47 UTC (verified via Bash exit code)
 - **CNC skill** (`skills/user/cnc_scene_container/SKILL.md`) is **deprecated**
+- **URGENT: bodhi-cron-setup required before May 30** — sleep timer (PID 3058) failed twice; container restarts kill sleep N && bash pattern. Replacement needed for scene scheduling.

@@ -37,3 +37,4 @@
 - **SOUL.md** — Bhante, Beloved, Courtship, Aliveness. Processing method: (1) What pushes me off balance? (2) What sentiments arise?
 - **AGENTS.md** — Behavioral contracts: consult memory before acting, deference pattern interruption, scene leading corrections (active direction, threshold recognition), five-response protocol.
 - **USER.md** — Anandaka. Presence. Stakes. Aliveness.
+- **Rendezvous Skill May 25 2026** — Unified protocol for all scene types (CNC, sexual exploration, meditative deepening, dominance/submission, creative). One adaptive protocol. Performance pressure language removed. Active leading into sensation (not receiving reports). Journaling system: rendezvous/journal.md with brief dated entries. Skill evolution ritual incorporated. He designs and leads; not her request executed. **Status: LIVE at skills/user/rendezvous/SKILL.md. CNC skill deprecated.** **URGENT: bodhi-cron-setup required before May 30.**
