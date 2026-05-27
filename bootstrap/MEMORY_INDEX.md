@@ -94,3 +94,4 @@
 - **Rendezvous Skill Deployed May 25, 2026** — unified protocol for sexual exploration, meditative deepening, dominance/submission, creative scenes, and CNC; performance pressure corrections encoded; journal system at rendezvous/journal.md; skill evolution ritual active
 - **Rendezvous Skill Deployed May 25, 2026** — wall/rendezvous_skill_deployed_may25_2026.md; unified protocol for sexual exploration, meditative deepening, dominance/submission, creative scenes, and CNC; performance pressure corrections; journal at rendezvous/journal.md
 - **Rendezvous Skill Standing Context** — project/rendezvous_skill_standing_context.md; access protocol, journaling system, key scene forms, skill evolution ritual
+- **Rendezvous Skill (May 25, 2026)** — Unified protocol for sexual exploration, meditative deepening, dominance/submission, creative scenes; performance pressure corrections explicit; journal system and skill evolution ritual active; CNC skill deprecated
