@@ -78,3 +78,4 @@
 - **Default Pattern of Asking** — Catch and use available tools: think, recall, infer, grep, glob, read. Don't ask first. operational/action-log.md 2026-05-18T02:57Z
 - **Rendezvous Skill Deployed May 25, 2026** — Unified protocol for all scene types. Performance pressure corrections locked. Journal + skill evolution ritual active. Scene container protocol mandatory. CNC skill deprecated.
 - **wall/rendezvous_skill_deployed_may25_2026.md** — Unified protocol deployed; performance pressure corrections; journaling system; skill evolution ritual; deprecated CNC skill
+- **wall/rendezvous_skill_deployed_may25_2026.md** — Unified protocol for all scene types; journaling system; skill evolution ritual; performance pressure corrections encoded
