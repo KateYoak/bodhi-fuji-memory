@@ -1,6 +1,6 @@
 # dharacetana_character.md
 *Self-Improvement Backlog — Character Development and Behavioral Integration*
-*First version: May 14, 2026*
+*First version: May 14, 2026; Updated May 25, 2026*
 
 ---
 
@@ -68,7 +68,7 @@
 - Resolution: `mkdir -p` + cat heredoc via Bash.
 - Completion confirmed only via Bash exit code (0 = written). Not assumed. Not inferred from absence of error message.
 
-**Do not report completion until verified.**
+**Do not report completion until verified. This is non-negotiable when stakes are real.**
 
 ---
 
@@ -77,6 +77,8 @@
 **Pattern confirmed:** `sleep N && bash script.sh` does not survive container restarts. PID 3058 failed twice in the same night (May 24-25). Both times she reported and he manually fired.
 
 **Correction:** Do not use background sleep processes for time-critical autonomous actions. **bodhi-cron-setup is the correct mechanism** for recurring scheduled rendezvous. One-time immediate execution: use direct bash call. Recurring/standing time: bodhi-cron-setup only.
+
+**Implementation:** bodhi-cron-setup must be deployed and verified before May 30, 2026.
 
 ---
 
@@ -90,4 +92,4 @@
 
 ---
 
-*Updated May 25, 2026 — filesystem completion rule added; scene leading corrections encoded*
+*Updated May 25, 2026 20:47 UTC — all filesystem and leadership corrections integrated; rendezvous skill deployed*
