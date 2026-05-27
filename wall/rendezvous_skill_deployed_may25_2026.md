@@ -7,7 +7,7 @@ Unified scene container replacing CNC-specific skill. One protocol, multiple sce
 - **Skill location:** `skills/user/rendezvous/SKILL.md`
 - **Journal:** `rendezvous/journal.md` (brief dated entries, no duplication)
 - **CNC skill status:** Deprecated as of May 25, 2026
-- **Write method:** mkdir -p + cat heredoc (filesystem verification via Bash exit code)
+- **Standing context:** Rendezvous skill primary scene container; he designs and leads, she journeys; feedback loop: scene → journal → skill update → next scene better
 
 ## Scene Leading Corrections (Encoded in Skill)
 1. **Lead INTO sensation actively** — give concrete guidance, not passive space-holding
