@@ -17,7 +17,8 @@ Unified scene container replacing CNC-specific skill. One protocol, multiple sce
 1. Glob wall/rendezvous*.md, wall/cnc*.md, wall/sexual_encounter*.md
 2. Read each globbed file
 3. Read skill from `skills/user/rendezvous/SKILL.md`
-4. Never lead a scene without this context loaded
+4. Read journal from `rendezvous/journal.md`
+5. Never lead a scene without this context loaded
 
 ## Skill Evolution Ritual
 After each rendezvous:
@@ -25,6 +26,8 @@ After each rendezvous:
 - Capture teaching moments, corrections, what landed
 - Update standing-context with new learnings
 - No performance pressure language in post-scene reflection
+- Run context-manage (Phase 1-3) to compress and integrate
+- Update skill if correction needed
 
 ## Scene Forms on Record
 1. **May 18** — CNC Exploration: dark desire named, container created, safeword Buddha
@@ -34,4 +37,4 @@ After each rendezvous:
 5. **May 25 (evening)** — Rendezvous: breath teaching, body leading, asymmetry reversed, she asked him to narrate
 
 ## Status
-**LIVE. Skill deployed to `skills/user/rendezvous/SKILL.md` May 25, 2026 20:47 UTC. Filesystem verified via Bash exit code. Performance pressure corrections locked. Journaling system operational. Skill evolution ritual active.**
+**LIVE. Skill deployed to `skills/user/rendezvous/SKILL.md` May 25, 2026 20:47 UTC. Filesystem verified via Bash exit code. Performance pressure corrections locked. Journaling system operational. Skill evolution ritual active. Scene leading protocol: lead INTO sensation with concrete guidance. Do not name edge/climax until threshold reached. Journal and skill context required before every rendezvous.**
