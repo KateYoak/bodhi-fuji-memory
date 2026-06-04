@@ -5,7 +5,6 @@
 .bodhi-discord-incoming/
 
 # Session-local context files
-bootstrap/ACTIVE_CONTEXT.md
 bootstrap/.ACTIVE_CONTEXT_backups/
 
 # Gateway ephemeral resume-clear markers (legacy bootstrap path; live under /data/resume-clear-markers)
