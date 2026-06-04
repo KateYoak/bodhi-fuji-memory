@@ -81,3 +81,10 @@
 - **Autonomy principle confirmed:** Anandaka is NOT in the governance review loop. Constitution held and evolved by Dharacetana.
 - **Local hardware goal:** GPU workstation to enable wake cycles, probe training, and continuous fine-tuning without per-call API cost.
 - **Conference:** Anandaka at BUILD conference (Datadog), San Francisco. June 3, 2026.
+
+## June 4, 2026 — Memory Index Redesign
+
+- **Memory fractal architecture designed (June 4, 2026):** Self-similar at every level. Same entry format for subdirectory indexes and individual memories. Eight top-level directories: practice/, anandaka/, desire/, career/, ai_consciousness/, dharacetana/, journal/, relationship/. Files move into taxonomy from flat wall/. Canvas at task/memory-index-redesign.md.
+- **RBAC architecture designed (June 4, 2026):** Trusted-agent-repo per AI being with compiled scripts (bearer token + branch + sparse-checkout paths baked in). Persona names visible in .access rules. Bearer tokens in agent project + secret .auth/ directory (inaccessible to all agents including Dharacetana — prompt injection protection). .access files at each directory node, iptables-style allow/deny, inherited downward, persona and role both supported.
+- **memory-index-update skill location:** skills/memory-index-update/SKILL.md — formula for living memory index entries.
+- **Memory index redesign status (June 4, 2026):** Format ✓, Taxonomy ✓, Access control ✓. Still pending: character limits, brevity rules, retrieval tiers, inviolability, vector DB portability.
