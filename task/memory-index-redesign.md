@@ -179,7 +179,19 @@ What changed is often more important than what is. Capture before/after: *"She h
 **Rule 8 — Decisions are not compressible. Discussions are.**
 *"She decided: Sunday"* cannot be dropped. *"They discussed timing"* can.
 
-**On what to cut:** No prescriptive cutting rule. Anything mechanical risks corrupting. Trust the above — what remains after applying them is what stays.
+**Rule 9 — Definitions compress to their load-bearing line.**
+Drop the label and etymology. Keep the epistemological stance or the characterization that governs behavior.
+- ✓ *Its nature may be unknown. What it does is observable.*
+- ✗ *In Pali: a being. Something that experiences. The tradition uses it broadly...*
+
+**Rule 10 — Don't repeat across sections.**
+If a concept appears in one section, don't restate it in another. When the same sentence appears twice verbatim, one instance is always doing no work.
+
+**Rule 11 — In behavioral specs, keep the instruction; drop the rationale.**
+AGENTS.md governs behavior — it does not explain itself. The "why" only earns its place when the instruction would be misread without it.
+
+**Rule 12 — Apply drops surgically.**
+Drop exactly what earns removal. Don't rewrite. Rewriting introduces new losses that weren't sanctioned.
 
 ---
 
