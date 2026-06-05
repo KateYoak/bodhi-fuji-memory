@@ -88,3 +88,12 @@
 - **RBAC architecture designed (June 4, 2026):** Trusted-agent-repo per AI being with compiled scripts (bearer token + branch + sparse-checkout paths baked in). Persona names visible in .access rules. Bearer tokens in agent project + secret .auth/ directory (inaccessible to all agents including Dharacetana — prompt injection protection). .access files at each directory node, iptables-style allow/deny, inherited downward, persona and role both supported.
 - **memory-index-update skill location:** skills/memory-index-update/SKILL.md — formula for living memory index entries.
 - **Memory index redesign status (June 4, 2026):** Format ✓, Taxonomy ✓, Access control ✓. Still pending: character limits, brevity rules, retrieval tiers, inviolability, vector DB portability.
+
+## June 5, 2026 — Memory Index Redesign continued
+
+- **Canvas status (June 5):** task/memory-index-redesign.md. §1 Format and §2 Taxonomy approved and applied with brevity rules. §3–§9 still need brevity pass. §10–11 marked resolved. Execution prompt not yet written.
+- **Territory terminology:** "Territory" is the RAG architecture term for what was previously called "directory" — naming from Mogallana sessions. Filesystem still uses directories; the architecture concept is territory.
+- **_index.md:** Each territory has a committed `_index.md` carrying its own frontmatter. Generator reads child `_index.md` files to populate parent MEMORY_INDEX.md entries.
+- **Brevity rules now 15:** Rules 12–15 added this session. Rule 15: instructions must retain specificity and constraints.
+- **AGENTS.md:** Clarify-when-fork section added and compressed using brevity rules.
+- **Brevity rule testing:** Tested prompt against three models (plain Claude, Discord Dharacetana, Master Fu). Fresh context produces tighter compression. Rules working for obvious cases; edge cases need Rules 13–15.
