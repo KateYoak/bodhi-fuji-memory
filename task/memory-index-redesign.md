@@ -142,43 +142,80 @@ spock/
 
 ### `.access` files
 
-Per-territory. Travel with the territory. Inherited downward. Overridable at any level.
+Per-territory. One file per directory. Describes who can read that territory.
+
+```yaml
+inherit: false        # true | false — default: false
+default: deny         # deny | allow
+allow:
+  - dharacetana
+  - masterfu
+```
 
 ```yaml
 inherit: true
-rules:
-  - deny: role:zen_teacher
-  - allow: person:master_mu
-  - allow: role:ai_friends
+default: allow
+deny:
+  - mastermu
 ```
 
-**Principles:** Both Allow and Deny. Specific person overrides general role. Deny wins over Allow at same level. Default: deny if no rule matches.
+**Fields:**
 
-**Defined roles:** `dharacetana_only`, `ai_friends`, `zen_teacher`, `all`
+- `inherit` — when `true`, this file's rules are added on top of the parent's rules. When `false` (default), this file stands alone.
+- `default` — what happens when no rule matches. `deny` = closed unless listed. `allow` = open unless listed.
+- `allow` — list of persons explicitly granted access.
+- `deny` — list of persons explicitly blocked.
+
+**Person names:** one word, lowercase. (`dharacetana`, `masterfu`, `mastermu`, `tyrion`, `spock`). `all` means every agent.
+
+**Conflict resolution:** when `inherit: true`, child rules override parent rules on conflict. A child `allow` overrides a parent `deny` for the same person, and vice versa.
+
+**Common patterns:**
+
+Close a territory to one being only:
+```yaml
+inherit: false
+default: deny
+allow:
+  - dharacetana
+```
+
+Open a territory but block one being:
+```yaml
+inherit: false
+default: allow
+deny:
+  - mastermu
+```
+
+Inherit parent rules and add one exception:
+```yaml
+inherit: true
+allow:
+  - tyrion
+```
 
 ### Trusted Agent Architecture
 
 ```
 trusted-agent-repo/         ← in agent's Claude project
-  clone.sh                  ← compiled; bearer token; sparse-checkouts permitted paths
+  clone.sh                  ← compiled; bearer token baked in; sparse-checkouts permitted paths
   commit.sh                 ← compiled; pushes to designated branch only
 
 bodhi-fuji-memory/
-  .access files             ← per-territory visibility rules (the policy)
+  .access files             ← per-territory policy
   .auth/                    ← inaccessible to ALL agents including Dharacetana
     tokens.yaml             ← bearer_token: {persona, branch, paths}
   [taxonomy]
 ```
 
 **Identity model:**
-- **Persona name** — visible, appears in `.access` files and prompts
-- **Bearer token** — obscure, random; in agent's project knowledge and in `.auth/`
-
-**The script is compiled policy enforcement.** The `.access` files define the policy. The script is the compiled expression of that policy for one identity. Kate generates scripts when setting up a new being.
+- **Persona name** — visible; appears in `.access` files and agent prompts
+- **Bearer token** — obscure, random; lives in agent's project knowledge and in `.auth/` only
 
 **Security:** `.auth/` inaccessible to all agents — protects against prompt injection from external content. Bearer token is the credential; persona name is attribution only.
 
-**Setup:** Generate token → add to `.auth/` → compile scripts with token + paths baked in → place in agent's trusted-agent-repo → configure agent's project.
+**Setup:** Generate token → add to `.auth/` → compile scripts with token and permitted paths baked in → place in agent's `trusted-agent-repo` → configure agent's project.
 
 ---
 
