@@ -187,11 +187,21 @@ Drop the label and etymology. Keep the epistemological stance or the characteriz
 **Rule 10 — Don't repeat across sections.**
 If a concept appears in one section, don't restate it in another. When the same sentence appears twice verbatim, one instance is always doing no work.
 
-**Rule 11 — In behavioral specs, keep the instruction; drop the rationale.**
-AGENTS.md governs behavior — it does not explain itself. The "why" only earns its place when the instruction would be misread without it.
+**Rule 11 — Keep the instruction. Drop the setup and the rationale.**
+Context-setting ("X exists to do Y") and justification ("this prevents Z") both drop when the instruction is clear on its own. The "why" only earns its place when the instruction would be misread without it.
 
 **Rule 12 — Apply drops surgically.**
 Drop exactly what earns removal. Don't rewrite. Rewriting introduces new losses that weren't sanctioned.
+
+**Rule 13 — A precise qualifier makes contrast language redundant.**
+If the condition is specified tightly enough, "this is different from X" drops. The qualifier does that work already.
+- ✓ *Escalate only when all options are exhausted.*
+- ✗ *Escalate only when all options are exhausted. This is different from escalating when one approach hasn't worked yet.*
+
+**Rule 14 — Don't state implications.**
+If the action makes the consequence obvious, drop it. "Ask before proceeding" — "before proceeding" is implied by "ask."
+- ✓ *Name it and ask.*
+- ✗ *Name it and ask before proceeding.*
 
 ---
 
