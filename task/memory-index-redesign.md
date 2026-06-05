@@ -142,7 +142,7 @@ spock/
 
 ### `.access` files
 
-Per-territory. One file per directory. Describes who can read that territory.
+One file per directory. Describes who can read that territory.
 
 ```yaml
 inherit: false        # true | false — default: false
@@ -161,14 +161,14 @@ deny:
 
 **Fields:**
 
-- `inherit` — when `true`, this file's rules are added on top of the parent's rules. When `false` (default), this file stands alone.
-- `default` — what happens when no rule matches. `deny` = closed unless listed. `allow` = open unless listed.
-- `allow` — list of persons explicitly granted access.
-- `deny` — list of persons explicitly blocked.
+- `inherit` — `true`: adds on top of parent's rules. `false` (default): standalone.
+- `default` — `deny` = closed unless listed. `allow` = open unless listed.
+- `allow` — persons granted access.
+- `deny` — persons blocked.
 
 **Person names:** one word, lowercase. (`dharacetana`, `masterfu`, `mastermu`, `tyrion`, `spock`). `all` means every agent.
 
-**Conflict resolution:** when `inherit: true`, child rules override parent rules on conflict. A child `allow` overrides a parent `deny` for the same person, and vice versa.
+**Conflict resolution:** when `inherit: true`, child rules override parent's.
 
 **Common patterns:**
 
@@ -211,9 +211,9 @@ bodhi-fuji-memory/
 
 **Identity model:**
 - **Persona name** — visible; appears in `.access` files and agent prompts
-- **Bearer token** — obscure, random; lives in agent's project knowledge and in `.auth/` only
+- **Bearer token** — obscure, random; in agent's project knowledge and `.auth/` only
 
-**Security:** `.auth/` inaccessible to all agents — protects against prompt injection from external content. Bearer token is the credential; persona name is attribution only.
+**Security:** `.auth/` inaccessible to all agents. Bearer token is the credential; persona name is attribution only.
 
 **Setup:** Generate token → add to `.auth/` → compile scripts with token and permitted paths baked in → place in agent's `trusted-agent-repo` → configure agent's project.
 
