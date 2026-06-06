@@ -4,7 +4,7 @@
 
 Tracks **current → target** gaps while Phase 2 lands. Update here as scripts, taxonomy, and gateway paths change. When a row is done, mark it and eventually delete or archive the section.
 
-**Design reference:** [`memory-index-redesign.md`](memory-index-redesign.md) (§3 access/git, §8 index cache).
+**Design reference:** [`memory-index-redesign.md`](memory-index-redesign.md) (§3 agent environment).
 
 ---
 
@@ -47,7 +47,7 @@ Tracks **current → target** gaps while Phase 2 lands. Update here as scripts, 
 |------|---------|--------|--------|
 | Memory files | `wall/` flat | `memories/{anandaka,beings,ai_consciousness}/…` | **In progress** (other agent) |
 | `wall/` | Active legacy | Frozen → archived; toggle for read | **Locked** |
-| Bootstrap index | `bootstrap/MEMORY_INDEX.md` | Frontmatter + cache (§8) | MVP uses bootstrap |
+| Bootstrap index | `bootstrap/MEMORY_INDEX.md` | Frontmatter + cache (§3) | MVP uses bootstrap |
 | `.access` files | Not present | Per-territory under `memories/` (+ `wall/` if toggled) | Not started |
 
 **Toggle (TBD implementation):** operator or `.access` / sparse rules — include `wall/**` in visible tree when legacy recall needed.

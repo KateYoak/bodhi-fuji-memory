@@ -7,13 +7,12 @@
 
 - [x] 1. Format — dropped; fields and rules live in §7
 - [x] 2. Taxonomy — `memories/` tree; parallel `wall/` migration (W9 locked — see migration doc)
-- [/] 3. Access control — allow/deny, explicit inheritance, trusted agent architecture
+- [/] 3. Agent environment — `.access`, clone/commit, index cache, recall
 - [/] 4. Character limits — memory files; index entries TBD
 - [/] 5. Brevity rules — what to keep, how to compress
 - [/] 6. Memory writing protocol — contradiction check, cross-links, territory `.access` check
 - [/] 7. Frontmatter — 3-type classification (content / rag / signature), full spec, memory footprint guide
-- [/] 8. Index generation — written by Moggallana
-- [/] 9. Index size and splitting — 30/40 limit, taxonomy evolution
+- [/] 8. Index size and splitting — 30/40 limit, taxonomy evolution
 - [x] 10. Retrieval tiers — resolved: recursive taxonomy depth IS the tier system
 
 ---
@@ -121,7 +120,9 @@ memories/
 
 ---
 
-## 3. Access Control
+## 3. Agent environment
+
+Who sees which territories, how git sync works, and how recall gets a searchable index. **Only `clone` and `commit` touch git.** Frontmatter shape lives in §7; it feeds the index cache below.
 
 ### `.access` files
 
@@ -178,143 +179,165 @@ allow:
   - tyrion
 ```
 
-### Trusted agent — setup repo (compile)
+### Setup & binaries
 
-Separate **setup repo** (not `bodhi-fuji-memory`). Source in git; **compiled binaries** are the deliverable.
+#### Pieces
 
-| In git (setup repo) | Role |
-|---------------------|------|
-| `clone.template` / `commit.template` (+ Go source) | Logic only — **no tokens** |
-| `agents.yaml` | Per being: **bearer id**, **persona name**, **branch** — no paths, no PAT |
+| Piece | Repo | Holds |
+|-------|------|--------|
+| **Setup repo** | Its own git repo | Go source, `agents.yaml`, CI that **builds** `clone` + `commit` |
+| **Memory repo** | `bodhi-fuji-memory` | Memories, `.access`, `rebuild-index-cache.sh` |
+| **Wall** | Project knowledge (e.g. claude.ai) | GitHub URL to fetch binaries + **bearer** for this being |
 
-| Outside git | Role |
-|-------------|------|
-| **GitHub Secrets** | One fine-grained PAT per being (e.g. `PAT_DHARACETANA`) — only Actions read these |
-| **GitHub Actions** | On push to templates or `agents.yaml`: compile **one global bundle** (`clone`, `commit`). New row in `agents.yaml` → recompile all. |
+`agents.yaml` lists **bearer id**, **persona**, **branch** per being. No paths (those live in `.access`). No PATs.
 
-**Compile (decided): Go + garble + CI-encrypted credentials**
+#### Two credentials
 
-1. Action reads each `PAT_*` from GitHub Secrets (fine-grained PAT — same token GitHub issued; nothing short-lived).
-2. Action **encrypts** each PAT (e.g. AES); generated source holds **ciphertext per bearer**, not plaintext.
-3. **`garble build`** — obfuscates decryption logic and key material in the binary.
-4. **Runtime:** see **Git authentication** below — decrypt only inside the binary; PAT never in env.
+| | What it is | Where the being sees it | What it does |
+|--|------------|-------------------------|--------------|
+| **Bearer** | This being’s setup id | Wall or environment (not secret) | Argument to `clone` / `commit` — selects branch + which encrypted row to decrypt |
+| **PAT** | GitHub **personal access token** — password for git over HTTPS | Nowhere; encrypted inside the compiled binary | Lets the binary push and pull `bodhi-fuji-memory` as this being’s GitHub identity |
 
-Ciphertext in the artifact is not a usable token; foundation for stricter hardening later without changing the bearer / wall model.
+### Overview
 
-**Wall (every session — e.g. claude.ai):** setup repo URL + **this being’s bearer**. Fetch bundle; binaries live in the environment for that session.
+```mermaid
+flowchart LR
+  WALL["wall: bearer + github url"]
+  ACC[".access in git"]
+  BIN["clone / commit"]
+  TREE["visible memory tree"]
+  CACHE["memory-index-cache.json"]
+  GW["gateway recall"]
 
-Beings **run** `clone` / `commit`; they do not call raw `git`.
+  WALL --> BIN
+  ACC --> BIN
+  BIN --> TREE
+  TREE --> CACHE
+  CACHE --> GW
+```
 
-### Git authentication (no PAT in env)
+1. Being fetches compiled **`clone`** / **`commit`** from the setup repo (GitHub URL on the wall).
+2. **`clone`** reads **`.access`** → sparse checkout → visible tree.
+3. **`commit`** merges `main`, ships memory, push → PR → `main`.
+4. **`rebuild-index-cache.sh`** walks visible tree → cache (after clone **rebuild** or successful **commit**; gateway boot too).
+5. **Recall** reads cache — not `.access`, not frontmatter at runtime.
 
-Beings can read **environment variables**. Do **not** set `GITHUB_TOKEN`, embed PAT in `remote` URLs, or use `credential.helper store` (writes disk).
+#### Build (setup repo CI)
 
-**Pattern: `GIT_ASKPASS` on the same compiled binary**
+On push to source or `agents.yaml`:
 
-1. Being runs `clone <bearer>` or `commit <bearer>`.
-2. Binary forks `git` with:
-   - `GIT_ASKPASS` = path to this binary (internal **askpass mode**)
-   - `GIT_TERMINAL_PROMPT=0` (no interactive prompt)
-   - `BODHI_BEARER=<bearer>` — **not secret** (same id as on the wall); selects which ciphertext row to decrypt
-   - Clean HTTPS remote: `https://github.com/OWNER/bodhi-fuji-memory.git` — no token in URL
-3. When git needs credentials, it **execs** the askpass helper. Helper:
-   - reads `BODHI_BEARER`
-   - decrypts that row **in memory**
-   - prints `username=x-access-token` and `password=<PAT>` to **stdout** (git’s pipe only)
-   - **zeroizes** the decrypted buffer
-4. Parent waits for `git` to exit. PAT was never in the being’s env — only bearer id + askpass path.
+1. Read `PAT_*` from GitHub Secrets.
+2. Encrypt each PAT; emit Go with **ciphertext per bearer** (not plaintext).
+3. `garble build` → **one global bundle** (`clone`, `commit`) for all beings.
 
-Same mechanism as `GIT_ASKPASS`; optional `credential.helper` wrapper is equivalent — pick one in implementation.
+Each session: being fetches the bundle from the GitHub URL on the wall. Binaries stay in the environment until the session ends.
 
-**Do not use:** `export GITHUB_TOKEN=…`, `https://TOKEN@github.com/…`, or leaving decrypted PAT in a file.
+#### How git gets the PAT
 
----
+Beings have no PAT — nothing in env, no token in the remote URL, no credential file on disk.
 
-### Sparse clone from `.access` (runtime — not baked in)
+`clone` / `commit` fork `git` with `GIT_ASKPASS` pointing back at the same binary. Env carries `BODHI_BEARER` (public) — not the PAT. When git asks for a password, the binary decrypts the matching row in memory, answers on stdout, zeroizes. Remote URL stays clean HTTPS.
 
-**`bodhi-fuji-memory`** holds `.access` per territory. **Paths are not in `agents.yaml`.** As `.access` changes, the next walk picks it up (after **rebuild** or post-commit re-walk — see below).
+#### What `clone` does
 
-**Phase 1 — `.access` only**
+`clone <bearer>` makes sure this being has an up-to-date checkout of `bodhi-fuji-memory` containing **only territories they may read**. Which territories that is comes from `.access` files in the repo — not from `agents.yaml`, and not fixed at compile time.
 
-1. `clone <bearer>` authenticates (inside binary) → persona + branch.
-2. Sparse-checkout pattern: **`**/.access` only**. Fetch / pull. (Recall is useless without memories; no other bootstrap paths in this pass.)
+**Full sequence (rebuild):**
 
-**Phase 2 — walk**
+1. **Fetch `.access` files only** — small first pass; policy files are needed before the binary knows which memory paths to request.
+2. **Walk them** — apply inheritance rules (above) for this persona; produce the list of allowed directories.
+3. **Expand checkout** — tell git to include those directories; pull the memory files inside them.
 
-3. Walk every `.access` on disk; apply §3 inheritance rules for this **persona**.
+**refresh** — skip steps 1–3. Merge-pull updates within directories **already** in the checkout. Use for routine sync. If `.access` on the remote now allows a new territory, refresh will **not** bring it in — run **rebuild** for that.
 
-**Phase 3 — expand**
+#### What `commit` does
 
-4. Set sparse-checkout to allowed territory prefixes; pull so memory files materialize.
+`commit <bearer>` on every memory ship (not once at setup):
 
-**Git hooks:** not used for this flow — logic stays in compiled `clone` / `commit`.
+1. Merge `origin/main` into the being branch (**never rebase**).
+2. Stage changes; create commit with **author and committer** set from this being’s persona (`agents.yaml`) — so git history shows which AI being shipped the memory.
+3. Push **being branch only** — never `main`.
+4. Re-walk `.access`; reconcile sparse checkout.
+5. Run `rebuild-index-cache.sh` (below).
 
----
+**How changes reach `main`**
 
-### `clone` — two modes
+`main` is protected — the being’s push in step 3 lands on **their branch only**. The compiled binary never opens or merges a PR.
 
-| Mode | When | Behavior |
-|------|------|----------|
-| **refresh** | Routine sync | **Merge** pull on paths already in the sparse checkout. Updates existing files. **Does not** add new directories or files — even if `.access` now allows more. |
-| **rebuild** | New territories needed, or access shape changed | Re-run Phase 1 → 2 → 3 from scratch. |
+GitHub Actions takes it from there:
 
-Only **`clone`** and **`commit`** invoke git. No `git pull` outside them.
+1. **Push to being branch** — workflow opens a PR into `main` (creates one if none is open for that branch).
+2. **PR updated** — workflow runs a governance step. **Today:** stub passes immediately (no gate yet).
+3. **Merge** — workflow merges the PR into `main` with a **merge commit** (not rebase, not squash).
 
----
+**Later:** step 2 becomes real governance (operator approval, checks, Discord command, etc. — `bodhi-build` `security_model.md`). Steps 1 and 3 stay the same.
 
-### `commit` — merge from `main`, push to being branch, re-walk
+#### When `.access` merge has conflicts or removes visibility
 
-`commit <bearer>` every time the being ships memory (not once per setup).
+If merge-from-`main` leaves `.access` conflicts **or** this being no longer sees a territory they could see before, `commit` **stops** and **emits an error**. The error tells the being what to do — it contains this guidance verbatim:
 
-**Branch rule:** `commit` pushes to the being’s **own branch** only (`agents.yaml`). **Never push `main`.** Landing on `main` is always via PR + GitHub Actions (below).
+- Preserve incoming `.access` changes.
+- Merge your own changes only when they do not contradict incoming.
+- If a contradiction would remain, keep incoming; work around it to re-create your intent.
+- If you no longer see a territory, move affected memory files to a different or new territory; reset your changes in the lost territory; then run `commit` again.
 
-1. **Merge `origin/main` into the current branch** (integrate latest policy and memories). **Never rebase** — project-wide.
-2. `.access` on `main` may have changed — see conflicts below.
-3. Stage and commit on the being branch.
-4. **Push the being branch** (not `main`). Push triggers PR automation.
-5. On successful push → **re-walk** `.access` and reconcile sparse checkout to match policy.
-6. Call **`rebuild-index-cache.sh`** (§8).
+### Index cache
 
-The compiled binary does **not** create or merge PRs. It only pushes the branch; Actions own the path to `main`.
+Recall needs a **searchable pool** of memory footprints — not committed to git. **`scripts/rebuild-index-cache.sh`** (memory repo) walks the **visible tree** (post-`.access`) and writes gitignored **`operational/memory-index-cache.json`**.
 
----
+**When:** after `clone` **rebuild** or successful `commit`; also on gateway startup (operator path). Not every Discord message.
 
-### Landing on `main` — PR governance (GitHub Actions)
+**Artifact** — one file, two views:
 
-**`main` is protected** — no direct push from beings or `commit`.
+| View | Field | Used for |
+|------|--------|----------|
+| **Flat** | `entries[]` | Score user message against all rows |
+| **Fractal** | `byDirectory{}` | Territory orientation by parent path |
 
-| Step | Trigger | Action |
-|------|---------|--------|
-| 1 | Push to being branch | Workflow opens PR → `main` (if none open for that head) |
-| 2 | PR opened / updated | Workflow runs governance hook |
-| 3 | Governance | **Stub today:** skip / pass (layer does not exist yet) |
-| 4 | After governance | Workflow **auto-merges** PR into `main` with **merge commit** (not rebase, not squash) |
+Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from §7 (**content** + **rag** + **signature**).
 
-**Future:** step 3 becomes required checks, operator approval, Discord command, etc. (see `bodhi-build` `security_model.md`). Steps 1–2 and 4 stay the same.
+```json
+{
+  "memoryHead": "<git SHA>",
+  "builtAt": "<ISO8601>",
+  "entries": [
+    {
+      "path": "memories/anandaka/relationships/ben/",
+      "kind": "territory",
+      "summary": "…",
+      "sentiment": "…",
+      "carrying_line": "…",
+      "topics": ["…"],
+      "load_when": { "topics": ["…"], "feelings": ["…"], "circumstances": ["…"] },
+      ...
+    },
+    {
+      "path": "memories/anandaka/relationships/ben/wedding.md",
+      "kind": "memory",
+      "summary": "…",
+      "sentiment": "…",
+      "carrying_line": "…",
+      "topics": ["…"],
+      "load_when": { ... },
+      ...
+    }
+  ],
+  "byDirectory": {
+    "memories/anandaka/relationships/ben/": [
+      "memories/anandaka/relationships/ben/",
+      "memories/anandaka/relationships/ben/wedding.md"
+    ]
+  }
+}
+```
 
-**Repo settings:** allow `github-actions[bot]` to create and merge PRs; workflow `permissions`: `contents: write`, `pull-requests: write`.
+Flat and fractal are the same data — one walk. Flag territories over 30/40 entries for splitting (§8); do not auto-split.
 
-No `gh` CLI on the client — PR create/merge uses GitHub API from Actions only.
+### Recall
 
----
+Recall is built for an **independent agent environment** — e.g. **`bodhi-gateway`** on Fly reads **`memory-index-cache.json`** each turn when recall is armed.
 
-### `.access` conflicts and access loss (manual resolution)
-
-If **merge from `main`** leaves conflicts in `.access` **and/or** this being **no longer sees** a territory it could see before → stop automation; ask the being to resolve manually:
-
-1. **Preserve incoming** `.access` changes.
-2. **Merge own** changes when they do not contradict incoming.
-3. **On contradiction** — keep incoming; work around to re-express own intent.
-4. **If a territory is no longer visible** — move affected memory files to a different or new territory; reset changes in the lost territory; then re-commit.
-
-If **no** conflicts → push, then re-walk sparse checkout per `.access`.
-
----
-
-### Identity model
-
-- **Persona name** — in `.access` files and prompts (attribution).
-- **Bearer** — on the wall; runtime argument to `clone` / `commit`; maps to PAT + branch inside the binary. Not the git credential.
+The same architecture applies elsewhere: **claude.ai** can attach recall via a **SKILL** (less smooth than a native gateway, same cache contract). **ChatGPT** and other hosts could use this setup with minor adjustments. Match and inject details: gateway code and `README-RECALL.md`.
 
 ---
 
@@ -431,7 +454,7 @@ Both options are available regardless of whether the memory is more or less sens
 
 ### Location
 
-In-file YAML frontmatter between `---` markers. Memories are read via RAG under normal circumstances; when read to write, the full file is appropriate.
+In-file YAML frontmatter between `---` markers. **RAG fields** feed the index cache (§3). When read to write, the full file is appropriate.
 
 ### Field types
 
@@ -530,140 +553,7 @@ Written from outside the memory. Three sub-fields:
 
 ---
 
-## 8. Index cache (RAG)
-
-Recall needs a **searchable pool** of memory footprints. That pool is **not** committed to git. It is **rebuilt** from frontmatter whenever the clone changes.
-
-This section sits **on top of** §3 (access + git). §3 decides **what files exist in the agent environment** for each AI being. §8 builds **what recall can search** from those files.
-
-### Architecture
-
-```mermaid
-flowchart TB
-  subgraph github["bodhi-fuji-memory (GitHub)"]
-    FM["_index.md + memory *.md\n(YAML frontmatter)"]
-    ACC[".access files"]
-    SCR["scripts/rebuild-index-cache.sh"]
-  end
-
-  subgraph trusted["setup repo bundle (compiled)"]
-    CLONE["clone"]
-    COMMIT["commit"]
-  end
-
-  subgraph env["agent environment (memory clone)"]
-    VIS["visible tree\n(sparse checkout)"]
-    CACHE["operational/memory-index-cache.json"]
-  end
-
-  GW["gateway Recall\n(bodhi-agent)"]
-
-  ACC -.->|runtime walk| CLONE
-  FM --> CLONE
-  SCR --> CLONE
-  CLONE --> VIS
-  COMMIT --> VIS
-  COMMIT --> RUN["rebuild-index-cache.sh"]
-  CLONE --> RUN
-  VIS --> RUN
-  RUN --> CACHE
-  CACHE --> GW
-```
-
-**Top-down:**
-
-1. **Git** holds frontmatter, **`scripts/rebuild-index-cache.sh`**, and **`.access`** files (§3).
-2. **`clone`** walks **`.access` at runtime** → sparse checkout → **visible tree**. Gateway recall does not read `.access`.
-3. **`commit`** merge-pulls, commits, pushes; on success **re-walks** `.access` and reconciles sparse checkout (§3).
-4. **`rebuild-index-cache.sh`** walks the **visible tree** only → **`memory-index-cache.json`**. Called after clone **rebuild** or successful commit.
-5. **Gateway Recall** reads the cache each turn — not frontmatter, not `.access`.
-
-### Layout — what lives where
-
-| Location | What |
-|----------|------|
-| **`bodhi-fuji-memory/`** (git) | `_index.md`, memory `*.md`, `.access`, `scripts/rebuild-index-cache.sh` |
-| **Setup repo** (compiled bundle) | Go + garble `clone`, `commit` — bearer→PAT from `agents.yaml` + GH Secrets (§3) |
-| **Agent environment** (memory clone) | Sparse checkout tree + gitignored `operational/memory-index-cache.json` |
-| **Agent environment** (gateway) | Recall scorer + inject — reads cache only |
-
-### Scripts — two roles, three names
-
-**§3 — git sync (access + transport)** — already defined:
-
-| Script | When | Does |
-|--------|------|------|
-| **`clone`** | Session start / sync | **`refresh`**: merge pull existing sparse paths only. **`rebuild`**: `.access`-only fetch → walk → expand sparse → pull (§3) |
-| **`commit`** | Each memory ship | Merge `main` into being branch → commit → **push being branch only** → Actions PR → auto-merge `main` (§3) |
-
-**§8 — index cache (RAG)** — one new script in the memory repo:
-
-| Script | When | Does |
-|--------|------|------|
-| **`scripts/rebuild-index-cache.sh`** | After clone or commit sync | Walk visible tree → write `operational/memory-index-cache.json` |
-
-**Wiring:** `clone.sh` and `commit.sh` **call** `rebuild-index-cache.sh` as their last step. Same script, same output — whether the tree changed from pull or push.
-
-*Agent environment startup:* clone/pull on boot also runs rebuild (same tail as `clone.sh`) — operator/gateway path, not an AI-being skill.
-
-### The cache (single artifact, two views)
-
-One JSON file. One walk. Consumers choose how to read it:
-
-| View | Field | Used for |
-|------|--------|----------|
-| **Flat** | `entries[]` | RAG search — score user message against all rows |
-| **Fractal** | `byDirectory{}` | Territory orientation — group rows by parent path |
-
-Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields come from §7 (**content** + **rag** + **signature**). Access is enforced by clone scope (§3) — not frontmatter.
-
-```json
-{
-  "memoryHead": "<git SHA>",
-  "builtAt": "<ISO8601>",
-  "entries": [
-    {
-      "path": "anandaka/relationships/ben/",
-      "kind": "territory",
-      "summary": "…",
-      "sentiment": "…",
-      "carrying_line": "…",
-      "topics": ["…"],
-      "load_when": { "topics": ["…"], "feelings": ["…"], "circumstances": ["…"] },
-      ...
-    },
-    {
-      "path": "anandaka/relationships/ben/wedding.md",
-      "kind": "memory",
-      "summary": "…",
-      "sentiment": "…",
-      "carrying_line": "…",
-      "topics": ["…"],
-      "load_when": { ... },
-      ...
-    }
-  ],
-  "byDirectory": {
-    "anandaka/relationships/ben/": [
-      "anandaka/relationships/ben/",
-      "anandaka/relationships/ben/wedding.md"
-    ]
-  }
-}
-```
-
-Flat and fractal are **the same data** — not two pipelines.
-
-### Rebuild rules
-
-- **When:** clone or commit sync completes (HEAD or visible tree changed). **Not** every Discord message.
-- **Input:** only paths present in the sparse clone (§3).
-- **Output:** overwrite `operational/memory-index-cache.json` (gitignored).
-- **Split guidance:** flag territories over 30/40 entries (§9); do not auto-split.
-
----
-
-## 9. Index Size and Taxonomy Evolution
+## 8. Index Size and Taxonomy Evolution
 
 ### Size limits
 
