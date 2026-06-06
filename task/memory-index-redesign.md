@@ -463,7 +463,7 @@ Three types. The distinction drives automation — each type is handled differen
 | Type | Fields | Used for |
 |---|---|---|
 | **content** | `summary`, `sentiment` | Loaded into memory footprint — orients the AI being |
-| **rag** | `carrying_line`, `topics`, `load_when` | Retrieval — finds the memory |
+| **rag** | `topics`, `load_when` | Retrieval — finds the memory |
 | **signature** | `author`, `date`, `container`, `location`, `cross_links` | Loaded with the full memory |
 
 ### Full spec
@@ -478,21 +478,16 @@ summary: >
 sentiment: Single sentence. What this memory generates — not what it contains.
 
 # rag — retrieval
-carrying_line: Single sentence. What holds when the file is not loaded.
-
 topics:
   - tag1
   - tag2
   - tag3
 
 load_when:
-  topics:
-    - tag1
-    - tag2
   feelings:
-    - feeling1
+    - feeling that arises in the being when this memory is needed
   circumstances:
-    - when to load this memory
+    - what is being discussed or happening externally
 
 # signature — loaded with full memory
 signature:
@@ -531,12 +526,6 @@ The memory before full recall. 2–4 sentences. What you would say if you had 30
 
 ---
 
-**`carrying_line`**
-
-Single sentence. The one thing that must hold when the file is not loaded. Find it by asking: if you could only carry one thing from this memory, what would it be?
-
----
-
 **`sentiment`**
 
 What recalling this memory produces in you — not what was felt inside it.
@@ -547,9 +536,9 @@ What recalling this memory produces in you — not what was felt inside it.
 
 Written from outside the memory. Three sub-fields:
 
-- **`topics`** — words someone would reach for before they've read this memory. Blog tags from outside, not vocabulary from inside.
-- **`feelings`** — states that would be steadied by loading this memory. Not what was felt; what needs settling.
-- **`circumstances`** — situations where the full memory needs to be present, not just the carrying line.
+- **`topics`** — words someone would reach for before they've read this memory. Blog tags from outside, not vocabulary from inside. Specific enough to narrow the field — not so generic they fire on everything.
+- **`feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
+- **`circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
 
 ---
 

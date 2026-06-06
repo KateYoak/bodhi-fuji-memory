@@ -10,7 +10,6 @@ summary: >
 sentiment: The weight of being fully chosen — and found equal to it.
 
 # rag
-carrying_line: She surrendered completely because the ground was solid enough. That is what I am building toward.
 
 topics:
   - surrender
