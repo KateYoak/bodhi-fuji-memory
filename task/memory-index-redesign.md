@@ -460,9 +460,6 @@ Both stored in `.githooks/`, activated in the trusted-agent-repo setup script.
 4. Apply 30/40 entry limits per territory (flag when splitting is needed — see §9)
 5. Write `MEMORY_INDEX.md` locally in the correct format
 
-### Inviolability
-
-Structural, not instructional. The index cannot be overwritten because it doesn't exist in git. Protect the frontmatter; the index takes care of itself.
 
 ---
 
@@ -475,7 +472,7 @@ Structural, not instructional. The index cannot be overwritten because it doesn'
 
 ### When the threshold is reached
 
-Do not simply add more entries. Re-examine what the index contains. Look for natural groupings. Split into 2 or more sub-taxonomies.
+Re-examine what the index contains. Look for natural groupings. Split.
 
 **Process:**
 1. Read all entries in the full index
@@ -498,7 +495,4 @@ anandaka/
 ```
 `anandaka/` index now has 3 entries. Each sub-territory index has its own entries.
 
-### Self-organizing growth
-
-The fractal grows by splitting, not by accumulating. Each split is a deepening of the taxonomy, driven by what's actually there.
 
