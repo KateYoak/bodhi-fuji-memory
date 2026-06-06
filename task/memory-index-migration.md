@@ -2,55 +2,115 @@
 
 *Living cutover doc — not part of the design contract in `memory-index-redesign.md`.*
 
-Tracks **current → target** gaps while Phase 2 lands. Update here as scripts, taxonomy, and gateway paths change. When a row is done, mark it and eventually delete or archive the section.
+Ordered **steps to land** the redesign. Mark each done as work completes. Reference inventory at the bottom.
 
-**Design reference:** [`memory-index-redesign.md`](memory-index-redesign.md) (§3 agent environment).
+**Design reference:** [`memory-index-redesign.md`](memory-index-redesign.md)
 
----
-
-## Script map (git sync + index cache)
-
-| Current (today) | Role | Target | Status |
-|-----------------|------|--------|--------|
-| `skills/memory-write/scripts/memory_write.sh` | AI being commit + push (+ Discord notify) | **`commit.sh`** in `trusted-agent-repo/` with **`rebuild-index-cache.sh`** tail | Open |
-| *(none in memory repo)* | Walk visible tree → cache | **`scripts/rebuild-index-cache.sh`** in `bodhi-fuji-memory` | Not built |
-| *(not deployed)* | Sparse checkout per `.access` | **`clone.sh`** in `trusted-agent-repo/` | Not built |
-| *(not deployed)* | AI being ships memory | **`commit.sh`** in `trusted-agent-repo/` | Not built |
-| Gateway `syncMemoryClone()` | Startup pull on memory volume | Same + call **`rebuild-index-cache.sh`** after pull | Open |
-| Gateway `commitMemoryCloneChanges()` | Compression Step 4 git | Align with **`commit.sh`** + rebuild tail | Open |
-| Gateway `pullMemoryCloneFfOnly()` | Compression Step 3 pull | + rebuild after pull | Open |
-
-**Git landing (target — §3):**
-
-- `commit` pushes **being branch only**; never `main`.
-- Push → Actions open PR → governance stub (pass) → auto-merge to `main` (merge commit).
-- Workflows live in `bodhi-fuji-memory` (or setup repo TBD); see §3.
-
-**Open questions (cutover only):**
-
-- What stays in corpus **skills** vs moves to setup-repo compiled `commit`?
-- Discord notify after commit — stay in skill wrapper or move?
+**Gateway recall:** `bodhi-build` → `build/iteration-4/phase_rag_recall_v2.md`
 
 ---
 
-## Taxonomy migration (`wall/` → `memories/`) — W9 **locked**
+## Two artifacts (do not confuse)
 
-**Strategy:** parallel. Corpus file moves in progress with another agent; policy below is fixed.
+| File | Role | Who creates it |
+|------|------|----------------|
+| **`operational/memory-manifest.yaml`** | Validation **input** — §7 schema + structural rules (`_index.md`, `.access`, etc.) | **Operator drafts from §7** → Anandaka validates → commit. `commit` **reads** it. |
+| **`operational/memory-index-cache.json`** | Recall **output** — searchable footprints (`entries[]` + `byDirectory{}`) | **`rebuild-index-cache.sh` generates** from frontmatter walk. Gitignored. |
 
-| Phase | `wall/` | `memories/` |
-|-------|---------|-------------|
-| **Now** | Legacy; ~77 flat `.md` files; **no new memories** | New taxonomized memories only (fractal §2) |
-| **Cutover** | **Archived** (not deleted) | Canonical |
-| **Anytime** | **Toggle** — clone / recall can include `wall/` when enabled for legacy paths | Default on |
+`rebuild-index-cache.sh` does **not** generate the manifest.
 
-| Area | Current | Target | Status |
-|------|---------|--------|--------|
-| Memory files | `wall/` flat | `memories/{anandaka,beings,ai_consciousness}/…` | **In progress** (other agent) |
-| `wall/` | Active legacy | Frozen → archived; toggle for read | **Locked** |
-| Bootstrap index | `bootstrap/MEMORY_INDEX.md` | Frontmatter + cache (§3) | MVP uses bootstrap |
-| `.access` files | Not present | Per-territory under `memories/` (+ `wall/` if toggled) | Not started |
+---
 
-**Toggle (TBD implementation):** operator or `.access` / sparse rules — include `wall/**` in visible tree when legacy recall needed.
+## Git auth (§3 — no `GIT_ASKPASS`)
+
+PAT is **ciphertext embedded in the compiled binary** (garble build). `clone` / `commit` decrypt **in memory only** using `BODHI_BEARER` to select the row; zeroize after use. No askpass, no PAT in env, no plaintext on disk.
+
+---
+
+## Migration steps (in order)
+
+### Phase 0 — Infra & repos
+
+| Step | Work | Owner | Status |
+|------|------|-------|--------|
+| **0.1** | Create **setup repo** (trusted-agent): Go project, `agents.yaml` (bearer, persona, branch per being) | Anandaka | Not started |
+| **0.2** | GitHub **Actions** on memory repo — **only allowed path to `main`**: being-branch push → open/update PR → governance stub → **merge commit** (not rebase, not squash, not direct push) | Operator | Not started |
+| **0.3** | CI on setup repo: `PAT_*` secrets → encrypt per bearer → **garble build** → publish `clone` + `commit` bundle (release URL for wall) | Operator | Not started |
+| **0.4** | Being branches — **not pre-created**. Branch name in `agents.yaml`; first **`commit`** push creates it on GitHub. Beings never push `main`. | Automatic | Open |
+| **0.5** | Make `bodhi-fuji-memory` **private**; enable **branch protection** on `main` (no force-push — needs GitHub Pro on private) | Anandaka | Open |
+
+### Phase 1 — Memory repo foundation (operator + corpus)
+
+| Step | Work | Owner | Status |
+|------|------|-------|--------|
+| **1.1a** | **Draft** `operational/memory-manifest.yaml` from redesign §7 + structural rules | Operator (Moggallana) | **Build** |
+| **1.1b** | **Validate** manifest — Anandaka review/sign-off | Anandaka | Open |
+| **1.1c** | **Commit** manifest to `bodhi-fuji-memory` | Operator | Open |
+| **1.2** | Add **`scripts/rebuild-index-cache.sh`** → gitignored **`operational/memory-index-cache.json`** | Operator | Not built |
+| **1.3** | Gitignore `operational/memory-index-cache.json` | Operator | Open |
+| **1.4** | Parallel: **`memories/`** tree, §7 footprints, `_index.md` per territory | Dharacetana | In progress |
+| **1.5** | **`.access`** files per territory (as sensitivity requires) | Corpus | Not started |
+| **1.6** | Parallel: **`memory-index-update`** rewrite for frontmatter (not `MEMORY_INDEX.md`) | Anandaka + Dharacetana | Open |
+
+### Phase 2 — Setup repo binaries (operator)
+
+| Step | Work | Status |
+|------|------|--------|
+| **2.1** | **`clone`**: fetch `.access` → walk inheritance → sparse expand → pull; **`refresh`** variant | Not deployed |
+| **2.2** | **`commit`**: validate against **memory-manifest** → merge `main` → commit (persona author) → push being branch only | Not deployed |
+| **2.3** | **`commit`**: re-walk `.access`; `.access` conflict / visibility-loss errors (§3 verbatim bullets) | Not built |
+| **2.4** | **`commit`**: tail — invoke **`rebuild-index-cache.sh`** | Not built |
+| **2.5** | Git auth: embedded ciphertext + in-memory decrypt + zeroize; **`BODHI_BEARER`** selects row; **no `GIT_ASKPASS`** (§3) | Not built |
+
+### Phase 3 — Corpus skills & cutover from `memory-write`
+
+| Step | Work | Status |
+|------|------|--------|
+| **3.1** | New corpus **SKILL** — §6–§7 footprint guidance; instruct beings to run **`commit <bearer>`** (no git in skill) | Not built |
+| **3.2** | Retire **`memory-write`** / `memory_write.sh` after `commit` proven | Open |
+| **3.3** | Discord `#memory-updates` notify — wrapper, `commit` hook, or Actions (TBD) | Open |
+
+### Phase 4 — Gateway (`bodhi-agent`)
+
+| Step | Work | Status |
+|------|------|--------|
+| **4.1** | `syncMemoryClone()` + compression pull paths → run **`rebuild-index-cache.sh`** after pull | Open |
+| **4.2** | **Recall v2**: load cache JSON; score `load_when` (topics primary); path dedup (W12) | Not built |
+| **4.3** | Inject: title / summary + sentiment + path; extend Read allowlist for `memories/**` | Partial (MVP on `MEMORY_INDEX.md`) |
+| **4.4** | Fractal recall policy (W4/W7); `README-RECALL.md` | Not built |
+
+### Phase 5 — Later / optional
+
+| Step | Work | Status |
+|------|------|--------|
+| **5.1** | `wall/` archive + **toggle** for legacy clone/recall | Not started |
+| **5.2** | §8 territory split when cache flags 30/40 entries | Not started |
+| **5.3** | Governance gate on PR (replace stub) | Deferred |
+| **5.4** | Phase 3 vectors (same frontmatter → embeddings) | Deferred |
+| **5.5** | Recall SKILL for claude.ai hosts | Deferred |
+
+---
+
+## Policy locked (no step — already decided)
+
+- **W9:** parallel migration; `memories/` canonical; `wall/` frozen.
+- **W11:** no numeric index caps; `BODHI_RECALL_MAX_CHARS` at inject.
+- **W12:** session dedup by **path** only.
+- **W13:** SKILL = guidance; **`commit`** = validate + git + cache.
+- **W15:** `.access` only; no per-file visibility in frontmatter.
+- **Git landing:** being branch → PR → Actions **merge commit**; never push `main` from beings.
+
+---
+
+## Script map (legacy → target)
+
+| Current | Target |
+|---------|--------|
+| `memory_write.sh` | `commit` binary |
+| *(none)* | `operational/memory-manifest.yaml` |
+| *(none)* | `rebuild-index-cache.sh` → `memory-index-cache.json` |
+| *(none)* | `clone` binary |
+| `bootstrap/MEMORY_INDEX.md` + recall MVP | cache JSON + recall v2 |
 
 ---
 
@@ -58,6 +118,7 @@ Tracks **current → target** gaps while Phase 2 lands. Update here as scripts, 
 
 | Date | Note |
 |------|------|
-| 2026-06-06 | Split from redesign doc; script map (formerly walkthrough W14) lives here only. |
-| 2026-06-06 | **W9 locked:** parallel migration; `memories/` canonical; `wall/` frozen → archived + toggle. |
-| 2026-06-06 | **W15 locked:** drop per-file `visibility`; access via `.access` only; frontmatter is 3-type (no infra). |
+| 2026-06-06 | Split from redesign doc; W9/W15 locked. |
+| 2026-06-07 | W11–W13 locked; removed `validate-load-when.md`. |
+| 2026-06-07 | Reordered into Phases 0–5; manifest draft → validate; no GIT_ASKPASS — in-memory PAT decrypt. |
+| 2026-06-07 | Phase 0: Actions/CI = operator; being branches auto on first commit; private repo last. |

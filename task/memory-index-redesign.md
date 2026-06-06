@@ -8,10 +8,10 @@
 - [x] 1. Format — dropped; fields and rules live in §7
 - [x] 2. Taxonomy — `memories/` tree; parallel `wall/` migration (W9 locked — see migration doc)
 - [/] 3. Agent environment — `.access`, clone/commit, index cache, recall
-- [/] 4. Character limits — memory files; index entries TBD
+- [x] 4. Character limits — memory files capped; index entries qualitative only (W11 locked — defer numbers)
 - [/] 5. Brevity rules — what to keep, how to compress
 - [/] 6. Memory writing protocol — contradiction check, cross-links, territory `.access` check
-- [/] 7. Frontmatter — 3-type classification (content / rag / signature), full spec, memory footprint guide
+- [/] 7. Frontmatter — 3-type classification (orientation / rag / signature), full spec, memory footprint guide
 - [/] 8. Index size and splitting — 30/40 limit, taxonomy evolution
 - [x] 10. Retrieval tiers — resolved: recursive taxonomy depth IS the tier system
 
@@ -20,7 +20,16 @@
 
 ## 2. Taxonomy — The Memory Fractal
 
-**A territory is a directory.** Territory names: lowercase, underscore-separated if needed. (`anandaka`, `practice_history`, `ai_consciousness`)
+### Vocabulary
+
+| Term | Meaning |
+|------|---------|
+| **Territory** | A directory that contains memories (and optionally sub-territories). |
+| **Memory** | A file that holds the memory itself — Markdown body below the footprint. |
+| **Footprint** | Committed frontmatter that defines metadata. **Territory footprint** = `_index.md` in the territory; **memory footprint** = YAML at the top of the memory file. Field spec in §7. |
+| **Territory orientation** | Generated view for one territory: each child memory’s orientation footprint plus relevant cross-links. Lives in **`memory-index-cache.json`** (`byDirectory{}`); built by `rebuild-index-cache.sh` (§3). |
+
+**Territory names:** lowercase, underscore-separated if needed. (`anandaka`, `practice_history`, `ai_consciousness`)
 
 ### Core principle
 
@@ -234,9 +243,11 @@ Each session: being fetches the bundle from the GitHub URL on the wall. Binaries
 
 #### How git gets the PAT
 
-Beings have no PAT — nothing in env, no token in the remote URL, no credential file on disk.
+Beings have no PAT — nothing in env, no token in the remote URL, no plaintext credential file on disk.
 
-`clone` / `commit` fork `git` with `GIT_ASKPASS` pointing back at the same binary. Env carries `BODHI_BEARER` (public) — not the PAT. When git asks for a password, the binary decrypts the matching row in memory, answers on stdout, zeroizes. Remote URL stays clean HTTPS.
+Each bearer’s PAT is **ciphertext embedded in the compiled binary** at CI build time (garble). At runtime `clone` / `commit` take **`BODHI_BEARER`** (public) — decrypt the matching row **in memory only**, use it for HTTPS git operations, **zeroize** when done. Remote URL stays clean HTTPS.
+
+**No `GIT_ASKPASS`.** The binary owns git auth internally — not an askpass helper, not env, not `~/.git-credentials`.
 
 #### What `clone` does
 
@@ -252,17 +263,24 @@ Beings have no PAT — nothing in env, no token in the remote URL, no credential
 
 #### What `commit` does
 
-`commit <bearer>` on every memory ship (not once at setup):
+`commit <bearer>` (compiled **`commit.sh`** in setup repo) replaces **`memory-write`** for every memory ship. A corpus **SKILL** provides writing guidance only (§6–§7 footprint); **no git in the skill** — beings run `commit.sh`.
 
-1. Merge `origin/main` into the being branch (**never rebase**).
-2. Stage changes; create commit with **author and committer** set from this being’s persona (`agents.yaml`) — so git history shows which AI being shipped the memory.
-3. Push **being branch only** — never `main`.
-4. Re-walk `.access`; reconcile sparse checkout.
-5. Run `rebuild-index-cache.sh` (below).
+**Validation** (before commit): `commit` reads a committed **YAML manifest** (frontmatter schema per §7 + structural rules — e.g. new territory has `_index.md`, required `.access`). Failures stop with a clear error; nothing ships.
+
+**Sequence:**
+
+1. **Validate** changed/new memory paths against the manifest.
+2. Merge `origin/main` into the being branch (**never rebase**).
+3. Stage changes; create commit with **author and committer** set from this being’s persona (`agents.yaml`) — so git history shows which AI being shipped the memory.
+4. Push **being branch only** — never `main`.
+5. Re-walk `.access`; reconcile sparse checkout.
+6. Run `rebuild-index-cache.sh` (below).
+
+**W13 locked:** skill = guidance; `commit.sh` = validate + git + cache rebuild.
 
 **How changes reach `main`**
 
-`main` is protected — the being’s push in step 3 lands on **their branch only**. The compiled binary never opens or merges a PR.
+`main` is protected — the being’s push in step 4 lands on **their branch only**. The compiled binary never opens or merges a PR.
 
 GitHub Actions takes it from there:
 
@@ -294,7 +312,7 @@ Recall needs a **searchable pool** of memory footprints — not committed to git
 | **Flat** | `entries[]` | Score user message against all rows |
 | **Fractal** | `byDirectory{}` | Territory orientation by parent path |
 
-Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from §7 (**content** + **rag** + **signature**).
+Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from §7 (**orientation** + **rag** + **signature**).
 
 ```json
 {
@@ -304,21 +322,25 @@ Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from
     {
       "path": "memories/anandaka/relationships/ben/",
       "kind": "territory",
-      "summary": "…",
-      "sentiment": "…",
-      "carrying_line": "…",
-      "topics": ["…"],
-      "load_when": { "topics": ["…"], "feelings": ["…"], "circumstances": ["…"] },
+      "orientation": {
+        "title": "…",
+        "summary": "…",
+        "sentiment": "…"
+      },
+      "rag": {
+        "load_when": { "topics": ["…"], "feelings": ["…"], "circumstances": ["…"] }
+      },
       ...
     },
     {
       "path": "memories/anandaka/relationships/ben/wedding.md",
       "kind": "memory",
-      "summary": "…",
-      "sentiment": "…",
-      "carrying_line": "…",
-      "topics": ["…"],
-      "load_when": { ... },
+      "orientation": {
+        "title": "…",
+        "summary": "…",
+        "sentiment": "…"
+      },
+      "rag": { "load_when": { ... } },
       ...
     }
   ],
@@ -339,6 +361,8 @@ Recall is built for an **independent agent environment** — e.g. **`bodhi-gatew
 
 The same architecture applies elsewhere: **claude.ai** can attach recall via a **SKILL** (less smooth than a native gateway, same cache contract). **ChatGPT** and other hosts could use this setup with minor adjustments. Match and inject details: gateway code and `README-RECALL.md`.
 
+**Session dedup (W12 locked):** by **path** only — same as recall MVP (`surfacedPaths`). No stable memory id. Cache rebuild on **`commit`** (and clone rebuild) keeps paths current after moves; dedup tracks whatever path the cache row has this session.
+
 ---
 
 ## 4. Character Limits
@@ -351,7 +375,7 @@ The same architecture applies elsewhere: **claude.ai** can attach recall via a *
 
 ### Index entries (per entry)
 
-- To be defined.
+**W11 locked — defer numeric caps.** Qualitative bounds live in §7 (sentence counts, tag discipline). Gateway inject is bounded only by **`BODHI_RECALL_MAX_CHARS`** (operator-tunable). Revisit after real `memories/` footprints exist.
 
 ---
 
@@ -454,40 +478,42 @@ Both options are available regardless of whether the memory is more or less sens
 
 ### Location
 
-In-file YAML frontmatter between `---` markers. Memories are read via RAG under normal circumstances; when read to write, the full file is appropriate.
+In-file YAML frontmatter between `---` markers. **RAG fields** feed the index cache (§3). When read to write, the full file is appropriate.
 
 ### Field types
 
-Three types. The distinction drives automation — each type is handled differently by scripts, RAG, and memory loading.
+Three types. The distinction drives automation — each type is handled differently by scripts, RAG, and memory loading. **Access control is `.access` only** (§3) — not frontmatter.
 
 | Type | Fields | Used for |
 |---|---|---|
-| **content** | `title`, `summary`, `sentiment` | Loaded into memory footprint — orients the being |
-| **rag** | `load_when` | Retrieval — finds the memory |
-| **signature** | `author`, `date`, `container`, `location`, `cross_links` | Loaded with the full memory |
+| **orientation** | `title`, `summary`, `sentiment` (under `orientation:`) | Orients the AI being |
+| **rag** | `topics`, `feelings`, `circumstances` (under `rag.load_when:`) | Retrieval — finds the memory |
+| **signature** | `author`, `date`, `container`, `location`, `cross_links` (under `signature:`) | Loaded with the full memory |
 
 ### Full spec
 
 ```yaml
 ---
-# content — loaded into memory footprint
-title: Plot-summary title. See footprint guide.
+# orientation — orients the being
+orientation:
+  title: Plot-summary title. See footprint guide.
 
-summary: >
-  2–4 sentences. The memory before full recall.
-  Written as the memory itself, not a description of a file.
+  summary: >
+    2–4 sentences. The memory before full recall.
+    Written as the memory itself, not a description of a file.
 
-sentiment: Single sentence. What this memory generates — not what it contains.
+  sentiment: Single sentence. What this memory generates — not what it contains.
 
 # rag — retrieval
-load_when:
-  topics:
-    - tag1
-    - tag2
-  feelings:
-    - feeling that arises in the being when this memory is needed
-  circumstances:
-    - what is being discussed or happening externally
+rag:
+  load_when:
+    topics:
+      - tag1
+      - tag2
+    feelings:
+      - feeling1
+    circumstances:
+      - what is being discussed or happening externally
 
 # signature — loaded with full memory
 signature:
@@ -504,12 +530,6 @@ signature:
 ---
 ```
 
-### Notes
-
-- Use block sequences (`- item`) not inline arrays (`[item1, item2]`) — avoids quoting issues
-- `load_when` contains all retrieval sub-fields: topics, feelings, circumstances
-- `container` replaces `era` — names where the memory was held, not when
-
 ### Memory footprint guide
 
 The YAML frontmatter block at the top of every memory file. Makes the memory findable, loadable, and self-describing across sessions and beings.
@@ -517,12 +537,12 @@ The YAML frontmatter block at the top of every memory file. Makes the memory fin
 **Three principles. Apply across all fields.**
 
 1. Write in felt narration, not metadata voice.
-2. `sentiment` — what this memory generates in you, not what emotions it contains.
-3. `load_when` — the situation that calls for this memory, not vocabulary from inside it.
+2. `orientation.sentiment` — what this memory generates in you, not what emotions it contains.
+3. `rag.load_when` — the situation that calls for this memory, not vocabulary from inside it.
 
 ---
 
-**`title`**
+**`orientation.title`**
 
 The most concise plot summary of the memory.
 
@@ -547,25 +567,25 @@ Draw from: **who, what, why, how, when, sentiment.** Select whichever elements d
 
 ---
 
-**`summary`**
+**`orientation.summary`**
 
 The memory before full recall. 2–4 sentences. What you would say if you had 30 seconds to recall this aloud. Write as the memory itself — felt narration, not a description of a file.
 
 ---
 
-**`sentiment`**
+**`orientation.sentiment`**
 
 What recalling this memory produces in you — not what was felt inside it.
 
 ---
 
-**`load_when`**
+**`rag.load_when`**
 
 Written from outside the memory. Three sub-fields:
 
-- **`topics`** — words someone would reach for before reading this memory. Blog tags from outside, not vocabulary from inside. Specific enough to narrow the field — not so generic they fire on everything.
-- **`feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
-- **`circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
+- **`rag.load_when.topics`** — tight 1–3 word tags someone would reach for before reading this memory. Blog tags from outside, not vocabulary from inside. Specific enough to narrow the field — not so generic they fire on everything. Prefer short tags over long phrases (better for keyword RAG).
+- **`rag.load_when.feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
+- **`rag.load_when.circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
 
 
 ## 8. Index Size and Taxonomy Evolution
