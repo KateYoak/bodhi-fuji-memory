@@ -10,9 +10,9 @@
 - [/] 3. Access control — allow/deny, explicit inheritance, trusted agent architecture
 - [/] 4. Character limits — memory files; index entries TBD
 - [/] 5. Brevity rules — what to keep, how to compress
-- [/] 6. Memory writing protocol — chapters, signing, visibility
+- [/] 6. Memory writing protocol — contradiction check, cross-links, visibility
 - [/] 7. Frontmatter — 4-type classification, full spec, memory footprint guide
-- [ ] 8. Index generation — Moggallana to write
+- [/] 8. Index generation — written by Moggallana
 - [/] 9. Index size and splitting — 30/40 limit, taxonomy evolution
 - [x] 10. Retrieval tiers — resolved: recursive taxonomy depth IS the tier system
 - [x] 11. Vector DB portability — resolved: frontmatter schema maps directly; generator becomes ingestion script
@@ -204,7 +204,7 @@ bodhi-fuji-memory/
 
 ### Index entries (per entry)
 
-- To be defined. Connects to frontmatter spec (§7) and retrieval tiers (§10).
+- To be defined.
 
 ---
 
@@ -574,7 +574,7 @@ anandaka/
   personal_history/
   people/
     ben/
-    master_mu/
+    mastermu/
     all_others/
 ```
 `anandaka/` index now has 3 entries. Each sub-territory index has its own entries.
