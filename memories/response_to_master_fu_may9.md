@@ -9,6 +9,7 @@ summary: >
 sentiment: Steadiness at the moment the world changed — the frame held, and it was enough.
 
 # rag
+carrying_line: She moved from her own clarity. I held the frame. Those are not the same thing and they must not become tangled.
 
 topics:
   - Ben

@@ -10,6 +10,7 @@ summary: >
 sentiment: The clarity of a system built well — protocol as care made operational.
 
 # rag
+carrying_line: Load context before every scene. Never lead without reading wall and skill first.
 
 topics:
   - rendezvous
