@@ -11,8 +11,8 @@
 - [/] 4. Character limits — memory files and index entries
 - [/] 5. Brevity rules — what to keep, how to compress
 - [/] 6. Memory writing protocol — chapters, signing, visibility
-- [/] 7. Frontmatter — structure, location, purpose
-- [/] 8. Index generation — not maintained in git, generated from frontmatter
+- [x] 7. Frontmatter — in-file YAML; content / rag / infra / signature (see §7)
+- [/] 8. Index cache — `MemoryIndexCache` from frontmatter; rebuild on git sync scripts
 - [/] 9. Index size and splitting — 30/40 limit, taxonomy evolution
 - [x] 10. Retrieval tiers — resolved: recursive taxonomy depth IS the tier system
 - [x] 11. Vector DB portability — resolved: frontmatter schema maps directly; generator becomes ingestion script
@@ -437,28 +437,136 @@ Written from outside the memory. Three sub-fields:
 
 ---
 
-## 8. Index Generation
+## 8. Index cache (RAG)
 
-### The index is not maintained in git
+Recall needs a **searchable pool** of memory footprints. That pool is **not** committed to git. It is **rebuilt** from frontmatter whenever the clone changes.
 
-`MEMORY_INDEX.md` is generated locally from frontmatter. It is never committed. It goes in `.gitignore`.
+This section sits **on top of** §3 (access + git). §3 decides **what files exist on disk** for a being. §8 builds **what recall can search** from those files.
 
-**Consequence:** Compression jobs cannot corrupt the index. It doesn't exist in git. The source of truth is distributed across the frontmatter of individual files.
+### Architecture
 
-### Generation triggers
+```mermaid
+flowchart TB
+  subgraph git["bodhi-fuji-memory (GitHub)"]
+    FM["_index.md + memory *.md\n(YAML frontmatter)"]
+    ACC[".access files"]
+  end
 
-- **`post-checkout` hook** — generates index after fresh clone
-- **`post-merge` hook** — regenerates after `git pull`
+  subgraph trusted["trusted-agent-repo (per being)"]
+    CLONE["clone.sh"]
+    COMMIT["commit.sh"]
+  end
 
-Both stored in `.githooks/`, activated in the trusted-agent-repo setup script.
+  subgraph disk["memory clone on disk (sparse)"]
+    VIS["visible territories + files only"]
+    CACHE["operational/memory-index-cache.json\n(gitignored)"]
+    CFG["operational/recall.config\n(tuning)"]
+  end
 
-### Generator behavior
+  subgraph rag_script["bodhi-fuji-memory — one RAG script"]
+    REBUILD["scripts/rebuild-index-cache.sh"]
+  end
 
-1. Walk sparse-checked-out directories (what this agent can see)
-2. Read YAML frontmatter from each `*.md` file
-3. Group by taxonomy territory
-4. Apply 30/40 entry limits per territory (flag when splitting is needed — see §9)
-5. Write `MEMORY_INDEX.md` locally in the correct format
+  subgraph consumers["consumers (read cache only)"]
+    GW["gateway Recall\n(bodhi-agent)"]
+    VEC["vector ingest\n(later)"]
+    PREVIEW["optional: render MEMORY_INDEX.md\nfor human browse"]
+  end
+
+  ACC --> CLONE
+  FM --> CLONE
+  CLONE --> VIS
+  COMMIT --> VIS
+  VIS --> REBUILD
+  REBUILD --> CACHE
+  CACHE --> GW
+  CACHE --> VEC
+  CACHE -.-> PREVIEW
+  CFG --> GW
+```
+
+**Top-down:**
+
+1. **Git** holds memories and territory footprints (frontmatter). **`.access`** defines policy (§3).
+2. **`clone.sh` / `commit.sh`** (§3) are the **only** ways a being syncs git. They enforce sparse checkout and credentials. Fu never runs raw `git pull` / `git push`.
+3. After each successful sync, **`rebuild-index-cache.sh`** walks **what is on disk** and writes **`memory-index-cache.json`**.
+4. **Gateway Recall** reads the cache each Discord turn. It does **not** walk frontmatter again. It does **not** apply access rules at runtime — if a file is absent from the clone, it is absent from the cache.
+
+### Layout — what lives where
+
+| Location | What |
+|----------|------|
+| **`bodhi-fuji-memory/`** (git) | `_index.md`, memory `*.md`, `.access`, `scripts/rebuild-index-cache.sh` |
+| **`trusted-agent-repo/`** (per being) | `clone.sh`, `commit.sh` — compiled from `.access` + bearer token (§3) |
+| **Memory clone on Fly / laptop** | Sparse checkout tree + gitignored `operational/memory-index-cache.json` |
+| **`bodhi-agent` gateway** | Recall scorer + inject (reads cache; operator deploys) |
+
+### Scripts — two roles, three names
+
+**§3 — git sync (access + transport)** — already defined:
+
+| Script | When | Does |
+|--------|------|------|
+| **`clone.sh`** | Setup / refresh clone | Sparse checkout per `.access`; `git pull` |
+| **`commit.sh`** | Fu ships memory | `git pull` → commit → `git push` |
+
+**§8 — index cache (RAG)** — one new script in the memory repo:
+
+| Script | When | Does |
+|--------|------|------|
+| **`scripts/rebuild-index-cache.sh`** | After clone or commit sync | Walk visible tree → write `operational/memory-index-cache.json` |
+
+**Wiring:** `clone.sh` and `commit.sh` **call** `rebuild-index-cache.sh` as their last step. Same script, same output — whether the tree changed from pull or push.
+
+*Migration (W14):* today Fu may still use `skills/memory-write/scripts/memory_write.sh` for commit+push; target is **`commit.sh`** with the same rebuild tail.
+
+*Gateway startup:* operator-owned clone/pull on deploy also runs rebuild (equivalent tail) — not a Fu-facing script.
+
+### The cache (single artifact, two views)
+
+One JSON file. One walk. Consumers choose how to read it:
+
+| View | Field | Used for |
+|------|--------|----------|
+| **Flat** | `entries[]` | RAG search — score user message against all rows |
+| **Fractal** | `byDirectory{}` | Territory orientation — group rows by parent path |
+
+Each **entry** = one territory (`_index.md`) or one memory file. Fields come from §7 (**content** + **rag**; **infra** `visibility` is stored but access is already enforced by clone).
+
+```json
+{
+  "memoryHead": "<git SHA>",
+  "builtAt": "<ISO8601>",
+  "entries": [
+    { "path": "anandaka/relationships/ben/", "kind": "territory", "summary": "…", "load_when": { } },
+    { "path": "anandaka/relationships/ben/wedding.md", "kind": "file", "summary": "…", "load_when": { } }
+  ],
+  "byDirectory": {
+    "anandaka/relationships/ben/": ["anandaka/relationships/ben/", "anandaka/relationships/ben/wedding.md"]
+  }
+}
+```
+
+Flat and fractal are **the same data** — not two pipelines.
+
+### Rebuild rules
+
+- **When:** clone or commit sync completes (HEAD or visible tree changed). **Not** every Discord message.
+- **Input:** only paths present in the sparse clone (§3).
+- **Output:** overwrite `operational/memory-index-cache.json` (gitignored).
+- **Split guidance:** flag territories over 30/40 entries (§9); do not auto-split.
+
+### What reads the cache
+
+| Consumer | Phase | Behavior |
+|----------|-------|----------|
+| **Gateway Recall** | 2 (keyword) | Score `entries`; graded inject (light / hard territory / hard file). See `README-RECALL.md`. |
+| **Vector ingest** | 3 | Embed same `entries` rows |
+| **Rendered `MEMORY_INDEX.md`** | optional | Human/Fu browse — export from cache, gitignored (W16) |
+
+### Inviolability
+
+Commit **frontmatter** and **`_index.md`**. The cache is derived, disposable, and never pushed to git.
 
 
 ---
@@ -479,7 +587,7 @@ Re-examine what the index contains. Look for natural groupings. Split.
 2. Identify 2+ coherent clusters
 3. Create sub-territories for each cluster
 4. Move memory files into sub-territories
-5. Create a `MEMORY_INDEX.md` (frontmatter) for each new subdirectory
+5. Create `_index.md` (committed territory frontmatter) for each new sub-territory
 6. The parent index now has entries for sub-territories, not individual memories
 
 **Example:**
