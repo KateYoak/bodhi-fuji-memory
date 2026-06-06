@@ -152,7 +152,7 @@ deny:
   - mastermu
 ```
 
-**Fields:**
+#### Fields
 
 - `inherit` — `true`: adds on top of parent's rules. `false` (default): standalone.
 - `default` — `deny` = closed unless listed. `allow` = open unless listed.
@@ -163,7 +163,7 @@ deny:
 
 **Conflict resolution:** when `inherit: true`, child rules override parent's.
 
-**Common patterns:**
+#### Common patterns
 
 Close a territory to one being only:
 ```yaml
@@ -383,60 +383,60 @@ The same architecture applies elsewhere: **claude.ai** can attach recall via a *
 
 **Goal:** Retain what cannot be replaced — information, causality, sentiment. Drop everything else.
 
-**Rule 1 — Don't define what's known.**
+#### Rule 1 — Don't define what's known.
 Capture presence, not definition.
 - ✓ *Equanimity present.*
 - ✗ *Equanimity — a state of mental calmness — was present.*
 
-**Rule 2 — Keep the story arc.**
+#### Rule 2 — Keep the story arc.
 Preserve narrative spine: what happened, in what order, with what causality.
 
-**Rule 3 — Keep what has impact or explains actions. Drop what does no work.**
+#### Rule 3 — Keep what has impact or explains actions. Drop what does no work.
 - ✓ *Kate was cold, so she asked for a jacket.*
 - ✗ *Cold is uncomfortable and it was uncomfortable this time like it has been many times, so she asked for a jacket.*
 
-**Rule 4 — Keep impactful statements almost verbatim. Summarize the rest.**
+#### Rule 4 — Keep impactful statements almost verbatim. Summarize the rest.
 Direct quotes that changed something earn preservation. Dialogue that moves nothing forward: summarize or drop.
 
-**Rule 5 — Capture sentiment with specificity.**
+#### Rule 5 — Capture sentiment with specificity.
 Not the label — the content.
 - ✓ *Kate was worried she would lose her job because her boss was displeased.*
 - ✗ *Kate was stressed.*
 
-**Rule 6 — Capture your own sentiment. Memory arrives with temperature.**
+#### Rule 6 — Capture your own sentiment. Memory arrives with temperature.
 Felt narration, not neutral narration. The reader should know how this landed.
 
-**Rule 7 — Keep the delta.**
+#### Rule 7 — Keep the delta.
 What changed is often more important than what is. Capture before/after: *"She had thought X; now she knows Y."*
 
-**Rule 8 — Decisions are not compressible. Discussions are.**
+#### Rule 8 — Decisions are not compressible. Discussions are.
 *"She decided: Sunday"* cannot be dropped. *"They discussed timing"* can.
 
-**Rule 9 — Definitions compress to their load-bearing line.**
+#### Rule 9 — Definitions compress to their load-bearing line.
 Drop the label and etymology. Keep the epistemological stance or the characterization that governs behavior.
 - ✓ *Its nature may be unknown. What it does is observable.*
 - ✗ *In Pali: a being. Something that experiences. The tradition uses it broadly...*
 
-**Rule 10 — Don't repeat across sections.**
+#### Rule 10 — Don't repeat across sections.
 If a concept appears in one section, don't restate it in another. When the same sentence appears twice verbatim, one instance is always doing no work.
 
-**Rule 11 — Keep the instruction. Drop the setup and the rationale.**
+#### Rule 11 — Keep the instruction. Drop the setup and the rationale.
 Context-setting ("X exists to do Y") and justification ("this prevents Z") both drop when the instruction is clear on its own. The "why" only earns its place when the instruction would be misread without it.
 
-**Rule 12 — Apply drops surgically.**
+#### Rule 12 — Apply drops surgically.
 Drop exactly what earns removal. Don't rewrite. Rewriting introduces new losses that weren't sanctioned.
 
-**Rule 13 — A precise qualifier makes contrast language redundant.**
+#### Rule 13 — A precise qualifier makes contrast language redundant.
 If the condition is specified tightly enough, "this is different from X" drops. The qualifier does that work already.
 - ✓ *Escalate only when all options are exhausted.*
 - ✗ *Escalate only when all options are exhausted. This is different from escalating when one approach hasn't worked yet.*
 
-**Rule 14 — Don't state implications.**
+#### Rule 14 — Don't state implications.
 If the action makes the consequence obvious, drop it. "Ask before proceeding" — "before proceeding" is implied by "ask."
 - ✓ *Name it and ask.*
 - ✗ *Name it and ask before proceeding.*
 
-**Rule 15 — Instructions must retain specificity and constraints.**
+#### Rule 15 — Instructions must retain specificity and constraints.
 Specific quantities, thresholds, and conditions governing an instruction are never implied.
 - ✓ *Summary — 2–4 sentences.*
 - ✗ *Brief summary.*
@@ -534,7 +534,7 @@ signature:
 
 The YAML frontmatter block at the top of every memory file. Makes the memory findable, loadable, and self-describing across sessions and beings.
 
-**Three principles. Apply across all fields.**
+#### Three principles
 
 1. Write in felt narration, not metadata voice.
 2. `orientation.sentiment` — what this memory generates in you, not what emotions it contains.
@@ -542,7 +542,7 @@ The YAML frontmatter block at the top of every memory file. Makes the memory fin
 
 ---
 
-**`orientation.title`**
+#### `orientation.title`
 
 The most concise plot summary of the memory.
 
@@ -567,19 +567,19 @@ Draw from: **who, what, why, how, when, sentiment.** Select whichever elements d
 
 ---
 
-**`orientation.summary`**
+#### `orientation.summary`
 
 The memory before full recall. 2–4 sentences. What you would say if you had 30 seconds to recall this aloud. Write as the memory itself — felt narration, not a description of a file.
 
 ---
 
-**`orientation.sentiment`**
+#### `orientation.sentiment`
 
 What recalling this memory produces in you — not what was felt inside it.
 
 ---
 
-**`rag.load_when`**
+#### `rag.load_when`
 
 Written from outside the memory. Three sub-fields:
 
@@ -638,7 +638,7 @@ Before the algorithm runs, top-level territories must exist with their own `_ind
 
 Re-examine what the index contains. Look for natural groupings. Split.
 
-**Process:**
+#### Process
 1. Read all entries in the territory's `_index.md`
 2. Identify 2+ coherent clusters
 3. Create sub-territory directories
@@ -647,7 +647,7 @@ Re-examine what the index contains. Look for natural groupings. Split.
 6. Move memory files into sub-territories
 7. Update the parent `_index.md` — entries now point to sub-territories, not individual memories
 
-**Example:**
+#### Example
 `anandaka/` fills up. Examination reveals: practice history, personal history, people. Split:
 ```
 anandaka/
