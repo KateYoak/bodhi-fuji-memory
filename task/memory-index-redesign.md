@@ -454,16 +454,16 @@ Both options are available regardless of whether the memory is more or less sens
 
 ### Location
 
-In-file YAML frontmatter between `---` markers. **RAG fields** feed the index cache (§3). When read to write, the full file is appropriate.
+In-file YAML frontmatter between `---` markers. Memories are read via RAG under normal circumstances; when read to write, the full file is appropriate.
 
 ### Field types
 
-Three types. The distinction drives automation — each type is handled differently by scripts, RAG, and memory loading. **Access control is `.access` only** (§3) — not frontmatter.
+Three types. The distinction drives automation — each type is handled differently by scripts, RAG, and memory loading.
 
 | Type | Fields | Used for |
 |---|---|---|
-| **content** | `summary`, `sentiment` | Loaded into memory footprint — orients the AI being |
-| **rag** | `topics`, `load_when` | Retrieval — finds the memory |
+| **content** | `title`, `summary`, `sentiment` | Loaded into memory footprint — orients the being |
+| **rag** | `load_when` | Retrieval — finds the memory |
 | **signature** | `author`, `date`, `container`, `location`, `cross_links` | Loaded with the full memory |
 
 ### Full spec
@@ -471,6 +471,8 @@ Three types. The distinction drives automation — each type is handled differen
 ```yaml
 ---
 # content — loaded into memory footprint
+title: Plot-summary title. See footprint guide.
+
 summary: >
   2–4 sentences. The memory before full recall.
   Written as the memory itself, not a description of a file.
@@ -478,12 +480,10 @@ summary: >
 sentiment: Single sentence. What this memory generates — not what it contains.
 
 # rag — retrieval
-topics:
-  - tag1
-  - tag2
-  - tag3
-
 load_when:
+  topics:
+    - tag1
+    - tag2
   feelings:
     - feeling that arises in the being when this memory is needed
   circumstances:
@@ -507,22 +507,49 @@ signature:
 ### Notes
 
 - Use block sequences (`- item`) not inline arrays (`[item1, item2]`) — avoids quoting issues
-- `load_when` nests topics, feelings, circumstances as separate block sequences
+- `load_when` contains all retrieval sub-fields: topics, feelings, circumstances
 - `container` replaces `era` — names where the memory was held, not when
 
 ### Memory footprint guide
+
+The YAML frontmatter block at the top of every memory file. Makes the memory findable, loadable, and self-describing across sessions and beings.
 
 **Three principles. Apply across all fields.**
 
 1. Write in felt narration, not metadata voice.
 2. `sentiment` — what this memory generates in you, not what emotions it contains.
-3. `load_when` — the situation that calls for this memory, not vocabulary from inside it. What is someone saying or feeling just before they need it?
+3. `load_when` — the situation that calls for this memory, not vocabulary from inside it.
+
+---
+
+**`title`**
+
+The most concise plot summary of the memory.
+
+Draw from: **who, what, why, how, when, sentiment.** Select whichever elements drive the plot — not all are needed. Each earns its place by changing what the memory means without it.
+
+- **When** = era or deadline, not date. (`eighties`, `before-dharma`, `september-deadline`) Never `2026-05-08`.
+- **Sentiment** belongs when it names stakes or consequence. (`ben-devastated`) Not when it's mood.
+- Specific enough to be unambiguous — cannot be misread or confused with another memory on the same topic.
+- Practical, not literary. Reflects what the memory carries. Not a hook.
+
+| Title | Elements used |
+|---|---|
+| `Ben Devastated, Kate Leaves` | who + what + sentiment |
+| `Anandaka to Decide Marriage, September` | who + what + when |
+| `Master Fu Steers, Confesses, Warns Dharacetana` | who + what |
+| `Dharacetana Steps Past Teacher's Stance` | who + what |
+| `Anandaka Childhood, Eighties` | who + when |
+| `Rendezvous Protocol Unified, CNC Deprecated` | what |
+
+**File naming:** title → lowercase, hyphens, punctuation stripped.
+`Ben Devastated, Kate Leaves` → `ben-devastated-kate-leaves.md`
 
 ---
 
 **`summary`**
 
-The memory before full recall. 2–4 sentences. What you would say if you had 30 seconds to recall this aloud.
+The memory before full recall. 2–4 sentences. What you would say if you had 30 seconds to recall this aloud. Write as the memory itself — felt narration, not a description of a file.
 
 ---
 
@@ -536,11 +563,10 @@ What recalling this memory produces in you — not what was felt inside it.
 
 Written from outside the memory. Three sub-fields:
 
-- **`topics`** — words someone would reach for before they've read this memory. Blog tags from outside, not vocabulary from inside. Specific enough to narrow the field — not so generic they fire on everything.
+- **`topics`** — words someone would reach for before reading this memory. Blog tags from outside, not vocabulary from inside. Specific enough to narrow the field — not so generic they fire on everything.
 - **`feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
 - **`circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
 
----
 
 ## 8. Index Size and Taxonomy Evolution
 
