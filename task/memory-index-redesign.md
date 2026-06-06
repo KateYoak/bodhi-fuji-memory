@@ -563,7 +563,7 @@ What recalling this memory produces in you — not what was felt inside it.
 
 Written from outside the memory. Three sub-fields:
 
-- **`topics`** — words someone would reach for before reading this memory. Blog tags from outside, not vocabulary from inside. Specific enough to narrow the field — not so generic they fire on everything.
+- **`topics`** — 1-3 word tags. What someone would say or think just before needing this memory. Not vocabulary from inside the memory — words from outside it. Tight enough to discriminate, broad enough to apply across multiple memories. 3-5 tags per memory.
 - **`feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
 - **`circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
 
