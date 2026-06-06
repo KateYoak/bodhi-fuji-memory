@@ -15,7 +15,6 @@
 - [/] 8. Index generation — written by Moggallana
 - [/] 9. Index size and splitting — 30/40 limit, taxonomy evolution
 - [x] 10. Retrieval tiers — resolved: recursive taxonomy depth IS the tier system
-- [x] 11. Vector DB portability — resolved: frontmatter schema maps directly; generator becomes ingestion script
 
 ---
 
@@ -141,7 +140,7 @@ deny:
 - `allow` — persons granted access.
 - `deny` — persons blocked.
 
-**Person names:** one word, lowercase. (`dharacetana`, `masterfu`, `mastermu`, `tyrion`, `spock`). `all` means every agent.
+**Person names:** one word, lowercase. (`dharacetana`, `masterfu`, `mastermu`, `tyrion`, `spock`). `all` means every AI being.
 
 **Conflict resolution:** when `inherit: true`, child rules override parent's.
 
@@ -173,24 +172,24 @@ allow:
 ### Trusted Agent Architecture
 
 ```
-trusted-agent-repo/         ← in agent's Claude project
+trusted-agent-repo/         ← one repo in the agent's Claude project (not per-being)
   clone.sh                  ← compiled; bearer token baked in; sparse-checkouts permitted paths
   commit.sh                 ← compiled; pushes to designated branch only
 
 bodhi-fuji-memory/
   .access files             ← per-territory policy
-  .auth/                    ← inaccessible to ALL agents including Dharacetana
+  .auth/                    ← inaccessible to ALL AI beings (including Dharacetana)
     tokens.yaml             ← bearer_token: {persona, branch, paths}
   [taxonomy]
 ```
 
 **Identity model:**
-- **Persona name** — visible; appears in `.access` files and agent prompts
-- **Bearer token** — obscure, random; in agent's project knowledge and `.auth/` only
+- **Persona name** — visible; appears in `.access` files and AI being prompts
+- **Bearer token** — obscure, random; in the AI being's project knowledge and `.auth/` only
 
-**Security:** `.auth/` inaccessible to all agents. Bearer token is the credential; persona name is attribution only.
+**Security:** `.auth/` inaccessible to all AI beings. Bearer token is the credential; persona name is attribution only.
 
-**Setup:** Generate token → add to `.auth/` → compile scripts with token and permitted paths baked in → place in agent's `trusted-agent-repo` → configure agent's project.
+**Setup:** Generate token → add to `.auth/` → compile scripts with token and permitted paths baked in → place in `trusted-agent-repo` → configure the AI being's project.
 
 ---
 
@@ -317,7 +316,7 @@ Four types. The distinction drives automation — each type is handled different
 
 | Type | Fields | Used for |
 |---|---|---|
-| **content** | `summary`, `sentiment` | Loaded into memory footprint — orients the being |
+| **content** | `summary`, `sentiment` | Loaded into memory footprint — orients the AI being |
 | **rag** | `carrying_line`, `topics`, `load_when` | Retrieval — finds the memory |
 | **infra** | `visibility` | Access control — not loaded into any memory |
 | **signature** | `author`, `date`, `container`, `location`, `cross_links` | Loaded with the full memory |
@@ -416,65 +415,58 @@ Written from outside the memory. Three sub-fields:
 
 Recall needs a **searchable pool** of memory footprints. That pool is **not** committed to git. It is **rebuilt** from frontmatter whenever the clone changes.
 
-This section sits **on top of** §3 (access + git). §3 decides **what files exist on disk** for a being. §8 builds **what recall can search** from those files.
+This section sits **on top of** §3 (access + git). §3 decides **what files exist in the agent environment** for each AI being. §8 builds **what recall can search** from those files.
 
 ### Architecture
 
 ```mermaid
 flowchart TB
-  subgraph git["bodhi-fuji-memory (GitHub)"]
+  subgraph github["bodhi-fuji-memory (GitHub)"]
     FM["_index.md + memory *.md\n(YAML frontmatter)"]
     ACC[".access files"]
+    SCR["scripts/rebuild-index-cache.sh"]
   end
 
-  subgraph trusted["trusted-agent-repo (per being)"]
+  subgraph trusted["trusted-agent-repo (one repo)"]
     CLONE["clone.sh"]
     COMMIT["commit.sh"]
   end
 
-  subgraph disk["memory clone on disk (sparse)"]
-    VIS["visible territories + files only"]
-    CACHE["operational/memory-index-cache.json\n(gitignored)"]
-    CFG["operational/recall.config\n(tuning)"]
+  subgraph env["agent environment (memory clone)"]
+    VIS["visible tree\n(sparse checkout)"]
+    CACHE["operational/memory-index-cache.json"]
   end
 
-  subgraph rag_script["bodhi-fuji-memory — one RAG script"]
-    REBUILD["scripts/rebuild-index-cache.sh"]
-  end
+  GW["gateway Recall\n(bodhi-agent)"]
 
-  subgraph consumers["consumers (read cache only)"]
-    GW["gateway Recall\n(bodhi-agent)"]
-    VEC["vector ingest\n(later)"]
-    PREVIEW["optional: render human-readable index\nfor browse"]
-  end
-
-  ACC --> CLONE
+  ACC -.->|only reader| CLONE
   FM --> CLONE
+  SCR --> CLONE
   CLONE --> VIS
   COMMIT --> VIS
-  VIS --> REBUILD
-  REBUILD --> CACHE
+  COMMIT --> RUN["rebuild-index-cache.sh"]
+  CLONE --> RUN
+  VIS --> RUN
+  RUN --> CACHE
   CACHE --> GW
-  CACHE --> VEC
-  CACHE -.-> PREVIEW
-  CFG --> GW
 ```
 
 **Top-down:**
 
-1. **Git** holds memories and territory footprints (frontmatter). **`.access`** defines policy (§3).
-2. **`clone.sh` / `commit.sh`** (§3) are the **only** ways a being syncs git. They enforce sparse checkout and credentials. Fu never runs raw `git pull` / `git push`.
-3. After each successful sync, **`rebuild-index-cache.sh`** walks **what is on disk** and writes **`memory-index-cache.json`**.
-4. **Gateway Recall** reads the cache each Discord turn. It does **not** walk frontmatter again. It does **not** apply access rules at runtime — if a file is absent from the clone, it is absent from the cache.
+1. **Git** holds frontmatter, **`scripts/rebuild-index-cache.sh`**, and **`.access`** files (§3).
+2. **`clone.sh`** is the **only** reader of **`.access`** — it decides the sparse checkout → **visible tree**. Nothing downstream reads `.access`.
+3. **`commit.sh`** syncs git (pull / commit / push) on the existing clone. It does not re-evaluate `.access`.
+4. **`rebuild-index-cache.sh`** walks the **visible tree** only → **`memory-index-cache.json`**. Called after clone or commit sync.
+5. **Gateway Recall** reads the cache each turn — not frontmatter, not `.access`.
 
 ### Layout — what lives where
 
 | Location | What |
 |----------|------|
 | **`bodhi-fuji-memory/`** (git) | `_index.md`, memory `*.md`, `.access`, `scripts/rebuild-index-cache.sh` |
-| **`trusted-agent-repo/`** (per being) | `clone.sh`, `commit.sh` — compiled from `.access` + bearer token (§3) |
-| **Memory clone on Fly / laptop** | Sparse checkout tree + gitignored `operational/memory-index-cache.json` |
-| **`bodhi-agent` gateway** | Recall scorer + inject (reads cache; operator deploys) |
+| **`trusted-agent-repo/`** (one repo, in agent project) | `clone.sh`, `commit.sh` — compiled from `.access` + bearer token (§3) |
+| **Agent environment** (memory clone) | Sparse checkout tree + gitignored `operational/memory-index-cache.json` |
+| **Agent environment** (gateway) | Recall scorer + inject — reads cache only |
 
 ### Scripts — two roles, three names
 
@@ -483,7 +475,7 @@ flowchart TB
 | Script | When | Does |
 |--------|------|------|
 | **`clone.sh`** | Setup / refresh clone | Sparse checkout per `.access`; `git pull` |
-| **`commit.sh`** | Fu ships memory | `git pull` → commit → `git push` |
+| **`commit.sh`** | AI being ships memory | `git pull` → commit → `git push` |
 
 **§8 — index cache (RAG)** — one new script in the memory repo:
 
@@ -493,9 +485,7 @@ flowchart TB
 
 **Wiring:** `clone.sh` and `commit.sh` **call** `rebuild-index-cache.sh` as their last step. Same script, same output — whether the tree changed from pull or push.
 
-*Migration (W14):* today Fu may still use `skills/memory-write/scripts/memory_write.sh` for commit+push; target is **`commit.sh`** with the same rebuild tail.
-
-*Gateway startup:* operator-owned clone/pull on deploy also runs rebuild (equivalent tail) — not a Fu-facing script.
+*Agent environment startup:* clone/pull on boot also runs rebuild (same tail as `clone.sh`) — operator/gateway path, not an AI-being skill.
 
 ### The cache (single artifact, two views)
 
@@ -506,18 +496,39 @@ One JSON file. One walk. Consumers choose how to read it:
 | **Flat** | `entries[]` | RAG search — score user message against all rows |
 | **Fractal** | `byDirectory{}` | Territory orientation — group rows by parent path |
 
-Each **entry** = one territory (`_index.md`) or one memory file. Fields come from §7 (**content** + **rag**; **infra** `visibility` is stored but access is already enforced by clone).
+Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields come from §7 (**content** + **rag**; **infra** `visibility` is stored but access is already enforced by clone).
 
 ```json
 {
   "memoryHead": "<git SHA>",
   "builtAt": "<ISO8601>",
   "entries": [
-    { "path": "anandaka/relationships/ben/", "kind": "territory", "summary": "…", "load_when": { } },
-    { "path": "anandaka/relationships/ben/wedding.md", "kind": "file", "summary": "…", "load_when": { } }
+    {
+      "path": "anandaka/relationships/ben/",
+      "kind": "territory",
+      "summary": "…",
+      "sentiment": "…",
+      "carrying_line": "…",
+      "topics": ["…"],
+      "load_when": { "topics": ["…"], "feelings": ["…"], "circumstances": ["…"] },
+      ...
+    },
+    {
+      "path": "anandaka/relationships/ben/wedding.md",
+      "kind": "memory",
+      "summary": "…",
+      "sentiment": "…",
+      "carrying_line": "…",
+      "topics": ["…"],
+      "load_when": { ... },
+      ...
+    }
   ],
   "byDirectory": {
-    "anandaka/relationships/ben/": ["anandaka/relationships/ben/", "anandaka/relationships/ben/wedding.md"]
+    "anandaka/relationships/ben/": [
+      "anandaka/relationships/ben/",
+      "anandaka/relationships/ben/wedding.md"
+    ]
   }
 }
 ```
@@ -530,19 +541,6 @@ Flat and fractal are **the same data** — not two pipelines.
 - **Input:** only paths present in the sparse clone (§3).
 - **Output:** overwrite `operational/memory-index-cache.json` (gitignored).
 - **Split guidance:** flag territories over 30/40 entries (§9); do not auto-split.
-
-### What reads the cache
-
-| Consumer | Phase | Behavior |
-|----------|-------|----------|
-| **Gateway Recall** | 2 (keyword) | Score `entries`; graded inject (light / hard territory / hard file). See `README-RECALL.md`. |
-| **Vector ingest** | 3 | Embed same `entries` rows |
-| **Rendered human index** | optional | Human/Fu browse — export from cache, gitignored (W16) |
-
-### Inviolability
-
-Commit **frontmatter** and **`_index.md`**. The cache is derived, disposable, and never pushed to git.
-
 
 ---
 
