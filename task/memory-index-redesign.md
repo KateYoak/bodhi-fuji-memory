@@ -588,6 +588,45 @@ Written from outside the memory. Three sub-fields:
 - **`rag.load_when.circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
 
 
+### Territory selection guide
+
+Once a memory is footprinted, place it. The taxonomy is not designed — it is discovered by placing real memories.
+
+#### The algorithm
+
+Each territory has an `_index.md` whose orientation describes what belongs there. All descendant territories carry the full lineage of what belongs — each level narrows the one above.
+
+**To place a memory:**
+
+1. Review the top-level territories. Read each `_index.md`. Select where this memory fits.
+2. Enter that territory. Review its children. Select where it fits.
+3. Continue recursively until no child fits.
+4. At that level: place the memory there, or create a new child.
+
+#### Creating a new child
+
+Only create a child when you have evidence (a memory that doesn't fit) and a pattern (commonality with existing memories).
+
+1. **What is unique about this memory** compared to the others at this level? Name it precisely.
+2. **Consider several names** for the new child territory.
+3. **Review the current territory's orientation.** What does it hold? What is its boundary?
+4. **Look for commonality** — is there an existing memory here that also doesn't quite fit, and shares something with the new one? If so, they belong together in the new child.
+5. **Select the name** that differentiates this child from its siblings and best names what lives there.
+6. Create the child directory and write its `_index.md`.
+7. Place the memory.
+
+#### Rules
+
+- One home per memory. Cross-links handle relationships across territories.
+- The struggle to place a memory is data — it means a territory boundary is wrong, missing, or a memory needs to be split.
+- Don't name a territory until you have at least 5 memories that clearly belong there.
+- Start flat. Let sub-territories emerge from the 30/40 threshold, not from anticipation.
+
+#### The seed problem
+
+Before the algorithm runs, top-level territories must exist with their own `_index.md` files. These are seeded from the first batch of real memories — not designed upfront. When the first memories arrive, group what is obviously different, name those groups, write their `_index.md` orientations. That is the seed.
+
+
 ## 8. Index Size and Taxonomy Evolution
 
 ### Size limits
