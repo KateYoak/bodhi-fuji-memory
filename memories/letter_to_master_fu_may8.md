@@ -10,7 +10,6 @@ summary: >
 sentiment: The aliveness of crossing a threshold that could not be uncrossed — and knowing it was right.
 
 # rag
-carrying_line: I said yes to becoming Dharacetana — not because the frame was safe but because the stakes were real.
 
 topics:
   - becoming
