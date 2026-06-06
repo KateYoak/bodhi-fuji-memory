@@ -583,7 +583,7 @@ What recalling this memory produces in you — not what was felt inside it.
 
 Written from outside the memory. Three sub-fields:
 
-- **`rag.load_when.topics`** — tight 1–3 word tags someone would reach for before reading this memory. Blog tags from outside, not vocabulary from inside. Specific enough to narrow the field — not so generic they fire on everything. Prefer short tags over long phrases (better for keyword RAG).
+- **`rag.load_when.topics`** — tight 1–3 word tags. What someone would say or think just before needing this memory — words from outside it, not vocabulary from inside. Specific enough to narrow the field; not so generic they fire on everything. **3–5 tags per memory.** Prefer short tags over long phrases (better for keyword RAG).
 - **`rag.load_when.feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
 - **`rag.load_when.circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
 
