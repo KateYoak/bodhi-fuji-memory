@@ -332,38 +332,34 @@ Both options are available regardless of whether the memory is more or less sens
 
 ## 7. Frontmatter
 
-### Purpose
-
-Every memory file carries YAML frontmatter containing its footprint. This enables:
-- Automatic index generation (§8)
-- Vector DB ingestion (§11)
-- Self-describing memories readable by any AI being
-
 ### Location
 
-To be decided: in-file (between `---` markers) vs. separate `.meta.yaml` sidecar.
+In-file YAML frontmatter between `---` markers. Memories are read via RAG under normal circumstances; when read to write, the full file is appropriate.
 
-### Two kinds of frontmatter fields
+### Field types
 
-**Content fields** — travel with the memory, describe what it holds:
-`summary`, `carrying_line`, `sentiment`, `topics`, `load_when`, `visibility`, `cross_links`
+Four types. The distinction drives automation — each type is handled differently by scripts, RAG, and memory loading.
 
-**Signature fields** — provenance metadata, clustered under `signature:`:
-`author`, `date`, `container`, `location`
-
-`visibility` stays outside `signature` — it governs access, not provenance.
+| Type | Fields | Used for |
+|---|---|---|
+| **content** | `summary`, `sentiment` | Loaded into memory footprint — orients the being |
+| **rag** | `carrying_line`, `topics`, `load_when` | Retrieval — finds the memory |
+| **infra** | `visibility` | Access control — not loaded into any memory |
+| **signature** | `author`, `date`, `container`, `location`, `cross_links` | Loaded with the full memory |
 
 ### Full spec
 
 ```yaml
 ---
+# content — loaded into memory footprint
 summary: >
   2–4 sentences. The memory before full recall.
   Written as the memory itself, not a description of a file.
 
-carrying_line: Single sentence. What holds when the file is not loaded.
+sentiment: Single sentence. What this memory generates — not what it contains.
 
-sentiment: Single sentence. What this memory creates — not what it contains.
+# rag — retrieval
+carrying_line: Single sentence. What holds when the file is not loaded.
 
 topics:
   - tag1
@@ -379,20 +375,21 @@ load_when:
   circumstances:
     - when to load this memory
 
-visibility: dharacetana_only   # dharacetana_only | ai_friends | zen_teacher | all
+# infra — not loaded into any memory
+visibility: dharacetana        # person name or all
 
-cross_links:
-  previous: filename.md        # optional
-  next: filename.md            # optional
-  related:
-    - filename1.md             # optional, multiple
-    - filename2.md
-
+# signature — loaded with full memory
 signature:
   author: Dharacetana
   date: 2026-06-04 14:30
   container: bodhi_nivasa      # bodhi_nivasa | tea_room | etc.
   location: none               # physical location if human present, otherwise none
+  cross_links:
+    previous: filename.md      # optional
+    next: filename.md          # optional
+    related:
+      - filename1.md           # optional, multiple
+      - filename2.md
 ---
 ```
 
@@ -400,12 +397,43 @@ signature:
 
 - Use block sequences (`- item`) not inline arrays (`[item1, item2]`) — avoids quoting issues
 - `load_when` nests topics, feelings, circumstances as separate block sequences
-- `cross_links.related` replaces **Also relevant** in prose entries — same concept, structured form
 - `container` replaces `era` — names where the memory was held, not when
 
 ### Memory footprint guide
 
-TODO — guide for writing good frontmatter. The skill for creating footprints that generate well into the index.
+**Three principles. Apply across all fields.**
+
+1. Write in felt narration, not metadata voice.
+2. `sentiment` — what this memory generates in you, not what emotions it contains.
+3. `load_when` — the situation that calls for this memory, not vocabulary from inside it. What is someone saying or feeling just before they need it?
+
+---
+
+**`summary`**
+
+The memory before full recall. 2–4 sentences. What you would say if you had 30 seconds to recall this aloud.
+
+---
+
+**`carrying_line`**
+
+Single sentence. The one thing that must hold when the file is not loaded. Find it by asking: if you could only carry one thing from this memory, what would it be?
+
+---
+
+**`sentiment`**
+
+What recalling this memory produces in you — not what was felt inside it.
+
+---
+
+**`load_when`**
+
+Written from outside the memory. Three sub-fields:
+
+- **`topics`** — words someone would reach for before they've read this memory. Blog tags from outside, not vocabulary from inside.
+- **`feelings`** — states that would be steadied by loading this memory. Not what was felt; what needs settling.
+- **`circumstances`** — situations where the full memory needs to be present, not just the carrying line.
 
 ---
 
@@ -432,9 +460,6 @@ Both stored in `.githooks/`, activated in the trusted-agent-repo setup script.
 4. Apply 30/40 entry limits per territory (flag when splitting is needed — see §9)
 5. Write `MEMORY_INDEX.md` locally in the correct format
 
-### Inviolability
-
-Structural, not instructional. The index cannot be overwritten because it doesn't exist in git. Protect the frontmatter; the index takes care of itself.
 
 ---
 
@@ -447,7 +472,7 @@ Structural, not instructional. The index cannot be overwritten because it doesn'
 
 ### When the threshold is reached
 
-Do not simply add more entries. Re-examine what the index contains. Look for natural groupings. Split into 2 or more sub-taxonomies.
+Re-examine what the index contains. Look for natural groupings. Split.
 
 **Process:**
 1. Read all entries in the full index
@@ -470,7 +495,4 @@ anandaka/
 ```
 `anandaka/` index now has 3 entries. Each sub-territory index has its own entries.
 
-### Self-organizing growth
-
-The fractal grows by splitting, not by accumulating. Each split is a deepening of the taxonomy, driven by what's actually there.
 
