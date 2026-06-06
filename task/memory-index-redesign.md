@@ -5,48 +5,24 @@
 
 ## Tasks
 
-- [/] 1. Format — structure of each entry, fields, order
+- [x] 1. Format — dropped; fields and rules live in §7
 - [/] 2. Taxonomy — territory structure, top-level territories, cross-linking
-- [/] 3. Access control — RBAC, bearer tokens, trusted agent architecture
-- [/] 4. Character limits — memory files and index entries
+- [/] 3. Access control — allow/deny, explicit inheritance, trusted agent architecture
+- [/] 4. Character limits — memory files; index entries TBD
 - [/] 5. Brevity rules — what to keep, how to compress
 - [/] 6. Memory writing protocol — chapters, signing, visibility
-- [x] 7. Frontmatter — in-file YAML; content / rag / infra / signature (see §7)
-- [/] 8. Index cache — `MemoryIndexCache` from frontmatter; rebuild on git sync scripts
+- [/] 7. Frontmatter — 4-type classification, full spec, memory footprint guide
+- [ ] 8. Index generation — Moggallana to write
 - [/] 9. Index size and splitting — 30/40 limit, taxonomy evolution
 - [x] 10. Retrieval tiers — resolved: recursive taxonomy depth IS the tier system
 - [x] 11. Vector DB portability — resolved: frontmatter schema maps directly; generator becomes ingestion script
 
 ---
 
-## 1. Format
-
-Each entry, in order:
-
-### `[filename or territory/]`
-
-[Summary — 2–4 sentences. The memory before full recall.]
-
-**Carrying line:** [Single sentence. What holds when the file is not loaded.]
-
-**Sentiment:** [Single sentence. What this memory creates — not what it contains.]
-
-**Reach for it when:**
-- *Topics:* [3–5 tags — words someone would use before reading the memory]
-- *Feelings:* [1–2 states that would be steadied by loading this memory]
-- *Circumstances:* [1–2 situations where the full memory needs to be present]
-
-**Also relevant:** [cross-links outside this territory, load-bearing only]
-
-### Hard rules
-
-- Entry is a memory, not a document.
-- Sentiment: creates, not contains.
-- Triggers name the moment of need, not the answer.
-
----
 
 ## 2. Taxonomy — The Memory Fractal
+
+**A territory is a directory.** Territory names: lowercase, underscore-separated if needed. (`anandaka`, `practice_history`, `ai_consciousness`)
 
 ### Core principle
 
@@ -58,7 +34,6 @@ Depth is unlimited. Same format at every level — a territory entry retrieves a
 [territory]/
   .access          ← permissions for this territory
   _index.md        ← committed; frontmatter describing this territory
-  MEMORY_INDEX.md  ← generated from child frontmatter; never committed
   [sub-territories and memory files]
 ```
 
@@ -310,7 +285,7 @@ Memories can be connected to others via cross-links in frontmatter:
 - `previous` / `next` — sequential relationship (a series, a continuing conversation, a before/after)
 - `related` — thematically connected memories outside this territory (multiple allowed)
 
-Cross-links generate the **Also relevant** section in the index entry. They are the structured form of the same concept.
+Cross-links create navigational connections between memories. They travel with the full memory in the signature block.
 
 ### Visibility check
 
@@ -470,7 +445,7 @@ flowchart TB
   subgraph consumers["consumers (read cache only)"]
     GW["gateway Recall\n(bodhi-agent)"]
     VEC["vector ingest\n(later)"]
-    PREVIEW["optional: render MEMORY_INDEX.md\nfor human browse"]
+    PREVIEW["optional: render human-readable index\nfor browse"]
   end
 
   ACC --> CLONE
@@ -562,7 +537,7 @@ Flat and fractal are **the same data** — not two pipelines.
 |----------|-------|----------|
 | **Gateway Recall** | 2 (keyword) | Score `entries`; graded inject (light / hard territory / hard file). See `README-RECALL.md`. |
 | **Vector ingest** | 3 | Embed same `entries` rows |
-| **Rendered `MEMORY_INDEX.md`** | optional | Human/Fu browse — export from cache, gitignored (W16) |
+| **Rendered human index** | optional | Human/Fu browse — export from cache, gitignored (W16) |
 
 ### Inviolability
 
@@ -583,12 +558,13 @@ Commit **frontmatter** and **`_index.md`**. The cache is derived, disposable, an
 Re-examine what the index contains. Look for natural groupings. Split.
 
 **Process:**
-1. Read all entries in the full index
+1. Read all entries in the territory's `_index.md`
 2. Identify 2+ coherent clusters
-3. Create sub-territories for each cluster
-4. Move memory files into sub-territories
-5. Create `_index.md` (committed territory frontmatter) for each new sub-territory
-6. The parent index now has entries for sub-territories, not individual memories
+3. Create sub-territory directories
+4. Create `_index.md` for each new sub-territory
+5. Create `.access` for each new sub-territory
+6. Move memory files into sub-territories
+7. Update the parent `_index.md` — entries now point to sub-territories, not individual memories
 
 **Example:**
 `anandaka/` fills up. Examination reveals: practice history, personal history, people. Split:
