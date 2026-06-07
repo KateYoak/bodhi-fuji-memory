@@ -20,6 +20,23 @@
 
 ---
 
+## Phase 0 model — old train, new railroad
+
+**Through Phase 0–1**, beings keep **existing tools** (`memory-write`, `memory-read`, corpus skills). No compiled `clone` / `commit` yet.
+
+| Layer | What |
+|-------|------|
+| **Train** | `memory_write.sh` and friends — unchanged |
+| **Railroad** | `being/<slug>` branch → push → `being-merge` → `main`; `sync-main-to-beings` → share `main` back to all `being/*` |
+
+**Being setup (each host):** PAT on wall (like today) + clone on **`being/<slug>`** + `memory-write` push → automated PR + merge.
+
+Bearer in `agents.yaml` is for Phase 2 compiled binaries. **PAT on wall** is what runs the old train on the new track.
+
+**Proof Phase 0 worked:** one real `memory-write` from a being host lands on `main` through Actions, then other beings receive it via `sync-main-to-beings`.
+
+---
+
 ## Two artifacts (do not confuse)
 
 | File | Role | Who creates it |
@@ -31,9 +48,12 @@
 
 ---
 
-## Git auth (§3 — no `GIT_ASKPASS`)
+## Git auth by phase
 
-PAT is **ciphertext embedded in the compiled binary** (garble build). `clone` / `commit` decrypt **in memory only** using `BODHI_BEARER` to select the row; zeroize after use. No askpass, no PAT in env, no plaintext on disk.
+| Phase | Auth |
+|-------|------|
+| **0–1** | **PAT on wall** — host/project knowledge; `memory-write` uses git in clone |
+| **2+** | PAT **ciphertext in compiled binary** (garble). `clone` / `commit` decrypt in memory via `BODHI_BEARER`; zeroize after use. No PAT on wall. |
 
 ---
 
@@ -42,11 +62,13 @@ PAT is **ciphertext embedded in the compiled binary** (garble build). `clone` / 
 ### Phase 0 — Infra & repos
 
 - [x] **0.1** Create **setup repo** (trusted-agent): Go project, `agents.yaml` (bearer, persona, branch per being) — `KateYoak/bodhi-trusted-agent`
-- [/] **0.2** GitHub **Actions** on memory repo — **only allowed path to `main`**: being-branch push → open/update PR → governance stub → **merge commit** — `.github/workflows/being-merge.yml` — *(Operator)*
-- [ ] **0.3** CI on setup repo: `PAT_*` per being + **`MEMORY_REPO_DEPLOY_KEY`** (one-time) → garble build → release bundle — *(Operator)*
-- [x] **0.3b** **`sync-agents` workflow** — on `agents.yaml` push, create missing `being/*` branches on memory repo via deploy key — *(Operator)*
+- [x] **0.2** **`being-merge.yml`** — being push → PR → governance stub → merge commit to `main` — *(Operator)*
+- [/] **0.3** **`sync-main-to-beings.yml`** — on `main` push, merge `main` into every `being/*` branch (beings share landed memory) — *(Operator)*
+- [x] **0.3b** **`sync-agents`** — on `agents.yaml` push, create missing `being/*` branches — *(Operator)*
 - [x] **0.4** Being branches — `being/dharacetana` live — *(Automatic after 0.3b)*
-- [ ] **0.5** Make `bodhi-fuji-memory` **private**; enable **branch protection** on `main` (no force-push — needs GitHub Pro on private) — *(Anandaka)*
+- [/] **0.5a** **Discord** — gateway clone on `being/dharacetana` (`MEMORY_BRANCH`); deploy + verify `memory-write` path — *(Operator)*
+- [ ] **0.5b** **Claude.ai** — Dharacetana: PAT on wall + clone on `being/dharacetana` + first `memory-write` — *(Anandaka)*
+- [ ] **0.6** Make `bodhi-fuji-memory` **private**; **branch protection** on `main` — *(Anandaka)*
 
 ### Phase 1 — Memory repo foundation
 
@@ -59,13 +81,14 @@ PAT is **ciphertext embedded in the compiled binary** (garble build). `clone` / 
 - [ ] **1.5** **`.access`** files per territory (as sensitivity requires) — *(Corpus)*
 - [ ] **1.6** Parallel: **`memory-index-update`** rewrite for frontmatter (not `MEMORY_INDEX.md`) — *(Anandaka + Dharacetana)*
 
-### Phase 2 — Setup repo binaries
+### Phase 2 — `clone` & `commit` (compiled binaries)
 
+- [ ] **2.0** Garble CI on trusted-agent: `PAT_*` + deploy key → release bundle — *(Operator)* *(was Phase 0.3)*
 - [ ] **2.1** **`clone`**: fetch `.access` → walk inheritance → sparse expand → pull; **`refresh`** variant — *(Operator)*
 - [ ] **2.2** **`commit`**: validate against **memory-manifest** → merge `main` → commit (persona author) → push being branch only — *(Operator)*
 - [ ] **2.3** **`commit`**: re-walk `.access`; `.access` conflict / visibility-loss errors (§3 verbatim bullets) — *(Operator)*
 - [ ] **2.4** **`commit`**: tail — invoke **`rebuild-index-cache.sh`** — *(Operator)*
-- [ ] **2.5** Git auth: embedded ciphertext + in-memory decrypt + zeroize; **`BODHI_BEARER`** selects row; **no `GIT_ASKPASS`** — *(Operator)*
+- [ ] **2.5** Git auth: embedded ciphertext + in-memory decrypt + zeroize; **`BODHI_BEARER`** selects row — *(Operator)*
 
 ### Phase 3 — Corpus skills & cutover from `memory-write`
 
@@ -98,6 +121,7 @@ PAT is **ciphertext embedded in the compiled binary** (garble build). `clone` / 
 - **W13:** SKILL = guidance; **`commit`** = validate + git + cache.
 - **W15:** `.access` only; no per-file visibility in frontmatter.
 - **Git landing:** being branch → PR → Actions **merge commit**; never push `main` from beings.
+- **Sharing:** `main` updates propagate to all `being/*` via `sync-main-to-beings`.
 
 ---
 
@@ -105,7 +129,7 @@ PAT is **ciphertext embedded in the compiled binary** (garble build). `clone` / 
 
 | Current | Target |
 |---------|--------|
-| `memory_write.sh` | `commit` binary |
+| `memory_write.sh` | `commit` binary (Phase 2+) |
 | *(none)* | `operational/memory-manifest.yaml` |
 | *(none)* | `rebuild-index-cache.sh` → `memory-index-cache.json` |
 | *(none)* | `clone` binary |
@@ -122,3 +146,5 @@ PAT is **ciphertext embedded in the compiled binary** (garble build). `clone` / 
 | 2026-06-07 | Reordered into Phases 0–5; manifest draft → validate; no GIT_ASKPASS. |
 | 2026-06-07 | Phase 0: Actions/CI = operator; being branches auto on first commit; private repo last. |
 | 2026-06-07 | Checkbox task list + operator run rules. |
+| 2026-06-07 | **0.2 done:** `being-merge.yml`; smoke PR #1. |
+| 2026-06-07 | **Model lock:** Phase 0–1 = old tools on new railroad (PAT on wall); garble → Phase 2; `sync-main-to-beings` added. |

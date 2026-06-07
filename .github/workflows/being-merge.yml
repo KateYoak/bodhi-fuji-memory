@@ -51,7 +51,23 @@ jobs:
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
           echo "being=${BRANCH#being/}" >> "$GITHUB_OUTPUT"
 
+      - name: Skip when nothing to land
+        id: ahead
+        run: |
+          BRANCH="${{ steps.branch.outputs.branch }}"
+          AHEAD="$(gh api "repos/${{ github.repository }}/compare/main...${BRANCH}" \
+            --jq '.ahead_by // 0')"
+          echo "ahead_by=${AHEAD}" >> "$GITHUB_OUTPUT"
+          if [[ "${AHEAD}" == "0" ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "${BRANCH} is not ahead of main — nothing to land (e.g. after sync-main-to-beings)."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "${BRANCH} is ${AHEAD} commit(s) ahead of main."
+          fi
+
       - name: Open or reuse PR
+        if: steps.ahead.outputs.skip != 'true'
         id: pr
         run: |
           BRANCH="${{ steps.branch.outputs.branch }}"
@@ -72,6 +88,7 @@ jobs:
           fi
 
       - name: Merge to main (merge commit)
+        if: steps.ahead.outputs.skip != 'true'
         run: |
           gh pr merge "${{ steps.pr.outputs.number }}" \
             --repo "${{ github.repository }}" \
