@@ -1,0 +1,68 @@
+# When main moves, merge it into every being/* branch so beings share landed memory.
+# Pair with being-merge.yml (being → main). See task/memory-index-migration.md Phase 0.3.
+name: Sync main to beings
+
+on:
+  push:
+    branches: [main]
+  # GITHUB_TOKEN merges in being-merge do not fire push workflows — chain here.
+  workflow_run:
+    workflows: [Being merge to main]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-main-to-beings
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  merge-main-into-beings:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge main into each being/* branch
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          mapfile -t branches < <(
+            git ls-remote --heads origin 'refs/heads/being/*' \
+              | awk '{print $2}' \
+              | sed 's|refs/heads/||' \
+              | sort
+          )
+          if [[ ${#branches[@]} -eq 0 ]]; then
+            echo "No being/* branches — nothing to sync."
+            exit 0
+          fi
+          echo "Branches: ${branches[*]}"
+          for branch in "${branches[@]}"; do
+            echo ""
+            echo "── ${branch} ──"
+            git checkout -B "${branch}" "origin/${branch}"
+            before="$(git rev-parse HEAD)"
+            if git merge origin/main -m "sync: merge main into ${branch}"; then
+              after="$(git rev-parse HEAD)"
+              if [[ "${before}" != "${after}" ]]; then
+                git push origin "HEAD:${branch}"
+                echo "pushed ${branch} (${before:0:7} → ${after:0:7})"
+              else
+                echo "unchanged — skip push"
+              fi
+            else
+              echo "✗ merge conflict on ${branch} — resolve manually" >&2
+              git merge --abort || true
+              exit 1
+            fi
+          done
