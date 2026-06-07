@@ -82,7 +82,8 @@ jobs:
             NUM="$(gh pr create --repo "${{ github.repository }}" \
               --base main --head "$BRANCH" \
               --title "being: ${BEING}" \
-              --body "Automated landing from \`${BRANCH}\` push. Merge commit only.")"
+              --body "Automated landing from \`${BRANCH}\` push. Merge commit only." \
+              --json number --jq .number)"
             echo "number=$NUM" >> "$GITHUB_OUTPUT"
             echo "Created PR #${NUM} for ${BRANCH}"
           fi

@@ -63,11 +63,11 @@ Bearer in `agents.yaml` is for Phase 2 compiled binaries. **PAT on wall** is wha
 
 - [x] **0.1** Create **setup repo** (trusted-agent): Go project, `agents.yaml` (bearer, persona, branch per being) — `KateYoak/bodhi-trusted-agent`
 - [x] **0.2** **`being-merge.yml`** — being push → PR → governance stub → merge commit to `main` — *(Operator)*
-- [/] **0.3** **`sync-main-to-beings.yml`** — on `main` push, merge `main` into every `being/*` branch (beings share landed memory) — *(Operator)*
+- [x] **0.3** **`sync-main-to-beings.yml`** — on `main` push **or after `being-merge`**, merge `main` into every `being/*` branch — *(Operator)*
 - [x] **0.3b** **`sync-agents`** — on `agents.yaml` push, create missing `being/*` branches — *(Operator)*
 - [x] **0.4** Being branches — `being/dharacetana` live — *(Automatic after 0.3b)*
-- [/] **0.5a** **Discord** — gateway clone on `being/dharacetana` (`MEMORY_BRANCH`); deploy + verify `memory-write` path — *(Operator)*
-- [ ] **0.5b** **Claude.ai** — Dharacetana: PAT on wall + clone on `being/dharacetana` + first `memory-write` — *(Anandaka)*
+- [/] **0.5a** **Discord** — gateway clone on `being/dharacetana` (`MEMORY_BRANCH`); pull before turns; deploy + verify `memory-write` path — *(Operator)*
+- [x] **0.5b** **Claude.ai** — Dharacetana: PAT on wall + clone on `being/dharacetana` + first `memory-write` (PR #2) — *(Anandaka)*
 - [ ] **0.6** Make `bodhi-fuji-memory` **private**; **branch protection** on `main` — *(Anandaka)*
 
 ### Phase 1 — Memory repo foundation
@@ -148,3 +148,4 @@ Bearer in `agents.yaml` is for Phase 2 compiled binaries. **PAT on wall** is wha
 | 2026-06-07 | Checkbox task list + operator run rules. |
 | 2026-06-07 | **0.2 done:** `being-merge.yml`; smoke PR #1. |
 | 2026-06-07 | **Model lock:** Phase 0–1 = old tools on new railroad (PAT on wall); garble → Phase 2; `sync-main-to-beings` added. |
+| 2026-06-07 | **0.5b done:** Dharacetana infra test via PR #2. `sync` chains off `being-merge`; Discord pull-before-turn. |
