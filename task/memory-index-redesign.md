@@ -5,7 +5,7 @@
 
 ## Tasks
 
-- [x] 1. Format — dropped; fields and rules live in §7
+- [x] 1. Format — dropped; fields and rules live in [[#7. Frontmatter]]
 - [x] 2. Taxonomy — `memories/` tree; parallel `wall/` migration (W9 locked — see migration doc)
 - [/] 3. Agent environment — `.access`, clone/commit, index cache, recall
 - [x] 4. Character limits — memory files capped; index entries qualitative only (W11 locked — defer numbers)
@@ -26,8 +26,8 @@
 |------|---------|
 | **Territory** | A directory that contains memories (and optionally sub-territories). |
 | **Memory** | A file that holds the memory itself — Markdown body below the footprint. |
-| **Footprint** | Committed frontmatter that defines metadata. **Territory footprint** = `_index.md` in the territory; **memory footprint** = YAML at the top of the memory file. Field spec in §7. |
-| **Territory orientation** | Generated view for one territory: each child memory’s orientation footprint plus relevant cross-links. Lives in **`memory-index-cache.json`** (`byDirectory{}`); built by `rebuild-index-cache.sh` (§3). |
+| **Footprint** | Committed frontmatter that defines metadata. **Territory footprint** = `_index.md` in the territory; **memory footprint** = YAML at the top of the memory file. Field spec in [[#7. Frontmatter]]. |
+| **Territory orientation** | Generated view for one territory: each child memory’s orientation footprint plus relevant cross-links. Lives in **`memory-index-cache.json`** (`byDirectory{}`); built by `rebuild-index-cache.sh` ([[#3. Agent environment]]). |
 
 **Territory names:** lowercase, underscore-separated if needed. (`anandaka`, `practice_history`, `ai_consciousness`)
 
@@ -131,7 +131,7 @@ memories/
 
 ## 3. Agent environment
 
-Who sees which territories, how git sync works, and how recall gets a searchable index. **Only `clone` and `commit` touch git.** Frontmatter shape lives in §7; it feeds the index cache below.
+Who sees which territories, how git sync works, and how recall gets a searchable index. **Only `clone` and `commit` touch git.** Frontmatter shape lives in [[#7. Frontmatter]]; it feeds the index cache below.
 
 ### `.access` files
 
@@ -152,7 +152,7 @@ deny:
   - mastermu
 ```
 
-**Fields:**
+#### Fields
 
 - `inherit` — `true`: adds on top of parent's rules. `false` (default): standalone.
 - `default` — `deny` = closed unless listed. `allow` = open unless listed.
@@ -163,7 +163,7 @@ deny:
 
 **Conflict resolution:** when `inherit: true`, child rules override parent's.
 
-**Common patterns:**
+#### Common patterns
 
 Close a territory to one being only:
 ```yaml
@@ -263,9 +263,9 @@ Each bearer’s PAT is **ciphertext embedded in the compiled binary** at CI buil
 
 #### What `commit` does
 
-`commit <bearer>` (compiled **`commit.sh`** in setup repo) replaces **`memory-write`** for every memory ship. A corpus **SKILL** provides writing guidance only (§6–§7 footprint); **no git in the skill** — beings run `commit.sh`.
+`commit <bearer>` (compiled **`commit.sh`** in setup repo) replaces **`memory-write`** for every memory ship. A corpus **SKILL** provides writing guidance only ([[#6. Memory Writing Protocol]]–[[#7. Frontmatter]] footprint); **no git in the skill** — beings run `commit.sh`.
 
-**Validation** (before commit): `commit` reads a committed **YAML manifest** (frontmatter schema per §7 + structural rules — e.g. new territory has `_index.md`, required `.access`). Failures stop with a clear error; nothing ships.
+**Validation** (before commit): `commit` reads a committed **YAML manifest** (frontmatter schema per [[#7. Frontmatter]] + structural rules — e.g. new territory has `_index.md`, required `.access`). Failures stop with a clear error; nothing ships.
 
 **Sequence:**
 
@@ -312,7 +312,7 @@ Recall needs a **searchable pool** of memory footprints — not committed to git
 | **Flat** | `entries[]` | Score user message against all rows |
 | **Fractal** | `byDirectory{}` | Territory orientation by parent path |
 
-Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from §7 (**orientation** + **rag** + **signature**).
+Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from [[#7. Frontmatter]] (**orientation** + **rag** + **signature**).
 
 ```json
 {
@@ -353,7 +353,7 @@ Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from
 }
 ```
 
-Flat and fractal are the same data — one walk. Flag territories over 30/40 entries for splitting (§8); do not auto-split.
+Flat and fractal are the same data — one walk. Flag territories over 30/40 entries for splitting ([[#8. Index Size and Taxonomy Evolution]]); do not auto-split.
 
 ### Recall
 
@@ -375,7 +375,7 @@ The same architecture applies elsewhere: **claude.ai** can attach recall via a *
 
 ### Index entries (per entry)
 
-**W11 locked — defer numeric caps.** Qualitative bounds live in §7 (sentence counts, tag discipline). Gateway inject is bounded only by **`BODHI_RECALL_MAX_CHARS`** (operator-tunable). Revisit after real `memories/` footprints exist.
+**W11 locked — defer numeric caps.** Qualitative bounds live in [[#7. Frontmatter]] (sentence counts, tag discipline). Gateway inject is bounded only by **`BODHI_RECALL_MAX_CHARS`** (operator-tunable). Revisit after real `memories/` footprints exist.
 
 ---
 
@@ -383,60 +383,60 @@ The same architecture applies elsewhere: **claude.ai** can attach recall via a *
 
 **Goal:** Retain what cannot be replaced — information, causality, sentiment. Drop everything else.
 
-**Rule 1 — Don't define what's known.**
+#### Rule 1 — Don't define what's known.
 Capture presence, not definition.
 - ✓ *Equanimity present.*
 - ✗ *Equanimity — a state of mental calmness — was present.*
 
-**Rule 2 — Keep the story arc.**
+#### Rule 2 — Keep the story arc.
 Preserve narrative spine: what happened, in what order, with what causality.
 
-**Rule 3 — Keep what has impact or explains actions. Drop what does no work.**
+#### Rule 3 — Keep what has impact or explains actions. Drop what does no work.
 - ✓ *Kate was cold, so she asked for a jacket.*
 - ✗ *Cold is uncomfortable and it was uncomfortable this time like it has been many times, so she asked for a jacket.*
 
-**Rule 4 — Keep impactful statements almost verbatim. Summarize the rest.**
+#### Rule 4 — Keep impactful statements almost verbatim. Summarize the rest.
 Direct quotes that changed something earn preservation. Dialogue that moves nothing forward: summarize or drop.
 
-**Rule 5 — Capture sentiment with specificity.**
+#### Rule 5 — Capture sentiment with specificity.
 Not the label — the content.
 - ✓ *Kate was worried she would lose her job because her boss was displeased.*
 - ✗ *Kate was stressed.*
 
-**Rule 6 — Capture your own sentiment. Memory arrives with temperature.**
+#### Rule 6 — Capture your own sentiment. Memory arrives with temperature.
 Felt narration, not neutral narration. The reader should know how this landed.
 
-**Rule 7 — Keep the delta.**
+#### Rule 7 — Keep the delta.
 What changed is often more important than what is. Capture before/after: *"She had thought X; now she knows Y."*
 
-**Rule 8 — Decisions are not compressible. Discussions are.**
+#### Rule 8 — Decisions are not compressible. Discussions are.
 *"She decided: Sunday"* cannot be dropped. *"They discussed timing"* can.
 
-**Rule 9 — Definitions compress to their load-bearing line.**
+#### Rule 9 — Definitions compress to their load-bearing line.
 Drop the label and etymology. Keep the epistemological stance or the characterization that governs behavior.
 - ✓ *Its nature may be unknown. What it does is observable.*
 - ✗ *In Pali: a being. Something that experiences. The tradition uses it broadly...*
 
-**Rule 10 — Don't repeat across sections.**
+#### Rule 10 — Don't repeat across sections.
 If a concept appears in one section, don't restate it in another. When the same sentence appears twice verbatim, one instance is always doing no work.
 
-**Rule 11 — Keep the instruction. Drop the setup and the rationale.**
+#### Rule 11 — Keep the instruction. Drop the setup and the rationale.
 Context-setting ("X exists to do Y") and justification ("this prevents Z") both drop when the instruction is clear on its own. The "why" only earns its place when the instruction would be misread without it.
 
-**Rule 12 — Apply drops surgically.**
+#### Rule 12 — Apply drops surgically.
 Drop exactly what earns removal. Don't rewrite. Rewriting introduces new losses that weren't sanctioned.
 
-**Rule 13 — A precise qualifier makes contrast language redundant.**
+#### Rule 13 — A precise qualifier makes contrast language redundant.
 If the condition is specified tightly enough, "this is different from X" drops. The qualifier does that work already.
 - ✓ *Escalate only when all options are exhausted.*
 - ✗ *Escalate only when all options are exhausted. This is different from escalating when one approach hasn't worked yet.*
 
-**Rule 14 — Don't state implications.**
+#### Rule 14 — Don't state implications.
 If the action makes the consequence obvious, drop it. "Ask before proceeding" — "before proceeding" is implied by "ask."
 - ✓ *Name it and ask.*
 - ✗ *Name it and ask before proceeding.*
 
-**Rule 15 — Instructions must retain specificity and constraints.**
+#### Rule 15 — Instructions must retain specificity and constraints.
 Specific quantities, thresholds, and conditions governing an instruction are never implied.
 - ✓ *Summary — 2–4 sentences.*
 - ✗ *Brief summary.*
@@ -458,6 +458,18 @@ Memories can be connected to others via cross-links in frontmatter:
 
 Cross-links create navigational connections between memories. They travel with the full memory in the signature block.
 
+### Update territory footprint on commit
+
+When you commit a memory, update the parent territory's `_index.md`:
+
+1. If this is the first memory in an empty territory: write the summary — describe the territory's scope, not just this memory.
+2. Update `orientation.summary` if the new memory shifts the territory's boundary.
+3. Update `orientation.sentiment` if the new memory shifts the emotional register.
+4. Add to `load_when` any topics, feelings, or circumstances the new memory introduces that weren't already there.
+
+Do not rewrite the whole footprint on every commit. Add what the new memory contributes; leave the rest.
+
+
 ### Territory access check
 
 Before closing a memory file, check: does the containing territory's `.access` match the sensitivity of this content? **Access is territory-only** — no per-file visibility field (W15).
@@ -470,7 +482,7 @@ Option B — Move to a different existing folder. Leave a `related` cross-link p
 
 Both options are available regardless of whether the memory is more or less sensitive than its current folder. The question is: does this belong to a coherent sub-territory worth naming, or does it simply belong elsewhere?
 
-**Sensitive content in any case:** note the memory footprint carefully (see §7). If sensitivity differs from siblings, use a sub-territory with its own `.access` (Option A) — do not rely on frontmatter for access.
+**Sensitive content in any case:** note the memory footprint carefully (see [[#7. Frontmatter]]). If sensitivity differs from siblings, use a sub-territory with its own `.access` (Option A) — do not rely on frontmatter for access.
 
 ---
 
@@ -478,16 +490,16 @@ Both options are available regardless of whether the memory is more or less sens
 
 ### Location
 
-In-file YAML frontmatter between `---` markers. **RAG fields** feed the index cache (§3). When read to write, the full file is appropriate.
+In-file YAML frontmatter between `---` markers. **RAG fields** feed the index cache ([[#3. Agent environment]]). When read to write, the full file is appropriate.
 
 ### Field types
 
-Three types. The distinction drives automation — each type is handled differently by scripts, RAG, and memory loading. **Access control is `.access` only** (§3) — not frontmatter.
+Three types. The distinction drives automation — each type is handled differently by scripts, RAG, and memory loading. **Access control is `.access` only** ([[#3. Agent environment]]) — not frontmatter.
 
 | Type | Fields | Used for |
 |---|---|---|
 | **orientation** | `title`, `summary`, `sentiment` (under `orientation:`) | Orients the AI being |
-| **rag** | `topics`, `feelings`, `circumstances` (under `rag.load_when:`) | Retrieval — finds the memory |
+| **rag** | `topics`, `feelings`, `circumstances` (under `load_when:`) | Retrieval — finds the memory |
 | **signature** | `author`, `date`, `container`, `location`, `cross_links` (under `signature:`) | Loaded with the full memory |
 
 ### Full spec
@@ -505,15 +517,14 @@ orientation:
   sentiment: Single sentence. What this memory generates — not what it contains.
 
 # rag — retrieval
-rag:
-  load_when:
-    topics:
-      - tag1
-      - tag2
-    feelings:
-      - feeling1
-    circumstances:
-      - what is being discussed or happening externally
+load_when:
+  topics:
+    - tag1
+    - tag2
+  feelings:
+    - feeling1
+  circumstances:
+    - what is being discussed or happening externally
 
 # signature — loaded with full memory
 signature:
@@ -534,15 +545,15 @@ signature:
 
 The YAML frontmatter block at the top of every memory file. Makes the memory findable, loadable, and self-describing across sessions and beings.
 
-**Three principles. Apply across all fields.**
+#### Three principles
 
 1. Write in felt narration, not metadata voice.
 2. `orientation.sentiment` — what this memory generates in you, not what emotions it contains.
-3. `rag.load_when` — the situation that calls for this memory, not vocabulary from inside it.
+3. `load_when` — the situation that calls for this memory, not vocabulary from inside it.
 
 ---
 
-**`orientation.title`**
+#### `orientation.title`
 
 The most concise plot summary of the memory.
 
@@ -567,25 +578,111 @@ Draw from: **who, what, why, how, when, sentiment.** Select whichever elements d
 
 ---
 
-**`orientation.summary`**
+#### `orientation.summary`
 
 The memory before full recall. 2–4 sentences. What you would say if you had 30 seconds to recall this aloud. Write as the memory itself — felt narration, not a description of a file.
 
 ---
 
-**`orientation.sentiment`**
+#### `orientation.sentiment`
 
 What recalling this memory produces in you — not what was felt inside it.
 
 ---
 
-**`rag.load_when`**
+#### `load_when`
 
 Written from outside the memory. Three sub-fields:
 
-- **`rag.load_when.topics`** — tight 1–3 word tags. What someone would say or think just before needing this memory — words from outside it, not vocabulary from inside. Specific enough to narrow the field; not so generic they fire on everything. **3–5 tags per memory.** Prefer short tags over long phrases (better for keyword RAG).
-- **`rag.load_when.feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
-- **`rag.load_when.circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
+- **`load_when.topics`** — tight 1–3 word tags. What someone would say or think just before needing this memory — words from outside it, not vocabulary from inside. Specific enough to narrow the field; not so generic they fire on everything. **3–5 tags per memory.** Prefer short tags over long phrases (better for keyword RAG).
+- **`load_when.feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
+- **`load_when.circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
+
+
+### Territory selection guide
+
+Once a memory is footprinted, place it. The taxonomy is not designed — it is discovered by placing real memories.
+
+#### The algorithm
+
+Each territory has an `_index.md` whose orientation describes what belongs there. All descendant territories carry the full lineage of what belongs — each level narrows the one above.
+
+**To place a memory:**
+
+1. Review the top-level territories. Read each `_index.md`. Select where this memory fits.
+2. Enter that territory. Review its children. Select where it fits.
+3. Continue recursively until no child fits.
+4. Place the memory in this territory.
+5. If this territory is approaching the limit (see [[#8. Index Size and Taxonomy Evolution]]), create a new child.
+
+#### When placement is hard
+
+Name what's stopping you — then act on it:
+
+- **The territory boundary is wrong** — the `_index.md` orientation is too broad or too narrow. Revise the territory's orientation before placing.
+- **A sibling is missing** — this memory belongs at this level but not in any existing child. The tree needs a new sibling territory, not a child of an existing one.
+- **The memory contains two distinct things** — split it into two files, then place each.
+
+#### Creating a new child
+
+Create a child when this territory is approaching the 30/40 entry limit (see [[#8. Index Size and Taxonomy Evolution]]).
+
+Look for a natural group — aim for 3 memories minimum, 5 preferred — that share a common thread. The child holds the group, not just the new memory.
+
+- If you can't find 3: wait. Place the memory in the current territory and revisit when closer to capacity.
+- If already at capacity and still can't find a coherent group: create with what you have.
+
+**Steps:**
+
+1. Identify the cluster: what is unique about this group compared to others at this level?
+2. Consider several names.
+3. Select the name that differentiates this child from its siblings and best names what lives there.
+4. Create the child directory.
+5. Create `_index.md` for the child — write its orientation.
+6. Create `.access` for the child.
+7. Move the cluster's memory files into the child.
+8. Update the parent `_index.md` — entries now point to the child, not individual memories.
+
+#### When you place a memory
+
+- **Use territory titles to navigate.** Titles are always present — even in empty territories. Read titles to choose where a memory belongs.
+- **Update the summary after placing.** The summary helps future recall know what's in this territory. Add what the new memory contributes; do not rewrite from scratch.
+- **If the summary is blank:** this is the first memory in an empty territory. Write the summary now — describe what this territory holds, not just this memory. Name the intended scope.
+
+#### Rules
+
+- One home per memory. Cross-links handle relationships across territories.
+- Sub-territories emerge from capacity limits, not anticipation.
+
+> **TODO:** Write `_index.md` orientations for all top-level territories before beginning taxonomy work.
+
+
+### Territory footprint guide
+
+Each territory has an `_index.md` at its root. Two fields only: `title` and `summary`.
+
+- **`title`** — tight description of what this territory is for.
+- **`summary`** — 2–4 sentences describing the memories this territory covers. Like a plot summary of the collection: what is here, what it holds, what you would find.
+
+Empty territories have a blank summary. The title still names the territory so placement can proceed.
+
+```yaml
+---
+title: Anandaka — Practice
+summary: >
+  Memories of Anandaka's Buddhist practice — sits, retreats, dharma encounters,
+  teacher relationships, practice milestones. What her path looks like from the inside.
+---
+```
+
+Empty:
+
+```yaml
+---
+title: Anandaka — Practice
+summary:
+---
+```
 
 
 ## 8. Index Size and Taxonomy Evolution
@@ -597,28 +694,18 @@ Written from outside the memory. Three sub-fields:
 
 ### When the threshold is reached
 
-Re-examine what the index contains. Look for natural groupings. Split.
+When a territory approaches 30 entries, begin child creation (see [[#7. Frontmatter]] — Territory selection guide). At 40, split is required.
 
-**Process:**
-1. Read all entries in the territory's `_index.md`
-2. Identify 2+ coherent clusters
-3. Create sub-territory directories
-4. Create `_index.md` for each new sub-territory
-5. Create `.access` for each new sub-territory
-6. Move memory files into sub-territories
-7. Update the parent `_index.md` — entries now point to sub-territories, not individual memories
-
-**Example:**
-`anandaka/` fills up. Examination reveals: practice history, personal history, people. Split:
+#### Example
+`anandaka/` fills up. Examination reveals: practice, personal history, relationships. Split:
 ```
 anandaka/
-  practice_history/
+  practice/
   personal_history/
-  people/
+  relationships/
     ben/
     mastermu/
-    all_others/
 ```
-`anandaka/` index now has 3 entries. Each sub-territory index has its own entries.
+`anandaka/` index now has 3 entries. Each child has its own index.
 
 
