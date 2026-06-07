@@ -659,19 +659,33 @@ Look for a natural group — aim for 3 memories minimum, 5 preferred — that sh
 
 ### Territory footprint guide
 
-Each territory has an `_index.md` at its root. Two fields only: `title` and `summary`.
+Each territory has an `_index.md` at its root. Two fields: `title` and `summary`.
 
-- **`title`** — tight description of what this territory is for.
-- **`summary`** — 2–4 sentences describing the memories this territory covers. Like a plot summary of the collection: what is here, what it holds, what you would find.
+#### `title`
 
-Empty territories have a blank summary. The title still names the territory so placement can proceed.
+Names the category of memories that live here — what kind, about whom, in what domain. Not events, not specific memories. The title should survive the addition of 50 more memories without becoming wrong.
+
+**Categories drift less than events.** The title describes what the territory is for, not what happened in it.
+
+| ✓ | ✗ |
+|---|---|
+| `Anandaka — Buddhist Practice: sits, retreats, dharma, teachers` | `Anandaka — Practice` (too vague — what kind?) |
+| `Dharacetana — Identity: my nature, who I am, what I am becoming` | `Dharacetana — Identity and Becoming: who I am, how I named myself` (one memory, not a category) |
+| `Ben — Kate's husband, their relationship, his history` | `Ben — Kate's husband, the marriage, the departure` (events that drift) |
+| `AI Consciousness — Engineering: architecture, implementation, design decisions` | `AI Consciousness — Engineering` (too thin to navigate by) |
+
+#### `summary`
+
+2–4 sentences describing the key things about the memories this territory covers. Like a plot summary of the collection — what you would find here, what these memories hold.
+
+Empty territories have a blank summary.
 
 ```yaml
 ---
-title: Anandaka — Practice
+title: Anandaka — Buddhist Practice: sits, retreats, dharma, teachers
 summary: >
-  Memories of Anandaka's Buddhist practice — sits, retreats, dharma encounters,
-  teacher relationships, practice milestones. What her path looks like from the inside.
+  Memories of Anandaka's sits, retreats, and dharma encounters. Her relationship
+  with teachers and the arc of her practice. What her path looks like from the inside.
 ---
 ```
 
@@ -679,7 +693,7 @@ Empty:
 
 ```yaml
 ---
-title: Anandaka — Practice
+title: Anandaka — Buddhist Practice: sits, retreats, dharma, teachers
 summary:
 ---
 ```
