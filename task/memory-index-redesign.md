@@ -462,7 +462,7 @@ Cross-links create navigational connections between memories. They travel with t
 
 When you commit a memory, update the parent territory's `_index.md`:
 
-1. If this is the first memory: remove `status: empty`.
+1. If this is the first memory: rewrite the summary — remove "Still empty. Use for:" and replace with the actual memory.
 2. Update `orientation.summary` if the new memory shifts the territory's boundary.
 3. Update `orientation.sentiment` if the new memory shifts the emotional register.
 4. Add to `load_when` any topics, feelings, or circumstances the new memory introduces that weren't already there.
@@ -666,16 +666,15 @@ Each territory has an `_index.md` at its root. Same YAML structure as a memory f
 
 #### Empty territories
 
-A predefined territory with no memories yet still has an `_index.md`. Add `status: empty` to orientation — it tells the algorithm the territory exists and what it is for, without claiming it holds anything yet. Remove when the first memory is placed.
+A predefined territory with no memories yet still has an `_index.md`. Open the summary with "Still empty. Use for:" followed by what belongs here. Remove when the first memory is placed.
 
 ```yaml
 ---
 orientation:
   title: Anandaka — Practice
   summary: >
-    Memories of Anandaka's Buddhist practice — sits, retreats, dharma encounters,
-    teacher relationships, practice milestones. What her path looks like from the inside.
-  status: empty   # no memories yet; this is what you use it for
+    Still empty. Use for: memories of Anandaka's Buddhist practice — sits, retreats,
+    dharma encounters, teacher relationships, practice milestones.
   sentiment: The ground her inner life stands on.
 
 load_when:
