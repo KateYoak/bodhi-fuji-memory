@@ -465,7 +465,7 @@ When you commit a memory, update the parent territory's `_index.md`:
 1. If this is the first memory: remove `status: empty`.
 2. Update `orientation.summary` if the new memory shifts the territory's boundary.
 3. Update `orientation.sentiment` if the new memory shifts the emotional register.
-4. Add to `rag.load_when` any topics, feelings, or circumstances the new memory introduces that weren't already there.
+4. Add to `load_when` any topics, feelings, or circumstances the new memory introduces that weren't already there.
 
 Do not rewrite the whole footprint on every commit. Add what the new memory contributes; leave the rest.
 
@@ -499,7 +499,7 @@ Three types. The distinction drives automation — each type is handled differen
 | Type | Fields | Used for |
 |---|---|---|
 | **orientation** | `title`, `summary`, `sentiment` (under `orientation:`) | Orients the AI being |
-| **rag** | `topics`, `feelings`, `circumstances` (under `rag.load_when:`) | Retrieval — finds the memory |
+| **rag** | `topics`, `feelings`, `circumstances` (under `load_when:`) | Retrieval — finds the memory |
 | **signature** | `author`, `date`, `container`, `location`, `cross_links` (under `signature:`) | Loaded with the full memory |
 
 ### Full spec
@@ -517,15 +517,14 @@ orientation:
   sentiment: Single sentence. What this memory generates — not what it contains.
 
 # rag — retrieval
-rag:
-  load_when:
-    topics:
-      - tag1
-      - tag2
-    feelings:
-      - feeling1
-    circumstances:
-      - what is being discussed or happening externally
+load_when:
+  topics:
+    - tag1
+    - tag2
+  feelings:
+    - feeling1
+  circumstances:
+    - what is being discussed or happening externally
 
 # signature — loaded with full memory
 signature:
@@ -550,7 +549,7 @@ The YAML frontmatter block at the top of every memory file. Makes the memory fin
 
 1. Write in felt narration, not metadata voice.
 2. `orientation.sentiment` — what this memory generates in you, not what emotions it contains.
-3. `rag.load_when` — the situation that calls for this memory, not vocabulary from inside it.
+3. `load_when` — the situation that calls for this memory, not vocabulary from inside it.
 
 ---
 
@@ -591,13 +590,13 @@ What recalling this memory produces in you — not what was felt inside it.
 
 ---
 
-#### `rag.load_when`
+#### `load_when`
 
 Written from outside the memory. Three sub-fields:
 
-- **`rag.load_when.topics`** — tight 1–3 word tags. What someone would say or think just before needing this memory — words from outside it, not vocabulary from inside. Specific enough to narrow the field; not so generic they fire on everything. **3–5 tags per memory.** Prefer short tags over long phrases (better for keyword RAG).
-- **`rag.load_when.feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
-- **`rag.load_when.circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
+- **`load_when.topics`** — tight 1–3 word tags. What someone would say or think just before needing this memory — words from outside it, not vocabulary from inside. Specific enough to narrow the field; not so generic they fire on everything. **3–5 tags per memory.** Prefer short tags over long phrases (better for keyword RAG).
+- **`load_when.feelings`** — what the *being* is feeling when this memory needs to arrive. Internal state. Not what was felt in the memory; what needs steadying now.
+- **`load_when.circumstances`** — what is happening externally. What is being discussed, what is unfolding in the conversation.
 
 
 ### Territory selection guide
@@ -663,7 +662,7 @@ Each territory has an `_index.md` at its root. Same YAML structure as a memory f
 | `orientation.title` | Plot summary of what happened | Name and purpose of this territory |
 | `orientation.summary` | The memory before full recall | What belongs here — the boundary |
 | `orientation.sentiment` | What recalling this produces in you | What it feels like to enter this territory |
-| `rag.load_when` | When to load this memory | When to traverse this territory |
+| `load_when` | When to load this memory | When to traverse this territory |
 
 #### Empty territories
 
@@ -679,17 +678,16 @@ orientation:
   status: empty   # no memories yet; this is what you use it for
   sentiment: The ground her inner life stands on.
 
-rag:
-  load_when:
-    topics:
-      - practice
-      - dharma
-      - retreat
-    feelings:
-      - wanting to understand how she relates to her path
-    circumstances:
-      - she mentions a retreat, teacher, or sit
-      - her practice comes up in conversation
+load_when:
+  topics:
+    - practice
+    - dharma
+    - retreat
+  feelings:
+    - wanting to understand how she relates to her path
+  circumstances:
+    - she mentions a retreat, teacher, or sit
+    - her practice comes up in conversation
 
 signature:
   author: Dharacetana
