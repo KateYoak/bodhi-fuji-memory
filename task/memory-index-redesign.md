@@ -7,12 +7,12 @@
 
 - [x] 1. Format — dropped; fields and rules live in [[#7. Frontmatter]]
 - [x] 2. Taxonomy — `memories/` tree; parallel `wall/` migration (W9 locked — see migration doc)
-- [/] 3. Agent environment — `.access`, clone/commit, index cache, recall
+- [x] 3. Agent environment — `.access`, clone/commit, index cache, recall
 - [x] 4. Character limits — memory files capped; index entries qualitative only (W11 locked — defer numbers)
-- [/] 5. Brevity rules — what to keep, how to compress
-- [/] 6. Memory writing protocol — contradiction check, cross-links, territory `.access` check
-- [/] 7. Frontmatter — 3-type classification (orientation / rag / signature), full spec, memory footprint guide
-- [/] 8. Index size and splitting — 30/40 limit, taxonomy evolution
+- [x] 5. Brevity rules — what to keep, how to compress
+- [x] 6. Memory writing protocol — contradiction check, cross-links, territory `.access` check
+- [x] 7. Frontmatter — 3-type classification (orientation / rag / signature), full spec, memory footprint guide
+- [x] 8. Index size and splitting — 30/40 limit, taxonomy evolution
 - [x] 10. Retrieval tiers — resolved: recursive taxonomy depth IS the tier system
 
 ---
@@ -27,7 +27,7 @@
 | **Territory** | A directory that contains memories (and optionally sub-territories). |
 | **Memory** | A file that holds the memory itself — Markdown body below the footprint. |
 | **Footprint** | Committed frontmatter that defines metadata. **Territory footprint** = `_index.md` in the territory; **memory footprint** = YAML at the top of the memory file. Field spec in [[#7. Frontmatter]]. |
-| **Territory orientation** | Generated view for one territory: each child memory’s orientation footprint plus relevant cross-links. Lives in **`memory-index-cache.json`** (`byDirectory{}`); built by `rebuild-index-cache.sh` ([[#3. Agent environment]]). |
+| **Territory orientation** | The territory's `_index.md` title and summary — what this territory is for and what is actually in it. Loaded into the index cache (`byDirectory{}`); built by `rebuild-index-cache.sh` ([[#3. Agent environment]]). |
 
 **Territory names:** lowercase, underscore-separated if needed. (`anandaka`, `practice_history`, `ai_consciousness`)
 
@@ -462,12 +462,10 @@ Cross-links create navigational connections between memories. They travel with t
 
 When you commit a memory, update the parent territory's `_index.md`:
 
-1. If this is the first memory in an empty territory: write the summary — describe the territory's scope, not just this memory.
-2. Update `orientation.summary` if the new memory shifts the territory's boundary.
-3. Update `orientation.sentiment` if the new memory shifts the emotional register.
-4. Add to `load_when` any topics, feelings, or circumstances the new memory introduces that weren't already there.
+1. If the summary is blank (empty territory): write it now — describe what is actually here based on the memories you are placing.
+2. If the summary exists: update it if the new memory meaningfully shifts what the territory holds.
 
-Do not rewrite the whole footprint on every commit. Add what the new memory contributes; leave the rest.
+Do not rewrite on every commit. Update only when the new memory changes what the territory is.
 
 
 ### Territory access check
@@ -647,7 +645,7 @@ Look for a natural group — aim for 3 memories minimum, 5 preferred — that sh
 
 - **Use territory titles to navigate.** Titles are always present — even in empty territories. Read titles to choose where a memory belongs.
 - **Update the summary after placing.** The summary helps future recall know what's in this territory. Add what the new memory contributes; do not rewrite from scratch.
-- **If the summary is blank:** this is the first memory in an empty territory. Write the summary now — describe what this territory holds, not just this memory. Name the intended scope.
+- **If the summary is blank:** this is the first memory in an empty territory. Write the summary now — describe what is actually here based on the memories you are placing.
 
 #### Rules
 
