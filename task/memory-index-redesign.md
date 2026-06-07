@@ -604,26 +604,40 @@ Each territory has an `_index.md` whose orientation describes what belongs there
 4. Place the memory in this territory.
 5. If this territory is approaching the limit (see [[#8. Index Size and Taxonomy Evolution]]), create a new child.
 
+#### When placement is hard
+
+Name what's stopping you — then act on it:
+
+- **The territory boundary is wrong** — the `_index.md` orientation is too broad or too narrow. Revise the territory's orientation before placing.
+- **A sibling is missing** — this memory belongs at this level but not in any existing child. The tree needs a new sibling territory, not a child of an existing one.
+- **The memory contains two distinct things** — split it into two files, then place each.
+
 #### Creating a new child
 
-Create a child when this territory is approaching the 30/40 entry limit.
+Create a child when this territory is approaching the 30/40 entry limit (see [[#8. Index Size and Taxonomy Evolution]]).
 
-1. **What is unique about this memory** compared to the others at this level? Name it precisely.
-2. **Consider several names** for the new child territory.
-3. **Review the current territory's orientation.** What does it hold? What is its boundary?
-4. **Look for commonality** — are there existing memories here that share something with the new one? If so, they belong together in the new child.
-5. **Select the name** that differentiates this child from its siblings and best names what lives there.
-6. Create the child directory and write its `_index.md`.
-7. Place the memory.
+Look for a natural group — aim for 3 memories minimum, 5 preferred — that share a common thread. The child holds the group, not just the new memory.
+
+- If you can't find 3: wait. Place the memory in the current territory and revisit when closer to capacity.
+- If already at capacity and still can't find a coherent group: create with what you have.
+
+**Steps:**
+
+1. Identify the cluster: what is unique about this group compared to others at this level?
+2. Consider several names.
+3. Select the name that differentiates this child from its siblings and best names what lives there.
+4. Create the child directory.
+5. Create `_index.md` for the child — write its orientation.
+6. Create `.access` for the child.
+7. Move the cluster's memory files into the child.
+8. Update the parent `_index.md` — entries now point to the child, not individual memories.
 
 #### Rules
 
 - One home per memory. Cross-links handle relationships across territories.
-- The struggle to place a memory is data — it means a territory boundary is wrong, missing, or a memory needs to be split.
+- Sub-territories emerge from capacity limits, not anticipation.
 
-#### The seed problem
-
-Before the algorithm runs, top-level territories must exist with their own `_index.md` files. These are seeded from the first batch of real memories — not designed upfront. When the first memories arrive, group what is obviously different, name those groups, write their `_index.md` orientations. That is the seed.
+> **TODO:** Write `_index.md` orientations for all top-level territories before beginning taxonomy work.
 
 
 ## 8. Index Size and Taxonomy Evolution
@@ -635,28 +649,18 @@ Before the algorithm runs, top-level territories must exist with their own `_ind
 
 ### When the threshold is reached
 
-Re-examine what the index contains. Look for natural groupings. Split.
-
-#### Process
-1. Read all entries in the territory's `_index.md`
-2. Identify 2+ coherent clusters
-3. Create sub-territory directories
-4. Create `_index.md` for each new sub-territory
-5. Create `.access` for each new sub-territory
-6. Move memory files into sub-territories
-7. Update the parent `_index.md` — entries now point to sub-territories, not individual memories
+When a territory approaches 30 entries, begin child creation (see [[#7. Frontmatter]] — Territory selection guide). At 40, split is required.
 
 #### Example
-`anandaka/` fills up. Examination reveals: practice history, personal history, people. Split:
+`anandaka/` fills up. Examination reveals: practice, personal history, relationships. Split:
 ```
 anandaka/
-  practice_history/
+  practice/
   personal_history/
-  people/
+  relationships/
     ben/
     mastermu/
-    all_others/
 ```
-`anandaka/` index now has 3 entries. Each sub-territory index has its own entries.
+`anandaka/` index now has 3 entries. Each child has its own index.
 
 
