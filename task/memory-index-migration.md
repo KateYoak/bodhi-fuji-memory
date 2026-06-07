@@ -42,9 +42,10 @@ PAT is **ciphertext embedded in the compiled binary** (garble build). `clone` / 
 ### Phase 0 — Infra & repos
 
 - [x] **0.1** Create **setup repo** (trusted-agent): Go project, `agents.yaml` (bearer, persona, branch per being) — `KateYoak/bodhi-trusted-agent`
-- [ ] **0.2** GitHub **Actions** on memory repo — **only allowed path to `main`**: being-branch push → open/update PR → governance stub → **merge commit** — *(Operator)*
-- [ ] **0.3** CI on setup repo: `PAT_*` secrets → encrypt per bearer → **garble build** → publish `clone` + `commit` bundle (release URL for wall) — *(Operator)*
-- [ ] **0.4** Being branches — **not pre-created**; first **`commit`** push creates branch from `agents.yaml` — *(Automatic)*
+- [/] **0.2** GitHub **Actions** on memory repo — **only allowed path to `main`**: being-branch push → open/update PR → governance stub → **merge commit** — `.github/workflows/being-merge.yml` — *(Operator)*
+- [ ] **0.3** CI on setup repo: `PAT_*` per being + **`MEMORY_REPO_DEPLOY_KEY`** (one-time) → garble build → release bundle — *(Operator)*
+- [x] **0.3b** **`sync-agents` workflow** — on `agents.yaml` push, create missing `being/*` branches on memory repo via deploy key — *(Operator)*
+- [x] **0.4** Being branches — `being/dharacetana` live — *(Automatic after 0.3b)*
 - [ ] **0.5** Make `bodhi-fuji-memory` **private**; enable **branch protection** on `main` (no force-push — needs GitHub Pro on private) — *(Anandaka)*
 
 ### Phase 1 — Memory repo foundation
