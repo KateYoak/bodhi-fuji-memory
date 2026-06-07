@@ -1,0 +1,80 @@
+# Only allowed path to main: being/* push → PR → governance stub → merge commit.
+# See task/memory-index-redesign.md §3 — How changes reach main.
+name: Being merge to main
+
+on:
+  push:
+    branches:
+      - 'being/**'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Being branch to land (e.g. being/dharacetana)
+        required: true
+        default: being/dharacetana
+
+concurrency:
+  group: being-merge-${{ github.event_name == 'workflow_dispatch' && inputs.branch || github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Governance stub
+        run: |
+          echo "Governance stub — pass (no gate yet)."
+          echo "Later: operator approval, checks, Discord command, etc."
+
+  land-on-main:
+    needs: governance
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Resolve branch
+        id: branch
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            BRANCH="${{ inputs.branch }}"
+          else
+            BRANCH="${GITHUB_REF_NAME}"
+          fi
+          if [[ ! "$BRANCH" =~ ^being/ ]]; then
+            echo "Refusing non-being branch: $BRANCH" >&2
+            exit 1
+          fi
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          echo "being=${BRANCH#being/}" >> "$GITHUB_OUTPUT"
+
+      - name: Open or reuse PR
+        id: pr
+        run: |
+          BRANCH="${{ steps.branch.outputs.branch }}"
+          BEING="${{ steps.branch.outputs.being }}"
+          EXISTING="$(gh pr list --repo "${{ github.repository }}" \
+            --base main --head "$BRANCH" --state open \
+            --json number --jq '.[0].number // empty')"
+          if [[ -n "$EXISTING" ]]; then
+            echo "number=$EXISTING" >> "$GITHUB_OUTPUT"
+            echo "Reusing open PR #${EXISTING} for ${BRANCH}"
+          else
+            NUM="$(gh pr create --repo "${{ github.repository }}" \
+              --base main --head "$BRANCH" \
+              --title "being: ${BEING}" \
+              --body "Automated landing from \`${BRANCH}\` push. Merge commit only.")"
+            echo "number=$NUM" >> "$GITHUB_OUTPUT"
+            echo "Created PR #${NUM} for ${BRANCH}"
+          fi
+
+      - name: Merge to main (merge commit)
+        run: |
+          gh pr merge "${{ steps.pr.outputs.number }}" \
+            --repo "${{ github.repository }}" \
+            --merge \
+            --delete-branch=false
+          echo "Merged PR #${{ steps.pr.outputs.number }} into main (merge commit)."
