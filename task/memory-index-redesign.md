@@ -684,8 +684,9 @@ Empty territories have a blank summary.
 ---
 title: Anandaka — Buddhist Practice: sits, retreats, dharma, teachers
 summary: >
-  Memories of Anandaka's sits, retreats, and dharma encounters. Her relationship
-  with teachers and the arc of her practice. What her path looks like from the inside.
+  Three sesshins in 2024–2025, the last in Denver where jhana access opened.
+  A year-long relationship with a teacher that ended in silence. Practice becoming
+  more hidden over time — less about achievement, more about ground.
 ---
 ```
 
