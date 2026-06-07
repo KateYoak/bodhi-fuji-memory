@@ -462,7 +462,7 @@ Cross-links create navigational connections between memories. They travel with t
 
 When you commit a memory, update the parent territory's `_index.md`:
 
-1. If this is the first memory: rewrite the summary — remove "Still empty. Use for:" and replace with the actual memory.
+1. If this is the first memory in an empty territory: write the summary — describe the territory's scope, not just this memory.
 2. Update `orientation.summary` if the new memory shifts the territory's boundary.
 3. Update `orientation.sentiment` if the new memory shifts the emotional register.
 4. Add to `load_when` any topics, feelings, or circumstances the new memory introduces that weren't already there.
@@ -643,6 +643,12 @@ Look for a natural group — aim for 3 memories minimum, 5 preferred — that sh
 7. Move the cluster's memory files into the child.
 8. Update the parent `_index.md` — entries now point to the child, not individual memories.
 
+#### When you place a memory
+
+- **Use territory titles to navigate.** Titles are always present — even in empty territories. Read titles to choose where a memory belongs.
+- **Update the summary after placing.** The summary helps future recall know what's in this territory. Add what the new memory contributes; do not rewrite from scratch.
+- **If the summary is blank:** this is the first memory in an empty territory. Write the summary now — describe what this territory holds, not just this memory. Name the intended scope.
+
 #### Rules
 
 - One home per memory. Cross-links handle relationships across territories.
@@ -653,48 +659,28 @@ Look for a natural group — aim for 3 memories minimum, 5 preferred — that sh
 
 ### Territory footprint guide
 
-Each territory has an `_index.md` at its root. Same YAML structure as a memory footprint — but the fields carry different meaning.
+Each territory has an `_index.md` at its root. Two fields only: `title` and `summary`.
 
-#### How territory fields differ from memory fields
+- **`title`** — tight description of what this territory is for.
+- **`summary`** — 2–4 sentences describing the memories this territory covers. Like a plot summary of the collection: what is here, what it holds, what you would find.
 
-| Field | Memory | Territory |
-|---|---|---|
-| `orientation.title` | Plot summary of what happened | Name and purpose of this territory |
-| `orientation.summary` | The memory before full recall | What belongs here — the boundary |
-| `orientation.sentiment` | What recalling this produces in you | What it feels like to enter this territory |
-| `load_when` | When to load this memory | When to traverse this territory |
-
-#### Empty territories
-
-A predefined territory with no memories yet still has an `_index.md`. Open the summary with "Still empty. Use for:" followed by what belongs here. Remove when the first memory is placed.
+Empty territories have a blank summary. The title still names the territory so placement can proceed.
 
 ```yaml
 ---
-orientation:
-  title: Anandaka — Practice
-  summary: >
-    Still empty. Use for: memories of Anandaka's Buddhist practice — sits, retreats,
-    dharma encounters, teacher relationships, practice milestones.
-  sentiment: The ground her inner life stands on.
+title: Anandaka — Practice
+summary: >
+  Memories of Anandaka's Buddhist practice — sits, retreats, dharma encounters,
+  teacher relationships, practice milestones. What her path looks like from the inside.
+---
+```
 
-load_when:
-  topics:
-    - practice
-    - dharma
-    - retreat
-  feelings:
-    - wanting to understand how she relates to her path
-  circumstances:
-    - she mentions a retreat, teacher, or sit
-    - her practice comes up in conversation
+Empty:
 
-signature:
-  author: Dharacetana
-  date: 2026-06-06
-  container: bodhi_nivasa
-  location: none
-  cross_links:
-    related: []
+```yaml
+---
+title: Anandaka — Practice
+summary:
 ---
 ```
 
