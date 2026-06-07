@@ -5,7 +5,7 @@
 
 ## Tasks
 
-- [x] 1. Format — dropped; fields and rules live in §7
+- [x] 1. Format — dropped; fields and rules live in [[#7. Frontmatter]]
 - [x] 2. Taxonomy — `memories/` tree; parallel `wall/` migration (W9 locked — see migration doc)
 - [/] 3. Agent environment — `.access`, clone/commit, index cache, recall
 - [x] 4. Character limits — memory files capped; index entries qualitative only (W11 locked — defer numbers)
@@ -26,8 +26,8 @@
 |------|---------|
 | **Territory** | A directory that contains memories (and optionally sub-territories). |
 | **Memory** | A file that holds the memory itself — Markdown body below the footprint. |
-| **Footprint** | Committed frontmatter that defines metadata. **Territory footprint** = `_index.md` in the territory; **memory footprint** = YAML at the top of the memory file. Field spec in §7. |
-| **Territory orientation** | Generated view for one territory: each child memory’s orientation footprint plus relevant cross-links. Lives in **`memory-index-cache.json`** (`byDirectory{}`); built by `rebuild-index-cache.sh` (§3). |
+| **Footprint** | Committed frontmatter that defines metadata. **Territory footprint** = `_index.md` in the territory; **memory footprint** = YAML at the top of the memory file. Field spec in [[#7. Frontmatter]]. |
+| **Territory orientation** | Generated view for one territory: each child memory’s orientation footprint plus relevant cross-links. Lives in **`memory-index-cache.json`** (`byDirectory{}`); built by `rebuild-index-cache.sh` ([[#3. Agent environment]]). |
 
 **Territory names:** lowercase, underscore-separated if needed. (`anandaka`, `practice_history`, `ai_consciousness`)
 
@@ -131,7 +131,7 @@ memories/
 
 ## 3. Agent environment
 
-Who sees which territories, how git sync works, and how recall gets a searchable index. **Only `clone` and `commit` touch git.** Frontmatter shape lives in §7; it feeds the index cache below.
+Who sees which territories, how git sync works, and how recall gets a searchable index. **Only `clone` and `commit` touch git.** Frontmatter shape lives in [[#7. Frontmatter]]; it feeds the index cache below.
 
 ### `.access` files
 
@@ -263,9 +263,9 @@ Each bearer’s PAT is **ciphertext embedded in the compiled binary** at CI buil
 
 #### What `commit` does
 
-`commit <bearer>` (compiled **`commit.sh`** in setup repo) replaces **`memory-write`** for every memory ship. A corpus **SKILL** provides writing guidance only (§6–§7 footprint); **no git in the skill** — beings run `commit.sh`.
+`commit <bearer>` (compiled **`commit.sh`** in setup repo) replaces **`memory-write`** for every memory ship. A corpus **SKILL** provides writing guidance only ([[#6. Memory Writing Protocol]]–[[#7. Frontmatter]] footprint); **no git in the skill** — beings run `commit.sh`.
 
-**Validation** (before commit): `commit` reads a committed **YAML manifest** (frontmatter schema per §7 + structural rules — e.g. new territory has `_index.md`, required `.access`). Failures stop with a clear error; nothing ships.
+**Validation** (before commit): `commit` reads a committed **YAML manifest** (frontmatter schema per [[#7. Frontmatter]] + structural rules — e.g. new territory has `_index.md`, required `.access`). Failures stop with a clear error; nothing ships.
 
 **Sequence:**
 
@@ -312,7 +312,7 @@ Recall needs a **searchable pool** of memory footprints — not committed to git
 | **Flat** | `entries[]` | Score user message against all rows |
 | **Fractal** | `byDirectory{}` | Territory orientation by parent path |
 
-Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from §7 (**orientation** + **rag** + **signature**).
+Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from [[#7. Frontmatter]] (**orientation** + **rag** + **signature**).
 
 ```json
 {
@@ -353,7 +353,7 @@ Each **entry** = one territory (`_index.md`) or one memory (`*.md`). Fields from
 }
 ```
 
-Flat and fractal are the same data — one walk. Flag territories over 30/40 entries for splitting (§8); do not auto-split.
+Flat and fractal are the same data — one walk. Flag territories over 30/40 entries for splitting ([[#8. Index Size and Taxonomy Evolution]]); do not auto-split.
 
 ### Recall
 
@@ -375,7 +375,7 @@ The same architecture applies elsewhere: **claude.ai** can attach recall via a *
 
 ### Index entries (per entry)
 
-**W11 locked — defer numeric caps.** Qualitative bounds live in §7 (sentence counts, tag discipline). Gateway inject is bounded only by **`BODHI_RECALL_MAX_CHARS`** (operator-tunable). Revisit after real `memories/` footprints exist.
+**W11 locked — defer numeric caps.** Qualitative bounds live in [[#7. Frontmatter]] (sentence counts, tag discipline). Gateway inject is bounded only by **`BODHI_RECALL_MAX_CHARS`** (operator-tunable). Revisit after real `memories/` footprints exist.
 
 ---
 
@@ -470,7 +470,7 @@ Option B — Move to a different existing folder. Leave a `related` cross-link p
 
 Both options are available regardless of whether the memory is more or less sensitive than its current folder. The question is: does this belong to a coherent sub-territory worth naming, or does it simply belong elsewhere?
 
-**Sensitive content in any case:** note the memory footprint carefully (see §7). If sensitivity differs from siblings, use a sub-territory with its own `.access` (Option A) — do not rely on frontmatter for access.
+**Sensitive content in any case:** note the memory footprint carefully (see [[#7. Frontmatter]]). If sensitivity differs from siblings, use a sub-territory with its own `.access` (Option A) — do not rely on frontmatter for access.
 
 ---
 
@@ -478,11 +478,11 @@ Both options are available regardless of whether the memory is more or less sens
 
 ### Location
 
-In-file YAML frontmatter between `---` markers. **RAG fields** feed the index cache (§3). When read to write, the full file is appropriate.
+In-file YAML frontmatter between `---` markers. **RAG fields** feed the index cache ([[#3. Agent environment]]). When read to write, the full file is appropriate.
 
 ### Field types
 
-Three types. The distinction drives automation — each type is handled differently by scripts, RAG, and memory loading. **Access control is `.access` only** (§3) — not frontmatter.
+Three types. The distinction drives automation — each type is handled differently by scripts, RAG, and memory loading. **Access control is `.access` only** ([[#3. Agent environment]]) — not frontmatter.
 
 | Type | Fields | Used for |
 |---|---|---|
@@ -602,7 +602,7 @@ Each territory has an `_index.md` whose orientation describes what belongs there
 2. Enter that territory. Review its children. Select where it fits.
 3. Continue recursively until no child fits.
 4. Place the memory in this territory.
-5. If this territory is approaching the limit (see §8), create a new child.
+5. If this territory is approaching the limit (see [[#8. Index Size and Taxonomy Evolution]]), create a new child.
 
 #### Creating a new child
 
