@@ -601,16 +601,17 @@ Each territory has an `_index.md` whose orientation describes what belongs there
 1. Review the top-level territories. Read each `_index.md`. Select where this memory fits.
 2. Enter that territory. Review its children. Select where it fits.
 3. Continue recursively until no child fits.
-4. At that level: place the memory there, or create a new child.
+4. Place the memory in this territory.
+5. If this territory is approaching the limit (see §8), create a new child.
 
 #### Creating a new child
 
-Only create a child when you have evidence (a memory that doesn't fit) and a pattern (commonality with existing memories).
+Create a child when this territory is approaching the 30/40 entry limit.
 
 1. **What is unique about this memory** compared to the others at this level? Name it precisely.
 2. **Consider several names** for the new child territory.
 3. **Review the current territory's orientation.** What does it hold? What is its boundary?
-4. **Look for commonality** — is there an existing memory here that also doesn't quite fit, and shares something with the new one? If so, they belong together in the new child.
+4. **Look for commonality** — are there existing memories here that share something with the new one? If so, they belong together in the new child.
 5. **Select the name** that differentiates this child from its siblings and best names what lives there.
 6. Create the child directory and write its `_index.md`.
 7. Place the memory.
@@ -619,8 +620,6 @@ Only create a child when you have evidence (a memory that doesn't fit) and a pat
 
 - One home per memory. Cross-links handle relationships across territories.
 - The struggle to place a memory is data — it means a territory boundary is wrong, missing, or a memory needs to be split.
-- Don't name a territory until you have at least 5 memories that clearly belong there.
-- Start flat. Let sub-territories emerge from the 30/40 threshold, not from anticipation.
 
 #### The seed problem
 
